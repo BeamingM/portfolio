@@ -1,76 +1,102 @@
 "use client";
 
-import { PhotoItem } from "@/config/gallery";
+import { PhotoItem, siteProfile } from "@/config/gallery";
 
 interface HudFooterProps {
   currentIndex: number;
   total: number;
   currentPhoto: PhotoItem;
+  onSelectIndex: (index: number) => void;
 }
 
 export default function HudFooter({
   currentIndex,
   total,
   currentPhoto,
+  onSelectIndex,
 }: HudFooterProps) {
   const specs = currentPhoto?.specs || {};
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full z-40 px-5 py-4 md:px-8 md:py-6 flex items-end justify-between text-xs tracking-wider select-none font-mono pointer-events-none">
-      {/* Frame Counter Badge */}
-      <div className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-sm border border-neutral-300 bg-white/70 backdrop-blur-sm shadow-xs text-neutral-800">
-        <span className="text-[10px] text-neutral-400 uppercase">FRAME</span>
-        <span className="tabular-nums font-semibold">
-          {String(currentIndex + 1).padStart(2, "0")}
-        </span>
-        <span className="text-neutral-400">/</span>
-        <span className="tabular-nums text-neutral-500">
-          {String(total).padStart(2, "0")}
-        </span>
+    <footer className="fixed bottom-0 left-0 w-full z-40 h-12 bg-[#FBFBF9]/90 backdrop-blur-md border-t border-[#E5E5DF] flex items-center justify-between px-4 md:px-8 select-none font-mono text-[11px]">
+      {/* Left: Frame Indexing & Mechanical Scrubber */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 text-[#121212] font-semibold">
+          <span className="text-[#FF3E00]">■</span>
+          <span>
+            [FRAME {String(currentIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}]
+          </span>
+        </div>
+
+        {/* Scrubber Ticks (1 to N) */}
+        <div className="hidden sm:flex items-center gap-1.5 pl-3 border-l border-[#E5E5DF]">
+          {Array.from({ length: total }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => onSelectIndex(i)}
+              type="button"
+              className={`w-4 h-4 text-center text-[10px] font-mono transition-colors cursor-pointer rounded-2xs ${
+                currentIndex === i
+                  ? "bg-[#121212] text-[#FBFBF9] font-bold"
+                  : "text-[#737373] hover:bg-[#E5E5DF]"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Camera Technical Spec Badge */}
-      <div className="pointer-events-auto hidden md:flex items-center gap-3 px-3 py-1.5 rounded-sm border border-neutral-300 bg-white/70 backdrop-blur-sm shadow-xs text-neutral-700 text-[11px]">
-        {specs.camera && (
-          <span className="font-semibold text-neutral-900">{specs.camera}</span>
-        )}
-        {specs.lens && (
-          <>
-            <span className="text-neutral-300">·</span>
-            <span>{specs.lens}</span>
-          </>
-        )}
-        {specs.aperture && (
-          <>
-            <span className="text-neutral-300">·</span>
-            <span className="text-neutral-900 font-medium">{specs.aperture}</span>
-          </>
-        )}
-        {specs.shutter && (
-          <>
-            <span className="text-neutral-300">·</span>
-            <span>{specs.shutter}</span>
-          </>
-        )}
-        {specs.iso && (
-          <>
-            <span className="text-neutral-300">·</span>
-            <span className="text-neutral-500">{specs.iso}</span>
-          </>
-        )}
-        {specs.location && (
-          <>
-            <span className="text-neutral-300">·</span>
-            <span className="text-neutral-400 uppercase">{specs.location}</span>
-          </>
-        )}
+      {/* Center: Scrollytelling Kinetic Prompt */}
+      <div className="hidden lg:flex items-center gap-2 text-[#737373] tracking-widest text-[10px]">
+        <span>[ SCROLL TO SCRUB TIMELINE ↓ ]</span>
       </div>
 
-      {/* Mobile Spec Summary */}
-      <div className="pointer-events-auto md:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm border border-neutral-300 bg-white/70 backdrop-blur-sm shadow-xs text-neutral-700 text-[10px]">
-        <span>{specs.camera || "CAMERA"}</span>
-        <span className="text-neutral-300">·</span>
-        <span>{specs.aperture || "SPEC"}</span>
+      {/* Right: EXIF Spec Readout & Coordinate Anchor */}
+      <div className="flex items-center gap-3 text-[#737373]">
+        <div className="hidden md:flex items-center gap-1.5">
+          {specs.camera && <span className="text-[#121212] font-semibold">{specs.camera}</span>}
+          {specs.lens && (
+            <>
+              <span className="text-neutral-300">·</span>
+              <span>{specs.lens}</span>
+            </>
+          )}
+          {specs.aperture && (
+            <>
+              <span className="text-neutral-300">·</span>
+              <span>{specs.aperture}</span>
+            </>
+          )}
+          {specs.shutter && (
+            <>
+              <span className="text-neutral-300">·</span>
+              <span>{specs.shutter}</span>
+            </>
+          )}
+          {specs.iso && (
+            <>
+              <span className="text-neutral-300">·</span>
+              <span>{specs.iso}</span>
+            </>
+          )}
+          <span className="text-neutral-300">·</span>
+          <span className="text-[#737373] uppercase">{siteProfile.coordinates}</span>
+        </div>
+
+        <div className="md:hidden text-[#121212] font-semibold">
+          {specs.camera || "CAMERA"} · {specs.aperture || "SPEC"}
+        </div>
+
+        {/* Instagram External Link */}
+        <a
+          href={siteProfile.contact.instagramUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="hidden xl:inline border-l border-[#E5E5DF] pl-3 text-[#121212] hover:text-[#FF3E00] transition-colors"
+        >
+          Instagram
+        </a>
       </div>
     </footer>
   );

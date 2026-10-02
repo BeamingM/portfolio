@@ -4,6 +4,7 @@
   --background: #FBFBF9;
   --foreground: #121212;
   --surface: #F4F4F0;
+  --surface-bright: #F9F9F7;
   --border: #E5E5DF;
   --muted: #737373;
   --accent: #FF3E00;
@@ -13,6 +14,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-bright: var(--surface-bright);
   --color-border-subtle: var(--border);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
@@ -26,6 +28,12 @@ html, body {
   font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   user-select: none;
+}
+
+/* Optical grain overlay inspired by Stitch design */
+.analog-grain {
+  background-image: radial-gradient(rgba(18, 18, 18, 0.05) 1px, transparent 0);
+  background-size: 24px 24px;
 }
 
 /* Custom subtle scrollbar */
