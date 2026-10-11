@@ -57,11 +57,11 @@ export default function FigmaCanvasOverlay() {
 
       const photoEl = target.closest("[data-figma-photo]");
       if (photoEl) {
-        const title = photoEl.getAttribute("data-photo-title") || "Frame";
+        const series = photoEl.getAttribute("data-photo-series") || "Documentary Frame";
         const specs = photoEl.getAttribute("data-photo-specs") || "Sony α7 III";
         setCursorContext({
           type: "photo",
-          label: title,
+          label: series,
           specs,
         });
         return;
@@ -75,7 +75,7 @@ export default function FigmaCanvasOverlay() {
 
       const btnEl = target.closest("button, [role='button'], a");
       if (btnEl) {
-        setCursorContext({ type: "button", label: "SELECT" });
+        setCursorContext({ type: "button" });
         return;
       }
 
@@ -118,7 +118,7 @@ export default function FigmaCanvasOverlay() {
       className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden select-none"
       aria-hidden="true"
     >
-      {/* 1. Primary Figma Vector Cursor (Zero-latency direct follow) */}
+      {/* 1. Polite, Gentle Rounded Cursor (Zero-latency direct follow) */}
       <motion.div
         style={{
           x: mouseX,
@@ -128,34 +128,34 @@ export default function FigmaCanvasOverlay() {
       >
         <div
           style={{
-            transform: `translate(-2px, -2px) scale(${isMouseDown ? 0.88 : 1})`,
+            transform: `translate(-1px, -1px) scale(${isMouseDown ? 0.9 : cursorContext.type === "button" ? 0.94 : 1})`,
             transformOrigin: "top left",
-            transition: "transform 0.08s cubic-bezier(0.16, 1, 0.3, 1)",
+            transition: "transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
           className="relative pointer-events-none"
         >
-          {/* Authentic Figma Canvas Vector Pointer */}
+          {/* Gentle, polite rounded arrow with soft fillets and gentle curves */}
           <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
+            width="19"
+            height="19"
+            viewBox="0 0 20 20"
             fill="none"
-            className="drop-shadow-md"
+            className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
           >
-            {/* Outer high-contrast stroke + inner fill */}
             <path
-              d="M3 3L10.5 21L13.5 13.5L21 10.5L3 3Z"
-              fill={cursorContext.type === "photo" ? accentOrange : isDark ? "#FFFFFF" : "#0D0D0D"}
-              stroke={isDark ? "#000000" : "#FFFFFF"}
-              strokeWidth="1.6"
+              d="M3.5 2.5 C3.0 2.2 2.4 2.6 2.4 3.2 L2.4 15.2 C2.4 15.8 3.2 16.2 3.7 15.7 L7.2 12.4 C7.5 12.1 7.9 11.9 8.3 11.9 L14.2 11.9 C14.8 11.9 15.2 11.1 14.7 10.6 L3.5 2.5 Z"
+              fill={cursorContext.type === "photo" ? accentOrange : isDark ? "#FFFFFF" : "#141414"}
+              stroke={isDark ? "rgba(0,0,0,0.75)" : "rgba(255,255,255,0.95)"}
+              strokeWidth="1.3"
               strokeLinejoin="round"
+              strokeLinecap="round"
             />
           </svg>
         </div>
       </motion.div>
 
-      {/* 2. Trailing Figma Tag Badge (Follows with gentle fluid spring) */}
-      {cursorContext.type !== "default" && (
+      {/* 2. Trailing Photo Pill Tag (Only appears gently when hovering photographs) */}
+      {cursorContext.type === "photo" && (
         <motion.div
           style={{
             x: tagX,
@@ -164,31 +164,16 @@ export default function FigmaCanvasOverlay() {
           className="fixed top-0 left-0"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, x: 14, y: 14 }}
+            initial={{ opacity: 0, scale: 0.85, x: 14, y: 14 }}
             animate={{ opacity: 1, scale: 1, x: 16, y: 14 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.12 }}
-            className="whitespace-nowrap flex flex-col items-start gap-0.5 px-2 py-0.5 rounded-sm shadow-md pointer-events-none"
-            style={{
-              backgroundColor:
-                cursorContext.type === "photo"
-                  ? accentOrange
-                  : cursorContext.type === "email"
-                  ? "#0D99FF"
-                  : isDark
-                  ? "#242423"
-                  : "#121212",
-              color: "#FFFFFF",
-            }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ duration: 0.14, ease: "easeOut" }}
+            className="whitespace-nowrap flex items-center gap-1.5 px-2.5 py-1 rounded-full shadow-lg pointer-events-none bg-black/85 dark:bg-black/90 backdrop-blur-md border border-white/15 text-white"
           >
-            <div className="flex items-center gap-1 font-mono text-[9px] font-bold tracking-wider uppercase">
-              <span>{cursorContext.label}</span>
-            </div>
-            {cursorContext.specs && (
-              <div className="font-mono text-[8px] text-white/80 font-normal tracking-tight">
-                {cursorContext.specs}
-              </div>
-            )}
+            <div className="w-1.5 h-1.5 rounded-full bg-[#FF9500] shrink-0" />
+            <span className="font-mono text-[9px] font-semibold tracking-wider uppercase text-white/95">
+              {cursorContext.label}
+            </span>
           </motion.div>
         </motion.div>
       )}

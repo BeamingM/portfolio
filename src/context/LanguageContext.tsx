@@ -17,6 +17,7 @@ const translations: Record<string, { th: string; en: string }> = {
   navPersonal: { th: "PERSONAL PROJECTS", en: "PERSONAL PROJECTS" },
   navTuPhoto: { th: "TU PHOTO", en: "TU PHOTO" },
   navPscTu: { th: "PSC.TU", en: "PSC.TU" },
+  aboutMe: { th: "เกี่ยวกับฉัน", en: "About Me" },
   contact: { th: "CONTACT", en: "CONTACT" },
   
   // Brand Tagline

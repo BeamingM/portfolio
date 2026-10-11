@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useScroll } from "framer-motion";
 import BrandMark from "./BrandMark";
-import { playTactileClick } from "@/utils/sound";
 import { triggerHaptic } from "@/utils/haptics";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -13,38 +11,57 @@ interface TopNavProps {
   onOpenAbout: () => void;
   onSelectSection?: (sectionId: string) => void;
   activeSection?: string;
+  counts?: Record<string, number>;
 }
 
 export default function TopNav({
   onOpenAbout,
   onSelectSection,
   activeSection = "all",
+  counts,
 }: TopNavProps) {
   const { lang, setLang, t } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
-  const { scrollY } = useScroll();
 
   const [progress, setProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1200);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      const w = window.innerWidth;
+      setWindowWidth(w);
+      setIsMobile(w < 768);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Robust native scroll listener guaranteeing smooth progress on mobile & desktop
   useEffect(() => {
-    return scrollY.on("change", (latest) => {
-      // 0 at top of hero, 1 once scrolled past 180px
-      const raw = Math.min(Math.max(latest / 180, 0), 1);
-      // Organic smoothstep curve: 3x^2 - 2x^3 (smooth acceleration & deceleration)
+    const handleScroll = () => {
+      const scroll =
+        window.pageYOffset ||
+        window.scrollY ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0;
+      // 0 at top of hero, 1 once scrolled past 140px
+      const raw = Math.min(Math.max(scroll / 140, 0), 1);
+      // Smoothstep curve: 3x^2 - 2x^3
       const eased = raw * raw * (3 - 2 * raw);
       setProgress(eased);
-    });
-  }, [scrollY]);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("touchmove", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("touchmove", handleScroll);
+    };
+  }, []);
 
   const navLinks = [
     { id: "all", label: t("navAll") },
@@ -53,18 +70,20 @@ export default function TopNav({
     { id: "psctu", label: t("navPscTu") },
   ];
 
-  // Dynamic calculations for Hero -> Top-Left morph
-  const sidePadding = isMobile ? 16 : 32; // px-4 vs px-8 fallback
+  // Side padding matches container: px-4 on mobile (<640), px-6 on sm, px-12 on lg
+  const sidePad = windowWidth < 640 ? 16 : windowWidth < 1024 ? 24 : 48;
   const factor = 1 - progress;
-  // Exact horizontal centering formula with top-left transform-origin and scale factor
-  const xOffset = `calc(${factor} * (50vw - var(--nav-pad, ${sidePadding}px) - 65%))`;
-  // Vertical travel distance to align with hero spacer across all screen sizes
-  const yOffset = `calc(${factor} * var(--hero-y, ${isMobile ? 116 : 126}px))`;
-  const scale = 1 + factor * 0.3;
+
+  // Exact clearance from BrandMark guaranteeing zero overlap with "BeamingMotion"
+  const isDesktop = windowWidth >= 1024;
+  const brandMarkClearance = isDesktop ? 315 : 138;
+  const navLeft = sidePad + brandMarkClearance;
+  const heroTop = isMobile ? 230 : 240;
+  const navTop = isMobile ? 14 : 18;
 
   return (
     <>
-      {/* 1. Progressive Blur Layer (No harsh border, fades smoothly into page tone) */}
+      {/* 1. Progressive Blur Layer */}
       <div
         className="progressive-blur-header"
         style={{
@@ -74,87 +93,116 @@ export default function TopNav({
         aria-hidden="true"
       />
 
-      {/* 2. Top Navigation Bar (z-40 floating above blur) */}
-      <header className="fixed top-0 left-0 w-full z-40 h-16 flex items-center justify-between px-4 md:px-8 select-none pointer-events-none [--nav-pad:16px] md:[--nav-pad:32px] [--hero-y:116px] md:[--hero-y:126px]">
-        {/* Left: Morphing BrandMark (starts centered in hero at scroll 0, morphs to top-left) */}
+      {/* 2. Unified Morphing Layer: BrandMark & Filter Bar glide together as one continuous piece */}
+      <div className="fixed top-0 left-0 w-full z-50 pointer-events-none select-none">
+        {/* BrandMark: Center Hero -> Top-Left Nav */}
         <div
           style={{
-            transform: `translate(${xOffset}, ${yOffset}) scale(${scale})`,
-            transformOrigin: "top left",
-            willChange: "transform",
+            position: "absolute",
+            left: `calc(${sidePad}px + ${factor} * (50% - ${sidePad}px))`,
+            top: `${(isMobile ? 14 : 18) + factor * (isMobile ? 52 : 62)}px`,
+            transform: `translate3d(-${factor * 50}%, 0, 0) scale(${1 + factor * 0.16})`,
+            transformOrigin: "center center",
+            willChange: "left, top, transform",
           }}
-          className={`pointer-events-auto ${progress > 0.3 ? "cursor-pointer" : "cursor-default"}`}
+          className={`pointer-events-auto shrink-0 max-w-[calc(100vw-180px)] ${
+            progress > 0.25 ? "cursor-pointer" : "cursor-default"
+          }`}
           onClick={() => {
-            if (progress > 0.3) {
+            if (progress > 0.25) {
+              triggerHaptic("light");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
         >
-          <BrandMark centerFactor={factor} />
+          <BrandMark
+            centerFactor={factor}
+            collapseSecondary={(isMobile || windowWidth < 1024) && progress > 0.15}
+          />
         </div>
 
-        {/* Center: Editorial Project Index Links (Visible on desktop) */}
-        <nav
+        {/* Unified Filter Bar: Center Hero -> Top Nav beside BrandMark (With generous 50px clearance from BeamingMotion) */}
+        <div
           style={{
-            opacity: Math.max(0, (progress - 0.2) / 0.8),
-            pointerEvents: progress > 0.25 ? "auto" : "none",
+            position: "absolute",
+            left: `calc(${navLeft}px + ${factor} * (50% - ${navLeft}px))`,
+            top: `${navTop + factor * (heroTop - navTop)}px`,
+            transform: `translate3d(-${factor * 50}%, 0, 0)`,
+            willChange: "left, top, transform",
+            maxWidth:
+              factor > 0.3
+                ? "94vw"
+                : `calc(100vw - ${navLeft + (isMobile ? 140 : 200)}px)`,
           }}
-          className="hidden md:flex items-center gap-1 font-mono text-[11px]"
+          className="pointer-events-auto flex items-center select-none"
         >
-          {navLinks.map((link) => {
-            const isActive = activeSection === link.id;
-            return (
-              <button
-                key={link.id}
-                onClick={() => {
-                  triggerHaptic("light");
-                  playTactileClick();
-                  onSelectSection?.(link.id);
-                }}
-                type="button"
-                className={`px-3 py-1 rounded-full transition-colors cursor-pointer ${
-                  isActive
-                    ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                    : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] hover:bg-[#F4F4F0] dark:hover:bg-[#1C1C1B]"
-                }`}
-              >
-                {link.label}
-              </button>
-            );
-          })}
-        </nav>
+          <div className="flex items-center gap-1 sm:gap-1.5 p-1 bg-[#F4F4F0] dark:bg-[#1A1A19] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full overflow-x-auto no-scrollbar shadow-2xs">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.id;
+              const count = counts?.[link.id] ?? 0;
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => {
+                    triggerHaptic("light");
+                    onSelectSection?.(link.id);
+                  }}
+                  type="button"
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                    isActive
+                      ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
+                      : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] hover:bg-white/70 dark:hover:bg-[#282827]"
+                  }`}
+                >
+                  <span>{link.label}</span>
+                  {count > 0 && (
+                    <span
+                      className={`text-[8px] sm:text-[9px] px-1 py-0.2 rounded-full ${
+                        isActive
+                          ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#121212]"
+                          : "text-[#A0A09A] dark:text-[#666]"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
-        {/* Right Controls: Theme Toggle, Language Switcher, and Contact Drawer */}
-        <div className="flex items-center gap-2 font-mono text-xs pointer-events-auto">
-          {/* Theme Toggle (Dark / Light mode based on system setting) */}
+      {/* 3. Top Navigation Right Controls */}
+      <header className="fixed top-0 left-0 w-full z-40 h-16 sm:h-20 flex items-center justify-end px-4 sm:px-6 md:px-12 select-none pointer-events-none overflow-x-hidden max-w-full">
+        <div className="flex items-center gap-1 sm:gap-2 font-mono text-xs pointer-events-auto shrink-0 ml-auto">
+          {/* Theme Toggle (Dark / Light mode) */}
           <button
             onClick={() => {
               triggerHaptic("light");
-              playTactileClick();
               toggleTheme();
             }}
             type="button"
             title={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            className="w-8 h-8 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] flex items-center justify-center transition-colors cursor-pointer shadow-2xs"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] flex items-center justify-center transition-colors cursor-pointer shadow-2xs"
             aria-label="Toggle theme mode"
           >
             {resolvedTheme === "dark" ? (
-              <Sun className="w-3.5 h-3.5 text-[#F5F5F3]" />
+              <Sun className="w-3.5 h-3.5 text-[#FFA000]" />
             ) : (
               <Moon className="w-3.5 h-3.5 text-[#121212]" />
             )}
           </button>
 
-          {/* Quick Language Switcher: TH | EN */}
-          <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full p-0.5 text-[10px]">
+          {/* Language Switcher: TH | EN */}
+          <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full p-0.5 text-[9px] sm:text-[10px]">
             <button
               onClick={() => {
                 triggerHaptic("light");
-                playTactileClick();
                 setLang("th");
               }}
               type="button"
-              className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
+              className={`px-1.5 sm:px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
                 lang === "th"
                   ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
                   : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3]"
@@ -165,11 +213,10 @@ export default function TopNav({
             <button
               onClick={() => {
                 triggerHaptic("light");
-                playTactileClick();
                 setLang("en");
               }}
               type="button"
-              className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
+              className={`px-1.5 sm:px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
                 lang === "en"
                   ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
                   : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3]"
@@ -179,17 +226,16 @@ export default function TopNav({
             </button>
           </div>
 
-          {/* Contact Trigger */}
+          {/* About Me Trigger */}
           <button
             onClick={() => {
               triggerHaptic("light");
-              playTactileClick();
               onOpenAbout();
             }}
             type="button"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#121212] dark:border-[#F5F5F3] bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] hover:bg-[#FF9500] dark:hover:bg-[#FFA000] hover:border-[#FF9500] dark:hover:border-[#FFA000] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer text-[11px] font-sans font-bold tracking-wide shadow-xs"
+            className="flex items-center gap-1 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-[#121212] dark:border-[#F5F5F3] bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] hover:bg-[#FF9500] dark:hover:bg-[#FFA000] hover:border-[#FF9500] dark:hover:border-[#FFA000] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer text-[9px] sm:text-[11px] font-sans font-bold tracking-wide shadow-xs shrink-0"
           >
-            <span>{t("contact")}</span>
+            <span>{t("aboutMe")}</span>
           </button>
         </div>
       </header>

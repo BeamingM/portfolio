@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import BrandMark from "./BrandMark";
 import { siteProfile } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
-import { playTactileClick } from "@/utils/sound";
-import { X, Copy, Check, ExternalLink, Mail } from "lucide-react";
+import { X, Copy, Check, ExternalLink, Mail, FileText } from "lucide-react";
+import { InstagramIcon, TwitterXIcon } from "./SocialIcons";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface AtelierDrawerProps {
@@ -21,14 +21,12 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(siteProfile.contact.email);
     triggerHaptic("success");
-    playTactileClick();
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
   };
 
   const handleClose = () => {
     triggerHaptic("light");
-    playTactileClick();
     onClose();
   };
 
@@ -67,28 +65,17 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                 </button>
               </div>
 
-              {/* Bio & Documentary Philosophy */}
-              <div className="mt-7 space-y-3.5">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#FF9500] dark:bg-[#FFA000]" />
-                  <span className="font-mono text-[10px] tracking-wider text-[#737373] dark:text-[#9E9E9C] uppercase font-semibold">
-                    {t("tagline")}
-                  </span>
-                </div>
-
-                <p className="font-sans text-sm md:text-base leading-relaxed text-[#262626] dark:text-[#D4D4D0]">
-                  {lang === "en" ? siteProfile.bio.en : siteProfile.bio.th}
+              {/* Bio & Intro (Clean, Floating Typography - No rigid boxes, no hashtag soup) */}
+              <div className="mt-8 space-y-4">
+                <p className="font-sans text-sm md:text-[15px] leading-relaxed text-[#262626] dark:text-[#D4D4D0]">
+                  {lang === "en"
+                    ? "Hi, I'm Beam (Chakarin Limudom). I fell in love with photography through the honest, unposed moments of everyday life—the transient light falling on streets and the quiet stories of people passing by. To me, pressing the shutter is simply about preserving honest human moments."
+                    : "สวัสดีครับ ผมบีม (จักริน ลิ้มป์อุดม) เริ่มต้นหยิบกล้องเพราะหลงใหลในความจริงใจของจังหวะเสี้ยววินาที—แสงเงาที่ไม่เคยซ้ำเดิมบนถนน และผู้คนที่เคลื่อนไหวโดยไม่ต้องจัดฉาก สำหรับผม การกดชัตเตอร์คือการบันทึกความทรงจำธรรมดาๆ ให้กลายเป็นสิ่งที่มีความหมาย"}
                 </p>
-
-                <div className="flex items-center gap-2 pt-1 font-mono text-[11px] text-[#737373] dark:text-[#9E9E9C]">
-                  <span className="px-2 py-0.5 rounded-full bg-[#F4F4F0] dark:bg-[#202020] text-[#121212] dark:text-[#F5F5F3] font-medium">
-                    {siteProfile.location}
-                  </span>
-                </div>
               </div>
 
               {/* Working Tools / Gear */}
-              <div className="mt-8 pt-6 border-t border-[#EBEBE6] dark:border-[#222221] space-y-3 font-mono text-xs">
+              <div className="mt-7 pt-5 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2.5 font-mono text-xs">
                 <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
                   [{t("equipment")}]
                 </div>
@@ -102,24 +89,21 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                 </div>
               </div>
 
-              {/* Direct Inquiries & Contact */}
-              <div className="mt-8 pt-6 border-t border-[#EBEBE6] dark:border-[#222221] space-y-3 font-mono text-xs">
+              {/* Direct Inquiries & Contact Channels */}
+              <div className="mt-7 pt-5 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2.5 font-mono text-xs">
                 <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
                   [{t("getInTouch")}]
                 </div>
 
-                {/* Email Box (Direct Mailto Link + Copy Action) */}
+                {/* Email Box */}
                 <div className="flex items-center justify-between p-3 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group">
                   <a
-                    href={`mailto:${siteProfile.contact.email}`}
-                    onClick={() => {
-                      triggerHaptic("light");
-                      playTactileClick();
-                    }}
+                    href="mailto:contact.chakarin@gmail.com"
+                    onClick={() => triggerHaptic("light")}
                     className="flex items-center gap-2 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
                   >
                     <Mail className="w-3.5 h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
-                    <span className="truncate">{siteProfile.contact.email}</span>
+                    <span className="truncate">contact.chakarin@gmail.com</span>
                   </a>
                   <button
                     onClick={(e) => {
@@ -129,48 +113,74 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                     }}
                     type="button"
                     title={copied ? "Copied" : "Copy email address"}
-                    className="flex items-center gap-1.5 pl-2 text-[10px] text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0"
+                    className="p-1 text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
                   >
                     {copied ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-[#FF9500] dark:text-[#FFA000]" />
-                        <span className="text-[#FF9500] dark:text-[#FFA000] font-bold">[{t("copied")}]</span>
-                      </>
+                      <Check className="w-3.5 h-3.5 text-[#FF9500] dark:text-[#FFA000]" />
                     ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>[{t("copy")}]</span>
-                      </>
+                      <Copy className="w-3.5 h-3.5" />
                     )}
                   </button>
                 </div>
+
+                {/* Twitter / X Link */}
+                <a
+                  href="https://x.com/beamingmotion"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-3 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
+                >
+                  <div className="flex items-center gap-2 text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px]">
+                    <TwitterXIcon className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000]" />
+                    <span>@beamingmotion</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-[10px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
+                    <span>TWITTER / X</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </div>
+                </a>
 
                 {/* Instagram Link */}
                 <a
                   href={siteProfile.contact.instagramUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="flex items-center justify-between p-3 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
                 >
-                  <span className="text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px]">
-                    @{siteProfile.contact.instagram}
-                  </span>
+                  <div className="flex items-center gap-2 text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px]">
+                    <InstagramIcon className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000]" />
+                    <span>@{siteProfile.contact.instagram}</span>
+                  </div>
                   <div className="flex items-center gap-1 text-[10px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
                     <span>INSTAGRAM</span>
                     <ExternalLink className="w-3 h-3" />
                   </div>
                 </a>
+
+                {/* Curriculum Vitae / Resume Link */}
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => triggerHaptic("light")}
+                  className="flex items-center justify-between p-3 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
+                >
+                  <div className="flex items-center gap-2 text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px]">
+                    <FileText className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
+                    <span>Resume</span>
+                  </div>
+                  <ExternalLink className="w-3 h-3 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3] transition-colors" />
+                </a>
               </div>
             </div>
 
-            {/* Language Switcher & Colophon */}
+            {/* Footer / Language Switcher */}
             <div className="pt-6 border-t border-[#EBEBE6] dark:border-[#222221] flex items-center justify-between font-mono text-[10px] text-[#737373] dark:text-[#9E9E9C] select-none">
-              <div>© CHAKARIN L. 2026</div>
+              <div>chakarin.pics · 2026</div>
               <div className="flex items-center gap-1 bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#282827] rounded-md p-0.5">
                 <button
                   onClick={() => {
                     triggerHaptic("light");
-                    playTactileClick();
                     setLang("th");
                   }}
                   type="button"
@@ -183,7 +193,6 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                 <button
                   onClick={() => {
                     triggerHaptic("light");
-                    playTactileClick();
                     setLang("en");
                   }}
                   type="button"

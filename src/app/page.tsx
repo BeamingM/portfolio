@@ -2,18 +2,26 @@
 
 import { useState, useMemo, useCallback } from "react";
 import TopNav from "@/components/TopNav";
-import SectionFilterBar from "@/components/SectionFilterBar";
+import ProjectDescriptionHeader from "@/components/ProjectDescriptionHeader";
 import EditorialPhotobook from "@/components/EditorialPhotobook";
 import PhotoModal from "@/components/PhotoModal";
 import AtelierDrawer from "@/components/AtelierDrawer";
 import FigmaCanvasOverlay from "@/components/FigmaCanvasOverlay";
 import { galleryItems, gallerySections, PhotoItem } from "@/config/gallery";
+import { triggerHaptic } from "@/utils/haptics";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState<string>("all");
   const [isAtelierOpen, setIsAtelierOpen] = useState<boolean>(false);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
 
+  // Filter gallery items by active project section
+  const displayedPhotos = useMemo(() => {
+    if (activeSection === "all") return galleryItems;
+    return galleryItems.filter((item) => item.sectionId === activeSection);
+  }, [activeSection]);
+
+  // Compute section counts based on available gallery photos
   const sectionCounts = useMemo(() => {
     const counts: Record<string, number> = {
       all: galleryItems.length,
@@ -27,72 +35,57 @@ export default function Home() {
   }, []);
 
   const handleSelectSection = (sectionId: string) => {
-    setActiveSection(sectionId);
-    if (sectionId === "all") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      setTimeout(() => {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 50);
-    }
+    triggerHaptic("light");
+    setActiveSection((prev) => (prev === sectionId && sectionId !== "all" ? "all" : sectionId));
   };
 
   const handleModalNext = useCallback(() => {
-    if (!selectedPhoto) return;
-    const curIdx = galleryItems.findIndex((p) => p.id === selectedPhoto.id);
+    if (!selectedPhoto || displayedPhotos.length === 0) return;
+    const curIdx = displayedPhotos.findIndex((p) => p.id === selectedPhoto.id);
     if (curIdx !== -1) {
-      const nextIdx = (curIdx + 1) % galleryItems.length;
-      setSelectedPhoto(galleryItems[nextIdx]);
+      const nextIdx = (curIdx + 1) % displayedPhotos.length;
+      setSelectedPhoto(displayedPhotos[nextIdx]);
+    } else {
+      setSelectedPhoto(displayedPhotos[0]);
     }
-  }, [selectedPhoto]);
+  }, [selectedPhoto, displayedPhotos]);
 
   const handleModalPrev = useCallback(() => {
-    if (!selectedPhoto) return;
-    const curIdx = galleryItems.findIndex((p) => p.id === selectedPhoto.id);
+    if (!selectedPhoto || displayedPhotos.length === 0) return;
+    const curIdx = displayedPhotos.findIndex((p) => p.id === selectedPhoto.id);
     if (curIdx !== -1) {
-      const prevIdx = (curIdx - 1 + galleryItems.length) % galleryItems.length;
-      setSelectedPhoto(galleryItems[prevIdx]);
+      const prevIdx = (curIdx - 1 + displayedPhotos.length) % displayedPhotos.length;
+      setSelectedPhoto(displayedPhotos[prevIdx]);
+    } else {
+      setSelectedPhoto(displayedPhotos[displayedPhotos.length - 1]);
     }
-  }, [selectedPhoto]);
+  }, [selectedPhoto, displayedPhotos]);
 
   return (
-    <main className="relative min-h-screen bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] selection:bg-[#FF9500] dark:selection:bg-[#FFA000] selection:text-white analog-grain pt-16 transition-colors duration-200">
-      {/* Top Header: Progressive Blur & Center-to-Top-Left Morphing BrandMark */}
+    <main className="relative min-h-screen bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] selection:bg-[#FF9500] dark:selection:bg-[#FFA000] selection:text-white paper-texture pt-16 sm:pt-20 transition-colors duration-200">
+      {/* Top Header: Progressive Blur & Center-to-Top-Left Morphing BrandMark with Project Tabs */}
       <TopNav
         onOpenAbout={() => setIsAtelierOpen(true)}
         onSelectSection={handleSelectSection}
         activeSection={activeSection}
+        counts={sectionCounts}
       />
 
-      {/* Hero Welcome Space: The Brand Identity begins here in the center, then morphs to top-left */}
-      <section className="relative w-full pt-14 pb-4 flex flex-col items-center justify-center select-none text-center">
-        {/* Invisible spacer matching where the BrandMark sits at scroll 0 */}
+      {/* Hero Welcome Space: BrandMark + Floating Greeting + Unified Filter Bar at scroll 0 */}
+      <section className="relative w-full pt-12 md:pt-16 pb-3 flex flex-col items-center justify-center select-none text-center">
+        {/* Spacer where the BrandMark sits at scroll 0 */}
         <div className="h-16 md:h-20" aria-hidden="true" />
 
-        {/* Camera Spec & Location Imprint */}
-        <div className="mt-6 flex items-center gap-2 font-mono text-[10px] md:text-[11px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-widest">
-          <span>Sony α7 III</span>
-          <span className="text-[#D1D1CB] dark:text-[#383837]">·</span>
-          <span>FE 35mm & 55mm ZA</span>
-        </div>
+        {/* Authentic Apple-Style Floating Narrative Greeting (No boxes, no badges, pure typography) */}
+        <ProjectDescriptionHeader activeSection={activeSection} />
+
+        {/* Spacer where the Unified Morphing Filter Bar sits at scroll 0 */}
+        <div className="h-14 sm:h-16" aria-hidden="true" />
       </section>
 
-      {/* Project Section Filter Pills */}
-      <div className="pt-2 pb-1">
-        <SectionFilterBar
-          sections={gallerySections}
-          activeSection={activeSection}
-          onSelectSection={handleSelectSection}
-          counts={sectionCounts}
-        />
-      </div>
-
-      {/* Main Exhibition: Vertical Scroll Editorial Photobook (Adaptive balanced grid) */}
+      {/* Editorial Photobook Exhibition Showcase */}
       <EditorialPhotobook
-        items={galleryItems}
+        items={displayedPhotos}
         activeSection={activeSection}
         onSelectPhoto={(photo) => setSelectedPhoto(photo)}
       />
@@ -111,7 +104,7 @@ export default function Home() {
         onClose={() => setIsAtelierOpen(false)}
       />
 
-      {/* Interactive Figma / Canva Canvas Gimmick */}
+      {/* Interactive Figma Canvas Cursor Overlay */}
       <FigmaCanvasOverlay />
     </main>
   );
