@@ -222,7 +222,7 @@ export default function EditorialPhotobook({
           <div className="font-sans font-black text-lg text-[#121212] dark:text-[#F5F5F3] tracking-tight uppercase">
             CHAKARIN L.
           </div>
-          <div className="font-macintosh text-base text-[#737373] dark:text-[#9E9E9C] mt-0.5">
+          <div className="font-serif italic text-base text-[#737373] dark:text-[#9E9E9C] mt-0.5">
             BeamingMotion
           </div>
           <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] mt-2 tracking-wider uppercase">

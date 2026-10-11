@@ -31,7 +31,7 @@ export default function BrandMark({
         <span className="text-[#D1D1CB] dark:text-[#383837] text-xs transition-colors duration-200">
           /
         </span>
-        <span className="font-macintosh text-[19px] md:text-[21px] text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] transition-colors duration-200 leading-none">
+        <span className="font-serif italic text-[18px] md:text-[20px] text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] transition-colors duration-200 leading-none">
           BeamingMotion
         </span>
       </div>

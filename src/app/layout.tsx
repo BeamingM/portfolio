@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Anuphan, Inter, JetBrains_Mono } from "next/font/google";
-import localFont from "next/font/local";
+import { Anuphan, Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -23,9 +22,10 @@ const anuphan = Anuphan({
   display: "swap",
 });
 
-const macintoshCursive = localFont({
-  src: "../fonts/MacintoshSkeletalFilled.otf",
-  variable: "--font-macintosh",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  style: ["italic", "normal"],
   display: "swap",
 });
 
@@ -47,7 +47,7 @@ export default function RootLayout({
     <html
       lang="th"
       suppressHydrationWarning
-      className={`${anuphan.variable} ${inter.variable} ${jetbrainsMono.variable} ${macintoshCursive.variable}`}
+      className={`${inter.variable} ${anuphan.variable} ${jetbrainsMono.variable} ${newsreader.variable}`}
     >
       <head>
         <script

@@ -20,8 +20,8 @@ const translations: Record<string, { th: string; en: string }> = {
   contact: { th: "CONTACT", en: "CONTACT" },
   
   // Brand Tagline
-  tagline: { th: "ช่างภาพอิสระในกรุงเทพฯ", en: "Photographer based in Bangkok" },
-  locationBadge: { th: "กรุงเทพฯ, ประเทศไทย", en: "Bangkok, Thailand" },
+  tagline: { th: "Photographer based in Bangkok", en: "Photographer based in Bangkok" },
+  locationBadge: { th: "Bangkok, Thailand", en: "Bangkok, Thailand" },
   scrollPrompt: { th: "Scroll down to explore prints", en: "Scroll down to explore prints" },
 
   // Sections
