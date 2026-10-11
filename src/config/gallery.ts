@@ -72,7 +72,7 @@ export const galleryItems: PhotoItem[] = [
     height: 1600,
     orientation: "landscape",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 35MM F1.8",
       aperture: "f/5.6",
       shutter: "1/800s",
@@ -95,7 +95,7 @@ export const galleryItems: PhotoItem[] = [
     height: 2400,
     orientation: "portrait",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 35MM F1.8",
       aperture: "f/2.8",
       shutter: "1/500s",
@@ -118,7 +118,7 @@ export const galleryItems: PhotoItem[] = [
     height: 2400,
     orientation: "portrait",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 55MM F1.8 ZA",
       aperture: "f/2.8",
       shutter: "1/400s",
@@ -141,7 +141,7 @@ export const galleryItems: PhotoItem[] = [
     height: 2400,
     orientation: "portrait",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 55MM F1.8 ZA",
       aperture: "f/4.0",
       shutter: "1/1000s",
@@ -166,7 +166,7 @@ export const galleryItems: PhotoItem[] = [
     height: 1600,
     orientation: "landscape",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 35MM F1.8",
       aperture: "f/2.2",
       shutter: "1/320s",
@@ -189,7 +189,7 @@ export const galleryItems: PhotoItem[] = [
     height: 1600,
     orientation: "landscape",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 35MM F1.8",
       aperture: "f/2.0",
       shutter: "1/200s",
@@ -212,7 +212,7 @@ export const galleryItems: PhotoItem[] = [
     height: 2400,
     orientation: "portrait",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 55MM F1.8 ZA",
       aperture: "f/1.8",
       shutter: "1/500s",
@@ -235,7 +235,7 @@ export const galleryItems: PhotoItem[] = [
     height: 1600,
     orientation: "landscape",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 55MM F1.8 ZA",
       aperture: "f/2.8",
       shutter: "1/1000s",
@@ -258,7 +258,7 @@ export const galleryItems: PhotoItem[] = [
     height: 1600,
     orientation: "landscape",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 35MM F1.8",
       aperture: "f/2.5",
       shutter: "1/400s",
@@ -283,7 +283,7 @@ export const galleryItems: PhotoItem[] = [
     height: 1600,
     orientation: "landscape",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 35MM F1.8",
       aperture: "f/2.8",
       shutter: "1/250s",
@@ -306,7 +306,7 @@ export const galleryItems: PhotoItem[] = [
     height: 1600,
     orientation: "landscape",
     specs: {
-      camera: "SONY A7III",
+      camera: "Sony α7 III",
       lens: "FE 55MM F1.8 ZA",
       aperture: "f/2.0",
       shutter: "1/320s",

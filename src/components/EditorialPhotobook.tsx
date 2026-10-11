@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { PhotoItem, gallerySections } from "@/config/gallery";
+import { PhotoItem, gallerySections, SectionInfo } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
 import { playTactileClick } from "@/utils/sound";
 import { motion } from "framer-motion";
 import InstagramEmbed from "@/components/InstagramEmbed";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface EditorialPhotobookProps {
   items: PhotoItem[];
@@ -38,6 +39,8 @@ export default function EditorialPhotobook({
   activeSection,
   onSelectPhoto,
 }: EditorialPhotobookProps) {
+  const { lang, t } = useLanguage();
+
   const sectionsToRender =
     activeSection === "all"
       ? gallerySections.filter((s) => s.id !== "all")
@@ -47,6 +50,21 @@ export default function EditorialPhotobook({
     triggerHaptic("light");
     playTactileClick();
     onSelectPhoto?.(photo);
+  };
+
+  const getSectionHeader = (sec: SectionInfo) => {
+    if (lang === "th") {
+      if (sec.id === "personal") {
+        return { title: t("personalTitle"), desc: t("personalDesc") };
+      }
+      if (sec.id === "tu-photo") {
+        return { title: t("tuPhotoTitle"), desc: t("tuPhotoDesc") };
+      }
+      if (sec.id === "psctu") {
+        return { title: t("pscTuTitle"), desc: t("pscTuDesc") };
+      }
+    }
+    return { title: sec.folderName, desc: sec.description };
   };
 
   const renderPhotoCard = (
@@ -69,7 +87,7 @@ export default function EditorialPhotobook({
       >
         <div
           onClick={() => handlePhotoClick(photo)}
-          className="w-full relative bg-white p-3 sm:p-4 md:p-5 pb-5 md:pb-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-[#EBEBE6] rounded-xs cursor-pointer"
+          className="w-full relative bg-white dark:bg-[#151515] p-3 sm:p-4 md:p-5 pb-5 md:pb-6 shadow-sm hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 border border-[#EBEBE6] dark:border-[#262625] rounded-xs cursor-pointer"
         >
           {/* Image Container with Exact Native Aspect Ratio — Zero cropping, zero empty side padding */}
           <div
@@ -87,27 +105,27 @@ export default function EditorialPhotobook({
           </div>
 
           {/* Editorial Caption Bar */}
-          <div className="mt-3.5 px-0.5 flex flex-col gap-1.5 font-mono text-[10px] md:text-[11px] text-[#737373] border-t border-[#F0F0EA] pt-2.5">
+          <div className="mt-3.5 px-0.5 flex flex-col gap-1.5 font-mono text-[10px] md:text-[11px] text-[#737373] dark:text-[#9E9E9C] border-t border-[#F0F0EA] dark:border-[#222221] pt-2.5">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 min-w-0">
-                <span className="font-sans font-bold text-xs md:text-sm text-[#121212] tracking-tight truncate">
+                <span className="font-sans font-bold text-xs md:text-sm text-[#121212] dark:text-[#F5F5F3] tracking-tight truncate">
                   {photo.title}
                 </span>
-                <span className="text-[#E0E0DA]">/</span>
-                <span className="text-[#737373] truncate text-[11px]">{photo.series}</span>
+                <span className="text-[#E0E0DA] dark:text-[#3A3A39]">/</span>
+                <span className="text-[#737373] dark:text-[#9E9E9C] truncate text-[11px]">{photo.series}</span>
               </div>
               {photo.category && (
-                <span className="px-1.5 py-0.5 rounded-sm bg-[#F4F4F0] text-[9px] text-[#555] shrink-0 font-mono">
+                <span className="px-1.5 py-0.5 rounded-sm bg-[#F4F4F0] dark:bg-[#202020] text-[9px] text-[#555] dark:text-[#BBB] shrink-0 font-mono">
                   {photo.category}
                 </span>
               )}
             </div>
 
-            <div className="flex items-center justify-between gap-2 uppercase tracking-wider text-[10px] text-[#8C8C8C]">
+            <div className="flex items-center justify-between gap-2 uppercase tracking-wider text-[10px] text-[#8C8C8C] dark:text-[#888886]">
               <span className="truncate">
                 {photo.specs.camera} · {photo.specs.lens}
               </span>
-              <span className="text-[#121212] font-semibold shrink-0">
+              <span className="text-[#121212] dark:text-[#F5F5F3] font-semibold shrink-0">
                 {photo.specs.location}
               </span>
             </div>
@@ -125,6 +143,7 @@ export default function EditorialPhotobook({
 
         // Split photos into 2 balanced columns for tablet & desktop
         const columns = splitIntoBalancedColumns(sectionPhotos, 2);
+        const { title, desc } = getSectionHeader(section);
 
         return (
           <section
@@ -133,19 +152,23 @@ export default function EditorialPhotobook({
             className="mb-24 md:mb-32 scroll-mt-24"
           >
             {/* Chapter Cover / Section Header */}
-            <div className="border-b border-[#E5E5DF] pb-4 mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-2">
+            <div className="border-b border-[#E5E5DF] dark:border-[#282827] pb-4 mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-2">
               <div>
-                <div className="flex items-center gap-2 font-mono text-[10px] md:text-[11px] text-[#737373] tracking-widest uppercase mb-1">
-                  <span>CHAPTER {String(secIdx + 1).padStart(2, "0")}</span>
+                <div className="flex items-center gap-2 font-mono text-[10px] md:text-[11px] text-[#737373] dark:text-[#9E9E9C] tracking-widest uppercase mb-1">
+                  <span>
+                    {t("chapter")} {String(secIdx + 1).padStart(2, "0")}
+                  </span>
                   <span>/</span>
-                  <span>{sectionPhotos.length} PRINTS</span>
+                  <span>
+                    {sectionPhotos.length} {t("prints")}
+                  </span>
                 </div>
-                <h2 className="font-sans font-extrabold text-xl md:text-2xl text-[#121212] tracking-tight">
-                  {section.folderName}
+                <h2 className="font-sans font-extrabold text-xl md:text-2xl text-[#121212] dark:text-[#F5F5F3] tracking-tight">
+                  {title}
                 </h2>
               </div>
-              <p className="font-sans text-xs md:text-sm text-[#737373] max-w-md">
-                {section.description}
+              <p className="font-sans text-xs md:text-sm text-[#737373] dark:text-[#9E9E9C] max-w-md">
+                {desc}
               </p>
             </div>
 
@@ -194,25 +217,25 @@ export default function EditorialPhotobook({
       })}
 
       {/* Editorial Colophon Footer */}
-      <footer className="mt-20 pt-10 border-t border-[#E5E5DF] flex flex-col sm:flex-row items-baseline justify-between gap-4 text-[#737373] font-mono select-none">
+      <footer className="mt-20 pt-10 border-t border-[#E5E5DF] dark:border-[#282827] flex flex-col sm:flex-row items-baseline justify-between gap-4 text-[#737373] dark:text-[#9E9E9C] font-mono select-none">
         <div>
-          <div className="font-sans font-black text-lg text-[#121212] tracking-tight uppercase">
+          <div className="font-sans font-black text-lg text-[#121212] dark:text-[#F5F5F3] tracking-tight uppercase">
             CHAKARIN L.
           </div>
-          <div className="font-macintosh text-base text-[#737373] mt-0.5">
+          <div className="font-macintosh text-base text-[#737373] dark:text-[#9E9E9C] mt-0.5">
             BeamingMotion
           </div>
-          <div className="text-[10px] text-[#737373] mt-2 tracking-wider uppercase">
-            Photographer based in Bangkok
+          <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] mt-2 tracking-wider uppercase">
+            {t("tagline")}
           </div>
         </div>
 
         <div className="flex flex-col sm:items-end gap-1 text-[11px]">
-          <div className="font-semibold text-[#121212]">
+          <div className="font-semibold text-[#121212] dark:text-[#F5F5F3]">
             © CHAKARIN L. 2026
           </div>
-          <div className="text-[10px] text-[#737373] uppercase tracking-wider">
-            All Rights Reserved
+          <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider">
+            {t("allRightsReserved")} · Sony α7 III
           </div>
         </div>
       </footer>

@@ -3,23 +3,39 @@
 :root {
   --background: #FBFBF9;
   --foreground: #121212;
-  --surface: #F4F4F0;
-  --surface-bright: #F9F9F7;
+  --surface: #FFFFFF;
+  --surface-muted: #F4F4F0;
   --border: #E5E5DF;
+  --border-subtle: #EBEBE6;
   --muted: #737373;
   --accent: #FF3E00;
+  --nav-blur-bg: rgba(251, 251, 249, 0.94);
+  --nav-blur-mid: rgba(251, 251, 249, 0.72);
+}
+
+.dark {
+  --background: #0D0D0D;
+  --foreground: #F5F5F3;
+  --surface: #161616;
+  --surface-muted: #1E1E1E;
+  --border: #2B2B2A;
+  --border-subtle: #222221;
+  --muted: #9E9E9C;
+  --accent: #FF5722;
+  --nav-blur-bg: rgba(13, 13, 13, 0.94);
+  --nav-blur-mid: rgba(13, 13, 13, 0.72);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
-  --color-surface-bright: var(--surface-bright);
+  --color-surface-muted: var(--surface-muted);
   --color-border-subtle: var(--border);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
-  --font-sans: var(--font-anuphan), var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-anuphan), var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), var(--font-inter), monospace;
   --font-macintosh: var(--font-macintosh), cursive;
   --font-anuphan: var(--font-anuphan);
 }
@@ -30,12 +46,22 @@ html, body {
   font-family: var(--font-anuphan), var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   user-select: none;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+html.dark body {
+  background-color: #0D0D0D;
+  color: #F5F5F3;
 }
 
 /* Optical fine-grain texture overlay */
 .analog-grain {
   background-image: radial-gradient(rgba(18, 18, 18, 0.03) 1px, transparent 0);
   background-size: 24px 24px;
+}
+
+html.dark .analog-grain {
+  background-image: radial-gradient(rgba(245, 245, 243, 0.035) 1px, transparent 0);
 }
 
 /* Custom subtle scrollbar */
@@ -49,6 +75,31 @@ html, body {
   background: #D8D8D0;
   border-radius: 2px;
 }
+html.dark ::-webkit-scrollbar-thumb {
+  background: #333333;
+}
 ::-webkit-scrollbar-thumb:hover {
   background: #B0B0A8;
+}
+
+/* Progressive Blur for Top Navigation */
+.progressive-blur-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6rem;
+  pointer-events: none;
+  z-index: 30;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: linear-gradient(
+    to bottom,
+    var(--nav-blur-bg) 0%,
+    var(--nav-blur-mid) 60%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.85) 65%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.85) 65%, rgba(0, 0, 0, 0) 100%);
+  transition: opacity 0.2s ease;
 }

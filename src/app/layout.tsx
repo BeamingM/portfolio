@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Anuphan } from "next/font/google";
+import { Anuphan, Inter, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { LanguageProvider } from "@/context/LanguageContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "greek"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin", "greek"],
+  display: "swap",
 });
 
 const anuphan = Anuphan({
@@ -42,9 +46,13 @@ export default function RootLayout({
   return (
     <html
       lang="th"
-      className={`${geistSans.variable} ${geistMono.variable} ${anuphan.variable} ${macintoshCursive.variable}`}
+      className={`${anuphan.variable} ${inter.variable} ${jetbrainsMono.variable} ${macintoshCursive.variable}`}
     >
-      <body className="antialiased bg-[#FBFBF9] text-[#121212] font-sans">{children}</body>
+      <body className="antialiased bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] font-sans">
+        <ThemeProvider>
+          <LanguageProvider>{children}</LanguageProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

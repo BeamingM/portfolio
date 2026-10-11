@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { ExternalLink, CheckCircle2 } from "lucide-react";
 import { triggerHaptic } from "@/utils/haptics";
 import { playTactileClick } from "@/utils/sound";
+import { useLanguage } from "@/context/LanguageContext";
 
 function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
   return (
@@ -60,23 +61,25 @@ export default function InstagramEmbed({
     return () => clearTimeout(timer);
   }, []);
 
+  const { t } = useLanguage();
+
   return (
     <div className="w-full max-w-xl mx-auto my-12">
       {/* Editorial Plaque Header */}
-      <div className="bg-[#FFFFFF] border border-[#EBEBE6] border-b-0 rounded-t-sm p-4 md:p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#F0F0EA]">
+      <div className="bg-[#FFFFFF] dark:bg-[#161616] border border-[#EBEBE6] dark:border-[#282827] border-b-0 rounded-t-sm p-4 md:p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#F0F0EA] dark:border-[#222221]">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#121212] text-white">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212]">
               <InstagramIcon className="w-3.5 h-3.5" />
             </span>
             <div>
-              <div className="flex items-center gap-1.5 font-sans font-bold text-xs md:text-sm text-[#121212]">
+              <div className="flex items-center gap-1.5 font-sans font-bold text-xs md:text-sm text-[#121212] dark:text-[#F5F5F3]">
                 <span>TU Photo Club</span>
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#FF3E00]" />
-                <span className="text-[#737373] font-normal text-xs">(@tuphotoclub)</span>
+                <span className="text-[#737373] dark:text-[#9E9E9C] font-normal text-xs">(@tuphotoclub)</span>
               </div>
-              <div className="font-mono text-[10px] text-[#737373] uppercase tracking-wider">
-                Official Feature · Thammasat Orientation 2026
+              <div className="font-mono text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider">
+                {t("officialPublication")} · {t("orientationSeries")}
               </div>
             </div>
           </div>
@@ -89,24 +92,24 @@ export default function InstagramEmbed({
               triggerHaptic("light");
               playTactileClick();
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E5DF] bg-[#FBFBF9] hover:bg-[#121212] hover:text-white transition-colors font-mono text-[10px] text-[#121212] tracking-wider uppercase self-start sm:self-auto cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:bg-[#121212] dark:hover:bg-[#F5F5F3] hover:text-white dark:hover:text-[#121212] transition-colors font-mono text-[10px] text-[#121212] dark:text-[#F5F5F3] tracking-wider uppercase self-start sm:self-auto cursor-pointer"
           >
-            <span>View on IG</span>
+            <span>{t("viewOnIg")}</span>
             <ExternalLink className="w-3 h-3" />
           </a>
         </div>
 
         {/* Post Context & Credit Notice */}
-        <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-[10px] text-[#737373]">
+        <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-[10px] text-[#737373] dark:text-[#9E9E9C]">
           <div>
-            <span>SERIES: </span>
-            <span className="text-[#121212] font-semibold">Where We Are Irreplaceable</span>
-            <span className="text-[#E0E0DA]"> · </span>
-            <span>CREDIT: </span>
-            <span className="text-[#121212] font-semibold">@beamingmotion</span>
+            <span>{t("seriesLabel")}: </span>
+            <span className="text-[#121212] dark:text-[#F5F5F3] font-semibold">Where We Are Irreplaceable</span>
+            <span className="text-[#E0E0DA] dark:text-[#333]"> · </span>
+            <span>{t("creditLabel")}: </span>
+            <span className="text-[#121212] dark:text-[#F5F5F3] font-semibold">@beamingmotion</span>
           </div>
 
-          <span className="text-[9px] tracking-wider text-[#A3A3A3] uppercase">
+          <span className="text-[9px] tracking-wider text-[#A3A3A3] dark:text-[#666] uppercase">
             Official Feed Embed
           </span>
         </div>
@@ -115,7 +118,7 @@ export default function InstagramEmbed({
       {/* Instagram Embed Box (Captioned) */}
       <div
         ref={containerRef}
-        className="bg-[#FFFFFF] border border-[#EBEBE6] rounded-b-sm p-2 sm:p-4 flex justify-center items-center overflow-hidden min-h-[500px]"
+        className="bg-[#FFFFFF] dark:bg-[#161616] border border-[#EBEBE6] dark:border-[#282827] rounded-b-sm p-2 sm:p-4 flex justify-center items-center overflow-hidden min-h-[500px]"
       >
         <blockquote
           className="instagram-media"
