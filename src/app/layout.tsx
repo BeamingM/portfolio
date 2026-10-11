@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { Geist, Geist_Mono, Anuphan } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
+const anuphan = Anuphan({
+  variable: "--font-anuphan",
+  subsets: ["thai", "latin"],
+  display: "swap",
 });
 
 const macintoshCursive = localFont({
@@ -41,10 +41,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${macintoshCursive.variable}`}
+      lang="th"
+      className={`${geistSans.variable} ${geistMono.variable} ${anuphan.variable} ${macintoshCursive.variable}`}
     >
-      <body className="antialiased bg-[#FBFBF9] text-[#121212]">{children}</body>
+      <body className="antialiased bg-[#FBFBF9] text-[#121212] font-sans">{children}</body>
     </html>
   );
 }
