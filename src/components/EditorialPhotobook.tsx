@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import Image from "next/image";
 import { PhotoItem, gallerySections } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
@@ -14,6 +13,26 @@ interface EditorialPhotobookProps {
   onSelectPhoto?: (item: PhotoItem) => void;
 }
 
+// Balance photos into columns greedily based on aspect-ratio height so both columns finish at similar heights
+function splitIntoBalancedColumns(photos: PhotoItem[], colCount: number = 2) {
+  const cols: PhotoItem[][] = Array.from({ length: colCount }, () => []);
+  const heights = Array(colCount).fill(0);
+
+  photos.forEach((photo) => {
+    const ratio = (photo.height || 1600) / (photo.width || 2400);
+    let minIdx = 0;
+    for (let i = 1; i < colCount; i++) {
+      if (heights[i] < heights[minIdx]) {
+        minIdx = i;
+      }
+    }
+    cols[minIdx].push(photo);
+    heights[minIdx] += ratio;
+  });
+
+  return cols;
+}
+
 export default function EditorialPhotobook({
   items,
   activeSection,
@@ -24,17 +43,88 @@ export default function EditorialPhotobook({
       ? gallerySections.filter((s) => s.id !== "all")
       : gallerySections.filter((s) => s.id === activeSection);
 
-  const handlePhotoClick = (item: PhotoItem) => {
+  const handlePhotoClick = (photo: PhotoItem) => {
     triggerHaptic("light");
     playTactileClick();
-    onSelectPhoto?.(item);
+    onSelectPhoto?.(photo);
+  };
+
+  const renderPhotoCard = (
+    photo: PhotoItem,
+    pIdx: number,
+    totalCount: number,
+    priority: boolean = false
+  ) => {
+    const isPortrait = (photo.height || 0) > (photo.width || 0) * 1.15;
+    const aspectRatio = `${photo.width || (isPortrait ? 2 : 3)} / ${photo.height || (isPortrait ? 3 : 2)}`;
+
+    return (
+      <motion.article
+        key={photo.id}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full flex flex-col group"
+      >
+        <div
+          onClick={() => handlePhotoClick(photo)}
+          className="w-full relative bg-white p-3 sm:p-4 md:p-5 pb-5 md:pb-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-[#EBEBE6] rounded-xs cursor-pointer"
+        >
+          {/* Image Container with Exact Native Aspect Ratio — Zero cropping, zero empty side padding */}
+          <div
+            style={{ aspectRatio }}
+            className="relative w-full bg-[#121212] overflow-hidden rounded-3xs"
+          >
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1400px) 50vw, 680px"
+              priority={priority}
+              className="object-cover select-none group-hover:scale-101.5 transition-transform duration-700 ease-out"
+            />
+          </div>
+
+          {/* Editorial Caption Bar */}
+          <div className="mt-3.5 px-0.5 flex flex-col gap-1.5 font-mono text-[10px] md:text-[11px] text-[#737373] border-t border-[#F0F0EA] pt-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="font-sans font-bold text-xs md:text-sm text-[#121212] tracking-tight truncate">
+                  {photo.title}
+                </span>
+                <span className="text-[#E0E0DA]">/</span>
+                <span className="text-[#737373] truncate text-[11px]">{photo.series}</span>
+              </div>
+              {photo.category && (
+                <span className="px-1.5 py-0.5 rounded-sm bg-[#F4F4F0] text-[9px] text-[#555] shrink-0 font-mono">
+                  {photo.category}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between gap-2 uppercase tracking-wider text-[10px] text-[#8C8C8C]">
+              <span className="truncate">
+                {photo.specs.camera} · {photo.specs.lens}
+              </span>
+              <span className="text-[#121212] font-semibold shrink-0">
+                {photo.specs.location}
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.article>
+    );
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 md:px-8 py-8 pb-32">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-8 pb-32">
       {sectionsToRender.map((section, secIdx) => {
         const sectionPhotos = items.filter((p) => p.sectionId === section.id);
         if (sectionPhotos.length === 0) return null;
+
+        // Split photos into 2 balanced columns for tablet & desktop
+        const columns = splitIntoBalancedColumns(sectionPhotos, 2);
 
         return (
           <section
@@ -43,7 +133,7 @@ export default function EditorialPhotobook({
             className="mb-24 md:mb-32 scroll-mt-24"
           >
             {/* Chapter Cover / Section Header */}
-            <div className="border-b border-[#E5E5DF] pb-4 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-2">
+            <div className="border-b border-[#E5E5DF] pb-4 mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-2">
               <div>
                 <div className="flex items-center gap-2 font-mono text-[10px] md:text-[11px] text-[#737373] tracking-widest uppercase mb-1">
                   <span>CHAPTER {String(secIdx + 1).padStart(2, "0")}</span>
@@ -60,79 +150,44 @@ export default function EditorialPhotobook({
             </div>
 
             {/* Featured Official Instagram Publication */}
-            {section.id === "tu-photo" && <InstagramEmbed />}
+            {section.id === "tu-photo" && (
+              <div className="mb-12 w-full max-w-xl mx-auto">
+                <InstagramEmbed />
+              </div>
+            )}
 
-            {/* Vertical Flow of Photobook Plates */}
-            <div className="space-y-16 md:space-y-24">
-              {sectionPhotos.map((photo, pIdx) => {
-                const isPortrait = (photo.height || 0) > (photo.width || 0) * 1.15;
+            {/* Mobile View: Sequential Single Column */}
+            <div className="flex flex-col gap-6 sm:gap-8 md:hidden">
+              {sectionPhotos.map((photo, pIdx) =>
+                renderPhotoCard(
+                  photo,
+                  pIdx,
+                  sectionPhotos.length,
+                  secIdx === 0 && pIdx === 0
+                )
+              )}
+            </div>
 
-                return (
-                  <motion.article
-                    key={photo.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    className="flex flex-col items-center justify-center group"
-                  >
-                    {/* Photobook Exhibition Plate */}
-                    <div
-                      onClick={() => handlePhotoClick(photo)}
-                      className={`relative bg-white p-3 md:p-5 pb-6 md:pb-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#EBEBE6] rounded-xs cursor-pointer ${
-                        isPortrait
-                          ? "w-full max-w-md md:max-w-lg"
-                          : "w-full max-w-3xl md:max-w-4xl"
-                      }`}
-                    >
-                      {/* Image Container with Exact Native Aspect Ratio */}
-                      <div
-                        style={{
-                          aspectRatio: `${photo.width || (isPortrait ? 2 : 3)} / ${photo.height || (isPortrait ? 3 : 2)}`,
-                        }}
-                        className="relative w-full bg-[#121212] overflow-hidden rounded-3xs"
-                      >
-                        <Image
-                          src={photo.src}
-                          alt={photo.alt}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 1200px"
-                          priority={secIdx === 0 && pIdx === 0}
-                          className="object-cover select-none group-hover:scale-101.5 transition-transform duration-700 ease-out"
-                        />
-                      </div>
+            {/* Tablet & Desktop View: Adaptive Balanced 2-Column Grid */}
+            <div className="hidden md:grid md:grid-cols-2 gap-6 lg:gap-8 items-start">
+              {/* Column 1 */}
+              <div className="flex flex-col gap-6 lg:gap-8">
+                {columns[0].map((photo, pIdx) =>
+                  renderPhotoCard(
+                    photo,
+                    pIdx,
+                    sectionPhotos.length,
+                    secIdx === 0 && pIdx === 0
+                  )
+                )}
+              </div>
 
-                      {/* Editorial Matting Caption Below Image */}
-                      <div className="mt-4 px-1 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 font-mono text-[10px] md:text-[11px] text-[#737373] border-t border-[#F0F0EA] pt-3">
-                        <div className="flex items-center gap-2">
-                          <span className="font-sans font-bold text-xs md:text-sm text-[#121212] tracking-tight">
-                            {photo.title}
-                          </span>
-                          <span className="text-[#E0E0DA]">/</span>
-                          <span className="text-[#737373]">{photo.series}</span>
-                          {photo.category && (
-                            <span className="px-1.5 py-0.5 rounded-sm bg-[#F4F4F0] text-[9px] text-[#555]">
-                              {photo.category}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-2.5 uppercase tracking-wider text-[10px]">
-                          <span>
-                            {photo.specs.camera} · {photo.specs.lens}
-                          </span>
-                          <span className="text-[#E0E0DA]">·</span>
-                          <span>{photo.specs.location}</span>
-                          <span className="text-[#E0E0DA]">·</span>
-                          <span className="text-[#121212] font-bold">
-                            {String(pIdx + 1).padStart(2, "0")} / {String(sectionPhotos.length).padStart(2, "0")}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.article>
-                );
-              })}
+              {/* Column 2 */}
+              <div className="flex flex-col gap-6 lg:gap-8">
+                {columns[1].map((photo, pIdx) =>
+                  renderPhotoCard(photo, pIdx, sectionPhotos.length, false)
+                )}
+              </div>
             </div>
           </section>
         );
