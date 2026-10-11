@@ -6,6 +6,7 @@ import SectionFilterBar from "@/components/SectionFilterBar";
 import EditorialPhotobook from "@/components/EditorialPhotobook";
 import PhotoModal from "@/components/PhotoModal";
 import AtelierDrawer from "@/components/AtelierDrawer";
+import FigmaCanvasOverlay from "@/components/FigmaCanvasOverlay";
 import { galleryItems, gallerySections, PhotoItem } from "@/config/gallery";
 
 export default function Home() {
@@ -109,6 +110,9 @@ export default function Home() {
         isOpen={isAtelierOpen}
         onClose={() => setIsAtelierOpen(false)}
       />
+
+      {/* Interactive Figma / Canva Canvas Gimmick */}
+      <FigmaCanvasOverlay />
     </main>
   );
 }
