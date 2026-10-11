@@ -7,6 +7,9 @@ export interface PhotoItem {
   series: string;
   caption: string;
   category?: string;
+  width: number;
+  height: number;
+  orientation?: "landscape" | "portrait" | "square";
   specs: {
     camera?: string;
     lens?: string;
@@ -29,6 +32,9 @@ export const galleryItems: PhotoItem[] = [
     series: "Bangkok Streets",
     category: "Night Street",
     caption: "Rain on asphalt. Wet neon reflections cutting through humid night air.",
+    width: 2400,
+    height: 1600,
+    orientation: "landscape",
     specs: {
       camera: "SONY A7III",
       lens: "FE 35MM F1.8",
@@ -48,6 +54,9 @@ export const galleryItems: PhotoItem[] = [
     series: "Bangkok Streets",
     category: "Documentary",
     caption: "Morning shadows elongating across cracked lime plaster walls.",
+    width: 1600,
+    height: 2400,
+    orientation: "portrait",
     specs: {
       camera: "SONY A7III",
       lens: "FE 35MM F1.8",
@@ -67,6 +76,9 @@ export const galleryItems: PhotoItem[] = [
     series: "River Transit",
     category: "Architecture",
     caption: "Heavy concrete pontoons swaying in tidal river swell under noon sun.",
+    width: 1600,
+    height: 2400,
+    orientation: "portrait",
     specs: {
       camera: "SONY A7III",
       lens: "FE 55MM F1.8 ZA",
@@ -86,6 +98,9 @@ export const galleryItems: PhotoItem[] = [
     series: "Urban Geometry",
     category: "Street",
     caption: "Cantilevered overpasses cast in monolithic streetlamp amber.",
+    width: 1600,
+    height: 2400,
+    orientation: "portrait",
     specs: {
       camera: "SONY A7III",
       lens: "FE 55MM F1.8 ZA",
@@ -105,6 +120,9 @@ export const galleryItems: PhotoItem[] = [
     series: "Field Trip 2026",
     category: "Documentary",
     caption: "Morning low tide uncovering linear sandbars and early fishermen.",
+    width: 1600,
+    height: 2400,
+    orientation: "portrait",
     specs: {
       camera: "SONY A7III",
       lens: "FE 35MM F1.8",
@@ -124,6 +142,9 @@ export const galleryItems: PhotoItem[] = [
     series: "Bangkok Streets",
     category: "Street",
     caption: "Decades of engine oil and lathe shavings ground into sandstone flags.",
+    width: 2400,
+    height: 1600,
+    orientation: "landscape",
     specs: {
       camera: "SONY A7III",
       lens: "FE 55MM F1.8 ZA",

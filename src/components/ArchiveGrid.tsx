@@ -12,7 +12,7 @@ interface ArchiveGridProps {
 }
 
 export default function ArchiveGrid({ items, onSelectPhoto }: ArchiveGridProps) {
-  const tilts = [-1.5, 1.2, -0.8, 1.6, -1.2, 0.7];
+  const tilts = [-1.2, 1.0, -0.8, 1.4, -1.0, 0.6];
 
   const handleSelect = (index: number) => {
     triggerHaptic("snap");
@@ -25,8 +25,8 @@ export default function ArchiveGrid({ items, onSelectPhoto }: ArchiveGridProps) 
       {/* Header Label */}
       <div className="flex items-baseline justify-between border-b border-[#E5E5DF] pb-4 mb-8 font-mono text-xs">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-xs bg-[#D9381E]" />
-          <span className="text-[#121212] font-semibold tracking-wider uppercase">
+          <span className="w-2 h-2 rounded-xs bg-[#FF3E00]" />
+          <span className="text-[#121212] font-bold tracking-wider uppercase">
             CONTACT SHEET / ARCHIVE
           </span>
           <span className="text-[#737373]">[{items.length} PRINTS]</span>
@@ -36,23 +36,30 @@ export default function ArchiveGrid({ items, onSelectPhoto }: ArchiveGridProps) 
         </span>
       </div>
 
-      {/* Scattered Prints Grid (Light Table Aesthetic) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      {/* Scattered Prints Grid (Light Table Aesthetic with Real Aspect Ratios) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-start">
         {items.map((item, index) => {
           const tilt = tilts[index % tilts.length];
+          const isPortrait = (item.height || 0) > (item.width || 0) * 1.15;
+
           return (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.06 }}
-              whileHover={{ scale: 1.03, rotate: 0, zIndex: 10 }}
+              transition={{ delay: index * 0.05 }}
+              whileHover={{ scale: 1.025, rotate: 0, zIndex: 10 }}
               style={{ rotate: `${tilt}deg` }}
               onClick={() => handleSelect(index)}
-              className="bg-white p-3 pb-6 rounded-xs border border-[#E5E5DF] shadow-md hover:shadow-2xl transition-shadow cursor-pointer group flex flex-col justify-between"
+              className="bg-white p-3 pb-5 rounded-xs border border-[#E5E5DF] shadow-md hover:shadow-2xl transition-shadow cursor-pointer group flex flex-col justify-between"
             >
-              {/* Photo */}
-              <div className="relative w-full aspect-3/2 bg-[#121212] overflow-hidden rounded-3xs">
+              {/* Photo with true aspect ratio */}
+              <div
+                style={{
+                  aspectRatio: `${item.width || (isPortrait ? 2 : 3)} / ${item.height || (isPortrait ? 3 : 2)}`,
+                }}
+                className="relative w-full bg-[#121212] overflow-hidden rounded-3xs"
+              >
                 <Image
                   src={item.src}
                   alt={item.title}
@@ -68,7 +75,15 @@ export default function ArchiveGrid({ items, onSelectPhoto }: ArchiveGridProps) 
                   <span className="font-sans text-[#121212] font-bold text-xs block">
                     {item.title}
                   </span>
-                  <span className="text-[9px] text-[#737373]">{item.series}</span>
+                  <div className="flex items-center gap-1.5 mt-0.5 text-[9px] text-[#737373]">
+                    <span>{item.series}</span>
+                    {item.category && (
+                      <>
+                        <span>·</span>
+                        <span className="text-[#121212]">{item.category}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
                 <div className="text-right">
                   <span className="font-bold text-[#121212]">
