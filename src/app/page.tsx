@@ -79,8 +79,12 @@ export default function Home() {
         {/* Authentic Apple-Style Floating Narrative Greeting (No boxes, no badges, pure typography) */}
         <ProjectDescriptionHeader activeSection={activeSection} />
 
-        {/* Spacer where the Unified Morphing Filter Bar sits at scroll 0 */}
-        <div className="h-14 sm:h-16" aria-hidden="true" />
+        {/* Anchor slot where the Unified Morphing Filter Bar sits cleanly below greeting at scroll 0 */}
+        <div
+          id="hero-filter-anchor"
+          className="w-full h-12 sm:h-14 flex items-center justify-center my-3 pointer-events-none"
+          aria-hidden="true"
+        />
       </section>
 
       {/* Editorial Photobook Exhibition Showcase */}

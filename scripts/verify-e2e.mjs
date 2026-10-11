@@ -215,12 +215,21 @@ test("PhotoDeckStack: Natural fling swipe physics, consistent keying & tap inspe
   assert(stackCode.includes("Sony α7 III"), "PhotoDeckStack must strictly display Sony α7 III invariant");
 });
 
-test("TopNav: Unified Morphing Filter Bar sits directly beside BrandMark with generous clearance", () => {
+test("TopNav: Unified Morphing Filter Bar dynamically measures hero-filter-anchor to prevent text collision", () => {
   const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
-  assert(topNavCode.includes("navLinks.map"), "TopNav must render project filter tabs");
+  const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
+  assert(pageCode.includes('id="hero-filter-anchor"'), "page.tsx must provide hero-filter-anchor slot below greeting");
+  assert(topNavCode.includes("heroFilterTop"), "TopNav must dynamically measure and interpolate heroFilterTop");
+  assert(topNavCode.includes("hero-filter-anchor"), "TopNav must measure hero-filter-anchor DOM element");
   assert(topNavCode.includes("brandMarkClearance"), "TopNav must maintain exact clearance from BrandMark");
-  assert(topNavCode.includes("heroTop"), "TopNav must interpolate filter bar position from hero to navTop");
-  assert(!topNavCode.includes("onSelectMode"), "TopNav must be streamlined without redundant mode toggle props");
+});
+
+test("InteractivePrintCard: Documentary metadata bar preserves Sony α7 III invariant without SONY ... truncation", () => {
+  const cardCode = fs.readFileSync(path.join(root, "src/components/InteractivePrintCard.tsx"), "utf-8");
+  assert(cardCode.includes("Sony α7 III"), "PrintCard must maintain Sony α7 III invariant");
+  assert(cardCode.includes("photo.series"), "PrintCard must display project series name");
+  assert(cardCode.includes("photo.specs.location"), "PrintCard must display location");
+  assert(!cardCode.includes("max-w-[200px]"), "PrintCard must not constrain camera container with cramped max-width");
 });
 
 // -----------------------------------------------------------------

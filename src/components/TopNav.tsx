@@ -38,7 +38,39 @@ export default function TopNav({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const [heroFilterTop, setHeroFilterTop] = useState(1200 > 768 ? 390 : 430);
+
+  // Measure exact position of hero filter anchor in DOM, adjusting dynamically for any text length or language
+  useEffect(() => {
+    const measureAnchor = () => {
+      const anchor = document.getElementById("hero-filter-anchor");
+      if (anchor) {
+        const rect = anchor.getBoundingClientRect();
+        const scroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const actualTop = rect.top + scroll;
+        if (actualTop > 100) {
+          setHeroFilterTop(Math.round(actualTop));
+        }
+      }
+    };
+
+    measureAnchor();
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.ready.then(measureAnchor);
+    }
+    const t1 = setTimeout(measureAnchor, 60);
+    const t2 = setTimeout(measureAnchor, 300);
+    window.addEventListener("resize", measureAnchor);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener("resize", measureAnchor);
+    };
+  }, [activeSection, lang, windowWidth, isMobile]);
+
   // Robust native scroll listener guaranteeing smooth progress on mobile & desktop
+  const scrollThreshold = Math.max(heroFilterTop - (isMobile ? 14 : 18) - 100, 180);
+
   useEffect(() => {
     const handleScroll = () => {
       const scroll =
@@ -47,8 +79,8 @@ export default function TopNav({
         document.documentElement.scrollTop ||
         document.body.scrollTop ||
         0;
-      // 0 at top of hero, 1 once scrolled past 140px
-      const raw = Math.min(Math.max(scroll / 140, 0), 1);
+      // 0 at top of hero, 1 once scrolled past hero anchor
+      const raw = Math.min(Math.max(scroll / scrollThreshold, 0), 1);
       // Smoothstep curve: 3x^2 - 2x^3
       const eased = raw * raw * (3 - 2 * raw);
       setProgress(eased);
@@ -61,7 +93,7 @@ export default function TopNav({
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("touchmove", handleScroll);
     };
-  }, []);
+  }, [scrollThreshold]);
 
   const navLinks = [
     { id: "all", label: t("navAll") },
@@ -78,7 +110,6 @@ export default function TopNav({
   const isDesktop = windowWidth >= 1024;
   const brandMarkClearance = isDesktop ? 315 : 138;
   const navLeft = sidePad + brandMarkClearance;
-  const heroTop = isMobile ? 230 : 240;
   const navTop = isMobile ? 14 : 18;
 
   return (
@@ -126,7 +157,7 @@ export default function TopNav({
           style={{
             position: "absolute",
             left: `calc(${navLeft}px + ${factor} * (50% - ${navLeft}px))`,
-            top: `${navTop + factor * (heroTop - navTop)}px`,
+            top: `${navTop + factor * (heroFilterTop - navTop)}px`,
             transform: `translate3d(-${factor * 50}%, 0, 0)`,
             willChange: "left, top, transform",
             maxWidth:
