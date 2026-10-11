@@ -54,12 +54,12 @@ export default function TopNav({
   ];
 
   // Dynamic calculations for Hero -> Top-Left morph
-  const sidePadding = isMobile ? 16 : 32; // px-4 vs px-8
+  const sidePadding = isMobile ? 16 : 32; // px-4 vs px-8 fallback
   const factor = 1 - progress;
   // Exact horizontal centering formula with top-left transform-origin and scale factor
-  const xOffset = `calc(${factor} * (50vw - ${sidePadding}px - 65%))`;
+  const xOffset = `calc(${factor} * (50vw - var(--nav-pad, ${sidePadding}px) - 65%))`;
   // Vertical travel distance to align with hero spacer across all screen sizes
-  const yOffset = `calc(${factor} * ${isMobile ? 116 : 126}px)`;
+  const yOffset = `calc(${factor} * var(--hero-y, ${isMobile ? 116 : 126}px))`;
   const scale = 1 + factor * 0.3;
 
   return (
@@ -75,7 +75,7 @@ export default function TopNav({
       />
 
       {/* 2. Top Navigation Bar (z-40 floating above blur) */}
-      <header className="fixed top-0 left-0 w-full z-40 h-16 flex items-center justify-between px-4 md:px-8 select-none pointer-events-none">
+      <header className="fixed top-0 left-0 w-full z-40 h-16 flex items-center justify-between px-4 md:px-8 select-none pointer-events-none [--nav-pad:16px] md:[--nav-pad:32px] [--hero-y:116px] md:[--hero-y:126px]">
         {/* Left: Morphing BrandMark (starts centered in hero at scroll 0, morphs to top-left) */}
         <div
           style={{
@@ -83,23 +83,23 @@ export default function TopNav({
             transformOrigin: "top left",
             willChange: "transform",
           }}
-          className="pointer-events-auto cursor-pointer"
+          className={`pointer-events-auto ${progress > 0.3 ? "cursor-pointer" : "cursor-default"}`}
           onClick={() => {
             if (progress > 0.3) {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
         >
-          <BrandMark
-            isCenter={progress < 0.05}
-            centerFactor={factor}
-          />
+          <BrandMark centerFactor={factor} />
         </div>
 
         {/* Center: Editorial Project Index Links (Visible on desktop) */}
         <nav
-          style={{ opacity: Math.max(0, (progress - 0.2) / 0.8) }}
-          className="hidden md:flex items-center gap-1 font-mono text-[11px] pointer-events-auto transition-opacity duration-200"
+          style={{
+            opacity: Math.max(0, (progress - 0.2) / 0.8),
+            pointerEvents: progress > 0.25 ? "auto" : "none",
+          }}
+          className="hidden md:flex items-center gap-1 font-mono text-[11px]"
         >
           {navLinks.map((link) => {
             const isActive = activeSection === link.id;
