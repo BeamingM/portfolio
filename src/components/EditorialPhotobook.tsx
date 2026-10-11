@@ -247,7 +247,7 @@ export default function EditorialPhotobook({
             © CHAKARIN L. 2026
           </div>
           <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider">
-            {t("allRightsReserved")} · Sony α7 III
+            {t("allRightsReserved")}
           </div>
         </div>
       </footer>
