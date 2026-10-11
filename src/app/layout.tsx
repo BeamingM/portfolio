@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,10 +19,16 @@ const newsreader = Newsreader({
   style: ["normal", "italic"],
 });
 
+const macintoshCursive = localFont({
+  src: "../fonts/MacintoshSkeletalFilled.otf",
+  variable: "--font-macintosh",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "CHAKARIN L. — Visual Media & Photography",
+  title: "BeamingMotion — Chakarin L. | Photography & Field Notes",
   description:
-    "Observational photography and curated visual media portfolio by Chakarin L., Bangkok.",
+    "Observational street and documentary photography by Chakarin L. (BeamingMotion), Bangkok.",
   icons: {
     icon: "/favicon.ico",
   },
@@ -35,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${macintoshCursive.variable}`}
     >
       <body className="antialiased bg-[#FBFBF9] text-[#121212]">{children}</body>
     </html>

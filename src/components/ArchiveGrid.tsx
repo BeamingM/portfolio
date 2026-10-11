@@ -65,7 +65,7 @@ export default function ArchiveGrid({ items, onSelectPhoto }: ArchiveGridProps) 
               {/* Matting Caption */}
               <div className="mt-3 px-1 flex items-baseline justify-between font-mono text-[10px] text-[#737373]">
                 <div>
-                  <span className="font-serif text-[#121212] font-medium text-xs block">
+                  <span className="font-sans text-[#121212] font-bold text-xs block">
                     {item.title}
                   </span>
                   <span className="text-[9px] text-[#737373]">{item.series}</span>

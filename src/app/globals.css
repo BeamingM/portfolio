@@ -7,7 +7,7 @@
   --surface-bright: #F9F9F7;
   --border: #E5E5DF;
   --muted: #737373;
-  --accent: #D9381E;
+  --accent: #FF3E00;
 }
 
 @theme inline {
@@ -21,6 +21,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-newsreader), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-macintosh: var(--font-macintosh), cursive;
 }
 
 html, body {
@@ -33,7 +34,7 @@ html, body {
 
 /* Optical fine-grain texture overlay */
 .analog-grain {
-  background-image: radial-gradient(rgba(18, 18, 18, 0.04) 1px, transparent 0);
+  background-image: radial-gradient(rgba(18, 18, 18, 0.03) 1px, transparent 0);
   background-size: 24px 24px;
 }
 

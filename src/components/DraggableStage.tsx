@@ -109,22 +109,27 @@ export default function DraggableStage({
               />
             </div>
 
-            {/* Polaroid / Fine Art Matting Caption Below Image */}
+            {/* Modern Clean Photo Matting & Info */}
             <div className="mt-3.5 md:mt-4 px-1 flex items-baseline justify-between font-mono text-[10px] md:text-[11px] text-[#737373]">
               <div className="flex items-center gap-2">
-                <span className="font-serif text-[#121212] font-semibold text-xs md:text-sm tracking-tight">
+                <span className="font-sans text-[#121212] font-bold text-xs md:text-sm tracking-tight">
                   {currentPhoto.title}
                 </span>
                 <span className="text-[#E5E5DF]">/</span>
                 <span className="text-[10px] text-[#737373] hidden sm:inline">
                   {currentPhoto.series}
                 </span>
+                {currentPhoto.category && (
+                  <span className="hidden md:inline px-1.5 py-0.5 rounded-sm bg-[#F4F4F0] text-[9px] text-[#555]">
+                    {currentPhoto.category}
+                  </span>
+                )}
               </div>
 
               <div className="flex items-center gap-2 text-[10px] tracking-wider uppercase">
                 <span>{currentPhoto.specs.location || "BANGKOK"}</span>
                 <span className="text-[#E5E5DF]">·</span>
-                <span className="text-[#121212] font-semibold">
+                <span className="text-[#121212] font-bold">
                   {String(currentIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
                 </span>
               </div>

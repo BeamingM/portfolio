@@ -8,26 +8,31 @@ interface BrandMarkProps {
 export default function BrandMark({ showSubtitle = true, className = "" }: BrandMarkProps) {
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
-      {/* Vermilion Artist Hankō Stamp (Inspired by Bill Guo / Japanese Art Seals) */}
-      <div className="relative w-8 h-8 rounded-xs bg-[#D9381E] flex items-center justify-center shadow-xs overflow-hidden border border-[#B32612]/30 transition-transform active:scale-95 cursor-pointer group">
-        {/* Subtle stamped texture overlay */}
-        <div className="absolute inset-0 bg-white/10 mix-blend-overlay pointer-events-none" />
-        <span className="font-serif text-[13px] font-bold tracking-tighter text-[#FFFDF9] select-none leading-none pt-0.5">
+      {/* Modern Monogram Icon with Macintosh Skeletal Script */}
+      <div className="relative w-8 h-8 rounded-lg bg-[#121212] text-white flex items-center justify-center shadow-xs transition-transform active:scale-95 cursor-pointer group">
+        <span className="font-macintosh text-[17px] text-white leading-none pt-0.5">
           CL
         </span>
-        {/* Tiny corner ink bleeds */}
-        <div className="absolute -top-0.5 -right-0.5 w-1 h-1 bg-[#FBFBF9] rounded-full" />
+        <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#FF3E00]" />
       </div>
 
-      {/* Bespoke Editorial Typographic Wordmark (Strictly No Camera Icons) */}
+      {/* Dual Typographic Lockup: Bold Modern Sans + Apple Macintosh Cursive Calligraphy */}
       <div className="flex flex-col">
-        <span className="font-serif text-[15px] md:text-[17px] font-medium tracking-[0.18em] text-[#121212] uppercase leading-none">
-          CHAKARIN L.
-        </span>
-        {showSubtitle && (
-          <span className="font-mono text-[9px] tracking-[0.24em] text-[#737373] uppercase mt-1">
-            Bangkok · Fine Art
+        <div className="flex items-baseline gap-2">
+          <span className="font-sans text-[15px] md:text-[17px] font-extrabold tracking-[-0.03em] text-[#121212] leading-none">
+            BeamingMotion
           </span>
+          <span className="text-[#D1D1CB] text-xs">·</span>
+          <span className="font-macintosh text-[19px] md:text-[21px] text-[#121212] leading-none">
+            Chakarin L.
+          </span>
+        </div>
+        {showSubtitle && (
+          <div className="flex items-center gap-1.5 mt-1 font-mono text-[9px] tracking-[0.12em] text-[#737373] uppercase">
+            <span>Bangkok</span>
+            <span className="text-[#D1D1CB]">/</span>
+            <span>Observational Photography</span>
+          </div>
         )}
       </div>
     </div>

@@ -128,8 +128,8 @@ export default function PolaroidDock({
           type="button"
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E5DF] bg-[#F4F4F0] hover:bg-[#121212] hover:text-white text-[#121212] transition-colors cursor-pointer text-[10px] md:text-[11px] font-mono tracking-wider shadow-2xs shrink-0"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#D9381E] animate-pulse" />
-          <span>[ATELIER]</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#FF3E00] animate-pulse" />
+          <span>[INFO]</span>
         </button>
       </div>
     </div>
