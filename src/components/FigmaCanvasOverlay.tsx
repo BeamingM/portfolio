@@ -14,23 +14,34 @@ export default function FigmaCanvasOverlay() {
   const { resolvedTheme } = useTheme();
   const [isFinePointer, setIsFinePointer] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMouseDown, setIsMouseDown] = useState(false);
   const [cursorContext, setCursorContext] = useState<CursorContext>({ type: "default" });
   const [coords, setCoords] = useState({ x: 0, y: 0 });
 
+  // Direct mouse positions for 0-latency crisp cursor replacement
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  // Smooth spring following like Figma multiplayer cursor
-  const springX = useSpring(mouseX, { damping: 25, stiffness: 350, mass: 0.5 });
-  const springY = useSpring(mouseY, { damping: 25, stiffness: 350, mass: 0.5 });
+  // Soft trailing spring for the floating badge tag (like Figma multiplayer name tag)
+  const tagX = useSpring(mouseX, { damping: 28, stiffness: 300, mass: 0.4 });
+  const tagY = useSpring(mouseY, { damping: 28, stiffness: 300, mass: 0.4 });
 
   useEffect(() => {
     // Only enable on desktop mouse/trackpad viewports
     const mediaQuery = window.matchMedia("(pointer: fine)");
     setIsFinePointer(mediaQuery.matches);
 
+    if (mediaQuery.matches) {
+      document.documentElement.classList.add("figma-cursor-active");
+    }
+
     const handleMediaChange = (e: MediaQueryListEvent) => {
       setIsFinePointer(e.matches);
+      if (e.matches) {
+        document.documentElement.classList.add("figma-cursor-active");
+      } else {
+        document.documentElement.classList.remove("figma-cursor-active");
+      }
     };
     mediaQuery.addEventListener("change", handleMediaChange);
 
@@ -71,16 +82,28 @@ export default function FigmaCanvasOverlay() {
       setCursorContext({ type: "default" });
     };
 
+    const handleMouseDown = () => setIsMouseDown(true);
+    const handleMouseUp = () => setIsMouseDown(false);
+
+    const handleMouseEnter = () => setIsVisible(true);
     const handleMouseLeave = () => {
       setIsVisible(false);
+      setIsMouseDown(false);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mouseenter", handleMouseEnter);
     document.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      document.documentElement.classList.remove("figma-cursor-active");
       mediaQuery.removeEventListener("change", handleMediaChange);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [mouseX, mouseY, isVisible]);
@@ -90,9 +113,12 @@ export default function FigmaCanvasOverlay() {
   const isDark = resolvedTheme === "dark";
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden select-none" aria-hidden="true">
+    <div
+      className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden select-none"
+      aria-hidden="true"
+    >
       {/* 1. Figma-style Canvas Coordinate HUD in bottom-right corner */}
-      <div className="fixed bottom-4 right-4 hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#F4F4F0]/90 dark:bg-[#1A1A19]/90 border border-[#E5E5DF] dark:border-[#282827] backdrop-blur-xs font-mono text-[9px] tracking-wider text-[#737373] dark:text-[#9E9E9C] shadow-2xs transition-opacity">
+      <div className="fixed bottom-4 right-4 hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#F4F4F0]/90 dark:bg-[#1A1A19]/90 border border-[#E5E5DF] dark:border-[#282827] backdrop-blur-xs font-mono text-[9px] tracking-wider text-[#737373] dark:text-[#9E9E9C] shadow-2xs">
         <span className="flex items-center gap-1 font-semibold text-[#121212] dark:text-[#F5F5F3]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#FF3E00] animate-pulse" />
           FIGMA HUD
@@ -104,68 +130,80 @@ export default function FigmaCanvasOverlay() {
         <span className="font-semibold text-[#FF3E00] dark:text-[#FF5722]">100%</span>
       </div>
 
-      {/* 2. Interactive Figma-Style Cursor with Badge Tag */}
+      {/* 2. Primary Figma Vector Cursor (Zero-latency direct follow) */}
       <motion.div
         style={{
-          x: springX,
-          y: springY,
+          x: mouseX,
+          y: mouseY,
         }}
-        className="absolute top-0 left-0"
+        className="fixed top-0 left-0"
       >
-        {/* Figma Arrow Pointer */}
-        <div className="relative -top-1 -left-1">
+        <div
+          style={{
+            transform: `translate(-2px, -2px) scale(${isMouseDown ? 0.88 : 1})`,
+            transformOrigin: "top left",
+            transition: "transform 0.08s cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+          className="relative pointer-events-none"
+        >
+          {/* Authentic Figma Canvas Vector Pointer */}
           <svg
-            width="20"
-            height="20"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
-            className="drop-shadow-sm transition-transform duration-150"
-            style={{
-              transform: cursorContext.type === "photo" ? "scale(1.15) rotate(-6deg)" : "scale(1)",
-            }}
+            className="drop-shadow-md"
           >
-            {/* Outer dark/light stroke */}
+            {/* Outer high-contrast stroke + inner fill */}
             <path
-              d="M5.5 3.5L18.5 13.5L12 14.5L9.5 20.5L5.5 3.5Z"
-              fill={cursorContext.type === "photo" ? "#FF3E00" : isDark ? "#F5F5F3" : "#121212"}
+              d="M3 3L10.5 21L13.5 13.5L21 10.5L3 3Z"
+              fill={cursorContext.type === "photo" ? "#FF3E00" : isDark ? "#FFFFFF" : "#0D0D0D"}
               stroke={isDark ? "#000000" : "#FFFFFF"}
-              strokeWidth="1.5"
+              strokeWidth="1.6"
               strokeLinejoin="round"
             />
           </svg>
-
-          {/* Figma Cursor Badge Tag */}
-          {cursorContext.type !== "default" && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, x: 10, y: 0 }}
-              animate={{ opacity: 1, scale: 1, x: 16, y: 4 }}
-              exit={{ opacity: 0, scale: 0.85 }}
-              transition={{ duration: 0.15 }}
-              className="absolute left-0 top-0 whitespace-nowrap flex flex-col items-start gap-0.5 px-2 py-0.5 rounded-sm shadow-md"
-              style={{
-                backgroundColor:
-                  cursorContext.type === "photo"
-                    ? "#FF3E00"
-                    : cursorContext.type === "email"
-                    ? "#0D99FF"
-                    : isDark
-                    ? "#282827"
-                    : "#121212",
-                color: "#FFFFFF",
-              }}
-            >
-              <div className="flex items-center gap-1 font-mono text-[9px] font-bold tracking-wider uppercase">
-                <span>{cursorContext.label}</span>
-              </div>
-              {cursorContext.specs && (
-                <div className="font-mono text-[8px] text-white/80 font-normal tracking-tight">
-                  {cursorContext.specs}
-                </div>
-              )}
-            </motion.div>
-          )}
         </div>
       </motion.div>
+
+      {/* 3. Trailing Figma Tag Badge (Follows with gentle fluid spring) */}
+      {cursorContext.type !== "default" && (
+        <motion.div
+          style={{
+            x: tagX,
+            y: tagY,
+          }}
+          className="fixed top-0 left-0"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, x: 14, y: 14 }}
+            animate={{ opacity: 1, scale: 1, x: 16, y: 14 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.12 }}
+            className="whitespace-nowrap flex flex-col items-start gap-0.5 px-2 py-0.5 rounded-sm shadow-md pointer-events-none"
+            style={{
+              backgroundColor:
+                cursorContext.type === "photo"
+                  ? "#FF3E00"
+                  : cursorContext.type === "email"
+                  ? "#0D99FF"
+                  : isDark
+                  ? "#242423"
+                  : "#121212",
+              color: "#FFFFFF",
+            }}
+          >
+            <div className="flex items-center gap-1 font-mono text-[9px] font-bold tracking-wider uppercase">
+              <span>{cursorContext.label}</span>
+            </div>
+            {cursorContext.specs && (
+              <div className="font-mono text-[8px] text-white/80 font-normal tracking-tight">
+                {cursorContext.specs}
+              </div>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
