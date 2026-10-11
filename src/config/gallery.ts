@@ -320,20 +320,19 @@ export const galleryItems: PhotoItem[] = [
 export const siteProfile = {
   name: "Chakarin L.",
   alias: "BeamingMotion",
-  role: "Street & Documentary Photography",
+  role: "Photographer based in Bangkok",
   location: "Bangkok, Thailand",
-  coordinates: "13.7563° N, 100.5018° E",
   bio: {
-    en: "Observational street and documentary photography centered on Bangkok's urban rhythm, candid human presence, and genuine moments. No staged sets, no pretension.",
-    th: "ภาพถ่ายสตรีทและสารคดีเชิงสังเกตการณ์ที่บันทึกจังหวะชีวิตจริง แสงเงา และความเป็นไปของเมือง โดยไม่จัดฉาก ไม่ปรุงแต่ง",
+    en: "Bangkok-based photographer capturing street scenes, candid moments, and everyday life around the city.",
+    th: "ถ่ายภาพสตรีท งานกิจกรรม และโมเมนต์จริงในกรุงเทพฯ เน้นเก็บบรรยากาศที่เป็นธรรมชาติและเรื่องราวระหว่างทาง",
   },
   gear: {
     system: "Sony α7 III",
+    lenses: ["FE 35mm F1.8", "Sonnar T* FE 55mm F1.8 ZA"],
     optics: ["FE 35mm F1.8", "Sonnar T* FE 55mm F1.8 ZA"],
-    archive: "Personal Projects 2026 · TU PHOTO 2026 · PSC.TU",
   },
   contact: {
-    email: "chakarin.dev@gmail.com",
+    email: "contact.chakarin@gmail.com",
     instagram: "beamingmotion",
     instagramUrl: "https://www.instagram.com/beamingmotion",
   },

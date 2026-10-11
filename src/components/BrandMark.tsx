@@ -21,9 +21,7 @@ export default function BrandMark({ showSubtitle = true, className = "" }: Brand
 
       {showSubtitle && (
         <div className="flex items-center gap-1.5 mt-1 font-mono text-[9px] tracking-[0.14em] text-[#737373] uppercase">
-          <span>Bangkok, Thailand</span>
-          <span className="text-[#D1D1CB]">·</span>
-          <span>Street & Documentary</span>
+          <span>Photographer based in Bangkok</span>
         </div>
       )}
     </div>

@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import BrandMark from "./BrandMark";
-import { toggleSound, playTactileClick } from "@/utils/sound";
+import { playTactileClick } from "@/utils/sound";
 import { triggerHaptic } from "@/utils/haptics";
-import { Volume2, VolumeX } from "lucide-react";
 
 interface TopNavProps {
   onOpenAbout: () => void;
@@ -17,15 +15,6 @@ export default function TopNav({
   onSelectSection,
   activeSection = "all",
 }: TopNavProps) {
-  const [soundOn, setSoundOn] = useState(true);
-
-  const handleSoundToggle = () => {
-    const newState = toggleSound();
-    setSoundOn(newState);
-    triggerHaptic("light");
-    if (newState) playTactileClick();
-  };
-
   const navLinks = [
     { id: "all", label: "ALL" },
     { id: "personal", label: "PERSONAL PROJECTS" },
@@ -65,17 +54,7 @@ export default function TopNav({
 
       {/* Right Controls */}
       <div className="flex items-center gap-2.5 font-mono text-xs">
-        {/* Sound FX Toggle */}
-        <button
-          onClick={handleSoundToggle}
-          type="button"
-          title={soundOn ? "Mute tactile click sounds" : "Unmute tactile click sounds"}
-          className="w-8 h-8 rounded-full border border-[#E5E5DF] bg-[#FFFFFF] hover:bg-[#121212] hover:text-white text-[#121212] flex items-center justify-center transition-colors cursor-pointer shadow-2xs"
-        >
-          {soundOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5 text-[#737373]" />}
-        </button>
-
-        {/* Profile & Info Trigger */}
+        {/* Contact Trigger */}
         <button
           onClick={() => {
             triggerHaptic("light");
@@ -85,7 +64,7 @@ export default function TopNav({
           type="button"
           className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#121212] bg-[#121212] text-white hover:bg-[#FF3E00] hover:border-[#FF3E00] transition-colors cursor-pointer text-[11px] font-sans font-bold tracking-wide shadow-xs"
         >
-          <span>INFO / CONTACT</span>
+          <span>CONTACT</span>
         </button>
       </div>
     </header>

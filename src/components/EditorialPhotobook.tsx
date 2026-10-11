@@ -148,7 +148,7 @@ export default function EditorialPhotobook({
             BeamingMotion
           </div>
           <div className="text-[10px] text-[#737373] mt-2 tracking-wider uppercase">
-            Street & Documentary Photography · Bangkok, Thailand
+            Photographer based in Bangkok
           </div>
         </div>
 

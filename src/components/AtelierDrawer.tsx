@@ -71,7 +71,7 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#FF3E00]" />
                   <span className="font-mono text-[10px] tracking-wider text-[#737373] uppercase font-semibold">
-                    PHOTOGRAPHY & FIELD NOTES
+                    PHOTOGRAPHER BASED IN BANGKOK
                   </span>
                 </div>
 
@@ -83,33 +83,28 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                   <span className="px-2 py-0.5 rounded-full bg-[#F4F4F0] text-[#121212] font-medium">
                     {siteProfile.location}
                   </span>
-                  <span>{siteProfile.coordinates}</span>
                 </div>
               </div>
 
-              {/* Working Tools / Real Gear */}
+              {/* Working Tools / Gear */}
               <div className="mt-8 pt-6 border-t border-[#EBEBE6] space-y-3 font-mono text-xs">
                 <div className="text-[10px] text-[#737373] uppercase tracking-wider font-semibold">
-                  [EQUIPMENT & ARCHIVE]
+                  [EQUIPMENT]
                 </div>
                 <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] text-[11px]">
                   <span className="text-[#737373]">SYSTEM</span>
                   <span className="text-[#121212] font-medium">{siteProfile.gear.system}</span>
                 </div>
                 <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] text-[11px]">
-                  <span className="text-[#737373]">OPTICS</span>
-                  <span className="text-[#121212] font-medium">{siteProfile.gear.optics.join(" · ")}</span>
-                </div>
-                <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] text-[11px]">
-                  <span className="text-[#737373]">SOURCE</span>
-                  <span className="text-[#121212] font-medium">{siteProfile.gear.archive}</span>
+                  <span className="text-[#737373]">LENS</span>
+                  <span className="text-[#121212] font-medium">{siteProfile.gear.lenses.join(" · ")}</span>
                 </div>
               </div>
 
               {/* Direct Inquiries & Contact */}
               <div className="mt-8 pt-6 border-t border-[#EBEBE6] space-y-3 font-mono text-xs">
                 <div className="text-[10px] text-[#737373] uppercase tracking-wider font-semibold">
-                  [GET IN TOUCH / COMMISSIONS]
+                  [GET IN TOUCH]
                 </div>
 
                 {/* Email Box */}

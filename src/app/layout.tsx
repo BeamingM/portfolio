@@ -26,9 +26,9 @@ const macintoshCursive = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CHAKARIN L. — Street & Documentary Photography",
+  title: "CHAKARIN L. — Photographer based in Bangkok",
   description:
-    "Observational street and documentary photography by Chakarin L. (BeamingMotion), Bangkok, Thailand.",
+    "Photography by Chakarin L. (BeamingMotion), photographer based in Bangkok, Thailand.",
   icons: {
     icon: "/favicon.ico",
   },
