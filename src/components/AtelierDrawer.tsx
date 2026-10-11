@@ -156,7 +156,7 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
 
             {/* Language Switcher & Colophon */}
             <div className="pt-6 border-t border-[#EBEBE6] flex items-center justify-between font-mono text-[10px] text-[#737373] select-none">
-              <div>© 2026 BEAMINGMOTION</div>
+              <div>© CHAKARIN L. 2026</div>
               <div className="flex items-center gap-1 bg-[#F4F4F0] border border-[#E5E5DF] rounded-md p-0.5">
                 <button
                   onClick={() => {

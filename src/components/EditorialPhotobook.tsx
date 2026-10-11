@@ -6,6 +6,7 @@ import { PhotoItem, gallerySections } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
 import { playTactileClick } from "@/utils/sound";
 import { motion } from "framer-motion";
+import InstagramEmbed from "@/components/InstagramEmbed";
 
 interface EditorialPhotobookProps {
   items: PhotoItem[];
@@ -58,6 +59,9 @@ export default function EditorialPhotobook({
               </p>
             </div>
 
+            {/* Featured Official Instagram Publication */}
+            {section.id === "tu-photo" && <InstagramEmbed />}
+
             {/* Vertical Flow of Photobook Plates */}
             <div className="space-y-16 md:space-y-24">
               {sectionPhotos.map((photo, pIdx) => {
@@ -72,7 +76,7 @@ export default function EditorialPhotobook({
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col items-center justify-center group"
                   >
-                    {/* The Fine Art Photobook Plate */}
+                    {/* Photobook Exhibition Plate */}
                     <div
                       onClick={() => handlePhotoClick(photo)}
                       className={`relative bg-white p-3 md:p-5 pb-6 md:pb-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#EBEBE6] rounded-xs cursor-pointer ${
@@ -133,6 +137,30 @@ export default function EditorialPhotobook({
           </section>
         );
       })}
+
+      {/* Editorial Colophon Footer */}
+      <footer className="mt-20 pt-10 border-t border-[#E5E5DF] flex flex-col sm:flex-row items-baseline justify-between gap-4 text-[#737373] font-mono select-none">
+        <div>
+          <div className="font-sans font-black text-lg text-[#121212] tracking-tight uppercase">
+            CHAKARIN L.
+          </div>
+          <div className="font-macintosh text-base text-[#737373] mt-0.5">
+            BeamingMotion
+          </div>
+          <div className="text-[10px] text-[#737373] mt-2 tracking-wider uppercase">
+            Street & Documentary Photography · Bangkok, Thailand
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:items-end gap-1 text-[11px]">
+          <div className="font-semibold text-[#121212]">
+            © CHAKARIN L. 2026
+          </div>
+          <div className="text-[10px] text-[#737373] uppercase tracking-wider">
+            All Rights Reserved
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

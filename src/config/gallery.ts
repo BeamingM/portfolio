@@ -335,6 +335,6 @@ export const siteProfile = {
   contact: {
     email: "chakarin.dev@gmail.com",
     instagram: "beamingmotion",
-    instagramUrl: "https://instagram.com",
+    instagramUrl: "https://www.instagram.com/beamingmotion",
   },
 };
