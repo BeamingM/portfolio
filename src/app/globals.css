@@ -7,7 +7,7 @@
   --surface-bright: #F9F9F7;
   --border: #E5E5DF;
   --muted: #737373;
-  --accent: #FF3E00;
+  --accent: #D9381E;
 }
 
 @theme inline {
@@ -20,6 +20,7 @@
   --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 html, body {
@@ -30,9 +31,9 @@ html, body {
   user-select: none;
 }
 
-/* Optical grain overlay inspired by Stitch design */
+/* Optical fine-grain texture overlay */
 .analog-grain {
-  background-image: radial-gradient(rgba(18, 18, 18, 0.05) 1px, transparent 0);
+  background-image: radial-gradient(rgba(18, 18, 18, 0.04) 1px, transparent 0);
   background-size: 24px 24px;
 }
 

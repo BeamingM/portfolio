@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CHAKARIN L. — Photographs</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cormorant Garamond, Cinzel, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            noir: '#070709',
+            pitch: '#030304',
+            charcoal: '#0d0d11',
+            amberGlow: '#f59e0b',
+            warmGold: '#d97706',
+            cream: '#f5f2eb'
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            display: ['"Cinzel"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Reset & Touch behavior */
+    * {
+      touch-action: pan-y;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      background-color: #050507;
+      color: #eae5d9;
+      overflow-x: hidden;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Lantern Mask & Reveal Setup */
+    :root {
+      --lantern-x: 50%;
+      --lantern-y: 42%;
+      --lantern-radius: 175px;
+      --lantern-feather: 75px;
+      --ambient-opacity: 0.08;
+    }
+
+    @media (min-width: 768px) {
+      :root {
+        --lantern-radius: 280px;
+        --lantern-feather: 110px;
+      }
+    }
+
+    /* The photo layer with radial mask spotlight */
+    .lantern-revealed-layer {
+      mask-image: radial-gradient(
+        circle var(--lantern-radius) at var(--lantern-x) var(--lantern-y),
+        rgba(0,0,0,1) 0%,
+        rgba(0,0,0,0.92) calc(var(--lantern-radius) - var(--lantern-feather)),
+        rgba(0,0,0,0) calc(var(--lantern-radius) + 30px)
+      );
+      -webkit-mask-image: radial-gradient(
+        circle var(--lantern-radius) at var(--lantern-x) var(--lantern-y),
+        rgba(0,0,0,1) 0%,
+        rgba(0,0,0,0.92) calc(var(--lantern-radius) - var(--lantern-feather)),
+        rgba(0,0,0,0) calc(var(--lantern-radius) + 30px)
+      );
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Warm amber atmospheric glow over the spotlight */
+    .lantern-glow-overlay {
+      pointer-events: none;
+      background: radial-gradient(
+        circle calc(var(--lantern-radius) * 1.35) at var(--lantern-x) var(--lantern-y),
+        rgba(245, 158, 11, 0.16) 0%,
+        rgba(217, 119, 6, 0.08) 45%,
+        rgba(180, 83, 9, 0.02) 75%,
+        transparent 100%
+      );
+      mix-blend-mode: screen;
+    }
+
+    /* Subtle cursor/touch point ring */
+    .torch-ring {
+      position: fixed;
+      left: var(--lantern-x);
+      top: var(--lantern-y);
+      width: 14px;
+      height: 14px;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      background: radial-gradient(circle, rgba(254, 243, 199, 0.6) 0%, rgba(245, 158, 11, 0) 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 40;
+      transition: width 0.3s ease, height 0.3s ease, opacity 0.4s ease;
+    }
+
+    /* Lantern glow particle float animation */
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(1.05); }
+    }
+    .pulse-soft {
+      animation: subtlePulse 4s infinite ease-in-out;
+    }
+
+    /* Grain overlay */
+    .film-grain {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 0);
+      background-size: 4px 4px;
+    }
+  </style>
+</head>
+<body class="bg-pitch text-[#ece7dc] font-sans relative selection:bg-amber-900 selection:text-amber-100 flex flex-col justify-between min-h-screen">
+
+  <!-- Interactive Atmosphere Layer -->
+  <div id="glowOverlay" class="lantern-glow-overlay fixed inset-0 z-30 transition-opacity duration-300"></div>
+  <div id="torchPoint" class="torch-ring pulse-soft"></div>
+
+  <!-- Subtle Film Grain -->
+  <div class="fixed inset-0 film-grain pointer-events-none z-20 opacity-40"></div>
+
+  <!-- Header: Pure Typographic / Calligraphic Brand Mark -->
+  <header class="relative z-40 px-6 pt-7 pb-4 flex items-center justify-between border-b border-white/[0.04] backdrop-blur-sm bg-pitch/40">
+    <div class="flex flex-col">
+      <span class="font-display tracking-[0.28em] text-sm md:text-base font-medium uppercase text-cream/90 flex items-center gap-2">
+        CHAKARIN L.
+        <span class="inline-block w-1 h-1 rounded-full bg-amber-500/70"></span>
+      </span>
+      <span class="font-serif italic text-xs tracking-[0.18em] text-cream/40 pl-0.5">Bangkok, Thailand</span>
+    </div>
+
+    <!-- Series Switcher / Nav -->
+    <div class="flex items-center gap-5 text-xs font-serif tracking-[0.15em]">
+      <button id="infoTrigger" class="text-cream/50 hover:text-amber-300 transition-colors py-1 px-2 uppercase text-[11px] tracking-[0.2em] border border-white/[0.08] rounded-full">
+        About
+      </button>
+      <button id="torchToggle" class="text-amber-400/80 hover:text-amber-200 transition-colors flex items-center gap-1.5 py-1 px-2 rounded-full bg-amber-950/20 border border-amber-500/20 text-[11px] tracking-[0.16em]">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+        <span id="torchStatusText">Lantern Active</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Central Experience: The Darkness & Revealed Frame -->
+  <main class="relative flex-1 flex flex-col justify-center items-center px-4 py-3 z-10 w-full max-w-4xl mx-auto overflow-hidden">
+    
+    <!-- Top Quiet Instruction Hint -->
+    <div class="w-full flex justify-between items-center px-2 mb-2 pointer-events-none">
+      <div class="flex items-center gap-2 text-cream/35 text-[11px] tracking-[0.22em] font-serif uppercase">
+        <span class="inline-block w-3 h-[1px] bg-amber-500/40"></span>
+        <span id="frameIndex">01 / 03</span>
+        <span class="text-cream/20">—</span>
+        <span id="frameTitle" class="italic text-cream/60">Yaowarat at 03:00</span>
+      </div>
+      <div id="gestureHint" class="font-serif italic text-[11px] tracking-[0.2em] text-amber-200/50 flex items-center gap-1.5 animate-pulse">
+        <span>move the light</span>
+        <span class="text-amber-400">✧</span>
+      </div>
+    </div>
+
+    <!-- The Darkness Chamber (Canvas / Photos Container) -->
+    <div id="exhibitionChamber" class="relative w-full max-w-sm sm:max-w-md md:max-w-lg aspect-[3/4] max-h-[64vh] rounded-md overflow-hidden bg-black shadow-2xl border border-white/[0.06] cursor-crosshair">
+      
+      <!-- Ghost Ambient Layer (Barely visible outline in pitch darkness) -->
+      <div class="absolute inset-0 z-0 opacity-[0.07] grayscale contrast-125 transition-opacity duration-700 pointer-events-none">
+        <img id="ghostImg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcJS4sPV_VYt2ICpHkLbmEWV9T1YMWmQsldzN_1_3A6XWGshFh3V7BOvJzAB1tW5-PmFu2qwOO3rUQ5A1cxu2PqGcqrZe-W19beYAr0SzgByLEhCR0yEXSBBiwKRBZtJ4E48O_HkOnDR-lpLW5n5tG4nC9knJGEkRRDE2JHEwpv6w6528RR9wOetYJO9W94xrrpvE2xGxN6kAEHCpJJweQz578ydvGs6-Hd-OmOwLVn97d099F-TtIou5mB32mrgDFf2IuIGT0NL8" alt="Shadow ambient reference" class="w-full h-full object-cover">
+      </div>
+
+      <!-- Spotlight Revealed Photography Layer -->
+      <div id="revealedFrame" class="lantern-revealed-layer absolute inset-0 z-10 w-full h-full">
+        <!-- Active Image Item -->
+        <img id="activeHeroImg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcJS4sPV_VYt2ICpHkLbmEWV9T1YMWmQsldzN_1_3A6XWGshFh3V7BOvJzAB1tW5-PmFu2qwOO3rUQ5A1cxu2PqGcqrZe-W19beYAr0SzgByLEhCR0yEXSBBiwKRBZtJ4E48O_HkOnDR-lpLW5n5tG4nC9knJGEkRRDE2JHEwpv6w6528RR9wOetYJO9W94xrrpvE2xGxN6kAEHCpJJweQz578ydvGs6-Hd-OmOwLVn97d099F-TtIou5mB32mrgDFf2IuIGT0NL8" alt="Bangkok fine art photography by Chakarin L." class="w-full h-full object-cover select-none">
+      </div>
+
+      <!-- Ambient Edge Vignette -->
+      <div class="absolute inset-0 pointer-events-none z-20 shadow-[inset_0_0_80px_rgba(3,3,4,0.95)]"></div>
+
+      <!-- Live Coordinates / Monolith subtle detail in dark room corner -->
+      <div class="absolute bottom-3 left-4 z-20 pointer-events-none font-serif text-[10px] tracking-[0.16em] text-cream/30 mix-blend-difference">
+        <p id="curCoords" class="uppercase">Lantern: 50% X · 42% Y</p>
+      </div>
+
+      <!-- Quick series badge bottom right -->
+      <div class="absolute bottom-3 right-4 z-20 pointer-events-none font-serif text-[10px] tracking-[0.18em] text-amber-300/40 uppercase">
+        Monsoon Noir
+      </div>
+    </div>
+
+    <!-- Minimal Gallery Navigation / Thumb-friendly Bar -->
+    <div class="w-full max-w-sm sm:max-w-md md:max-w-lg mt-4 flex items-center justify-between px-2 z-30">
+      
+      <!-- Previous Photo -->
+      <button id="prevBtn" class="group flex items-center gap-2 py-2 px-3 rounded-full hover:bg-white/[0.03] transition text-cream/45 hover:text-amber-200">
+        <span class="text-sm font-serif group-hover:-translate-x-0.5 transition-transform">←</span>
+        <span class="font-serif text-xs tracking-[0.18em] uppercase">Prev</span>
+      </button>
+
+      <!-- Thumb Dot Selectors -->
+      <div class="flex items-center gap-3">
+        <button data-index="0" class="gallery-dot w-8 h-1.5 rounded-full bg-amber-400/90 transition-all duration-300" aria-label="Yaowarat Night"></button>
+        <button data-index="1" class="gallery-dot w-2 h-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-all duration-300" aria-label="Thai Dancer Backstage"></button>
+        <button data-index="2" class="gallery-dot w-2 h-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-all duration-300" aria-label="Brutalist Monsoon"></button>
+      </div>
+
+      <!-- Next Photo -->
+      <button id="nextBtn" class="group flex items-center gap-2 py-2 px-3 rounded-full hover:bg-white/[0.03] transition text-cream/45 hover:text-amber-200">
+        <span class="font-serif text-xs tracking-[0.18em] uppercase">Next</span>
+        <span class="text-sm font-serif group-hover:translate-x-0.5 transition-transform">→</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Editorial Info & Work Meta Drawer (Collapsible) -->
+  <footer class="relative z-30 px-6 py-4 border-t border-white/[0.04] bg-pitch/60 backdrop-blur-md">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+      
+      <div class="flex flex-col">
+        <p id="curDescription" class="font-serif text-sm tracking-[0.06em] text-cream/70 italic">
+          "Rain on Yaowarat asphalt. Bangkok breathes in amber neon and lingering steam."
+        </p>
+        <span class="text-[10px] tracking-[0.2em] font-sans text-cream/30 uppercase mt-0.5">
+          Archival Gelatin Silver & C-Type Pigment · Limited Edition of 7
+        </span>
+      </div>
+
+      <!-- Minimal Inquiry / Dialogue Action -->
+      <div class="flex items-center gap-4">
+        <a href="mailto:studio@chakarin.art?subject=Acquisition%20Inquiry" class="inline-flex items-center justify-center font-display text-[11px] tracking-[0.25em] text-amber-300/90 hover:text-amber-100 uppercase border border-amber-500/30 hover:border-amber-400 px-4 py-2 rounded transition-all bg-amber-950/10">
+          Inquire
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal / Narrative overlay for Artist & Philosophy -->
+  <div id="infoModal" class="fixed inset-0 z-50 bg-pitch/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-500 flex items-center justify-center p-6">
+    <div class="max-w-md w-full border border-white/[0.08] p-7 rounded-sm bg-[#08080a] relative shadow-2xl">
+      <button id="closeInfo" class="absolute top-5 right-5 text-cream/40 hover:text-cream text-lg font-serif">✕</button>
+      
+      <h3 class="font-display text-lg tracking-[0.22em] uppercase text-cream/90 mb-1">CHAKARIN L.</h3>
+      <p class="font-serif italic text-xs tracking-[0.18em] text-amber-400/80 mb-6">Photographer · Bangkok</p>
+      
+      <div class="space-y-4 font-serif text-sm text-cream/75 leading-relaxed tracking-wide">
+        <p>
+          "Photography in Bangkok is not the capture of light, but the negotiation with shadow. Monsoon rains, golden back-alleys, and backstage sanctuaries."
+        </p>
+        <p class="text-xs text-cream/50 leading-relaxed font-sans">
+          The <span class="text-amber-300 font-serif italic">Lantern</span> exhibition honors the act of looking. Images are not instantly consumed; they require presence. Touch or move your cursor to illuminate moments from the quiet margins of the capital.
+        </p>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-white/[0.06] flex justify-between items-center text-[11px] font-serif tracking-[0.16em] text-cream/40">
+        <span>Pranakorn & Thonburi Archives</span>
+        <span class="text-amber-400/70">MMLXXV</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vanilla Script: Light Follow, Touch Tracking, and Collection Switching -->
+  <script>
+    (function() {
+      // Data set for Chakarin L.'s photography collection
+      const series = [
+        {
+          src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDcJS4sPV_VYt2ICpHkLbmEWV9T1YMWmQsldzN_1_3A6XWGshFh3V7BOvJzAB1tW5-PmFu2qwOO3rUQ5A1cxu2PqGcqrZe-W19beYAr0SzgByLEhCR0yEXSBBiwKRBZtJ4E48O_HkOnDR-lpLW5n5tG4nC9knJGEkRRDE2JHEwpv6w6528RR9wOetYJO9W94xrrpvE2xGxN6kAEHCpJJweQz578ydvGs6-Hd-OmOwLVn97d099F-TtIou5mB32mrgDFf2IuIGT0NL8",
+          index: "01 / 03",
+          title: "Yaowarat at 03:00",
+          desc: "\"Rain on Yaowarat asphalt. Bangkok breathes in amber neon and lingering steam.\""
+        },
+        {
+          src: "https://lh3.googleusercontent.com/aida-public/AB6AXuC4OfueysnfDa77p-0GEHHDCpgLN9ZAp1PZ4_8fbNXepQ0aq07hR5nC3YlPGG0mTGW3ts-dNbCWj5KJguRATMMDfuGbc4BmmfgXBasDZdBjqFWDkAq901v4AA7F1hQWqiIPJZJUQF1e3HtIvL6Te9rYI703tfoN17d7v1UhQiLZ5g4gzpABbplTKVzI4mLgJnpg5HkDodV9WlH56DAl4Bat0Vzwyh3MoWWpQz2nAh9PlZGJZ0gpSEml1-3-60Ib3jy2sfGrIR_eWrY",
+          index: "02 / 03",
+          title: "Reverence (Khon Backstage)",
+          desc: "\"Gold threads catch the sanctuary lamplight. Before the dance, silence reigns.\""
+        },
+        {
+          src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBMilcXh5Is1_hkEJv2tKn36u3Iu4pelHicguHAckseTAK-jHDWaLqMoO9sX1h5HYTKmT1-RQohDDTt9s_HtzBP_mcqbL3Qxu64oZanAaHi_gsy7pbizI-2hJTBS8NqG6VHflqNizx2T6pBDdwJ0Jv7fMB-A4FO-PhmOPLFV1krrGTg5OSAwp9f5awP9MTfbsF32u1oXXd12bIMyfQeKFXIeXabi2_4neDmzBYLmGfxjeQyO1LM4vmYCGz-hgmrTfJyxcN7jRV3CYI",
+          index: "03 / 03",
+          title: "Monsoon over Brutalism",
+          desc: "\"Siam concrete meets tropical downpour. A sliver of late afternoon sun breaks through.\""
+        }
+      ];
+
+      let currentIndex = 0;
+      let isLanternEnabled = true;
+
+      // DOM Elements
+      const chamber = document.getElementById('exhibitionChamber');
+      const root = document.documentElement;
+      const torchPoint = document.getElementById('torchPoint');
+      const curCoords = document.getElementById('curCoords');
+      const gestureHint = document.getElementById('gestureHint');
+      const activeHeroImg = document.getElementById('activeHeroImg');
+      const ghostImg = document.getElementById('ghostImg');
+      const frameIndex = document.getElementById('frameIndex');
+      const frameTitle = document.getElementById('frameTitle');
+      const curDescription = document.getElementById('curDescription');
+      const dots = document.querySelectorAll('.gallery-dot');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const infoTrigger = document.getElementById('infoTrigger');
+      const infoModal = document.getElementById('infoModal');
+      const closeInfo = document.getElementById('closeInfo');
+      const torchToggle = document.getElementById('torchToggle');
+      const torchStatusText = document.getElementById('torchStatusText');
+      const glowOverlay = document.getElementById('glowOverlay');
+      const revealedFrame = document.getElementById('revealedFrame');
+
+      // Update light position based on coordinates
+      function updateLanternPosition(clientX, clientY) {
+        if (!isLanternEnabled) return;
+
+        const rect = chamber.getBoundingClientRect();
+        
+        // Target relative to container or window
+        let x = clientX;
+        let y = clientY;
+
+        // Calculate percentage for CSS variables
+        const pctX = ((x / window.innerWidth) * 100).toFixed(1);
+        const pctY = ((y / window.innerHeight) * 100).toFixed(1);
+
+        root.style.setProperty('--lantern-x', `${x}px`);
+        root.style.setProperty('--lantern-y', `${y}px`);
+
+        if (curCoords) {
+          curCoords.textContent = `Lantern: ${pctX}% X · ${pctY}% Y`;
+        }
+
+        // Fade gesture hint once interacted with
+        if (gestureHint && gestureHint.style.opacity !== '0') {
+          gestureHint.style.opacity = '0';
+          setTimeout(() => { gestureHint.style.display = 'none'; }, 400);
+        }
+      }
+
+      // Pointer movement listeners (mouse & touch)
+      window.addEventListener('mousemove', (e) => {
+        updateLanternPosition(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          const touch = e.touches[0];
+          updateLanternPosition(touch.clientX, touch.clientY);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) {
+          const touch = e.touches[0];
+          updateLanternPosition(touch.clientX, touch.clientY);
+        }
+      }, { passive: true });
+
+      // Change exhibited photo
+      function showPhoto(idx) {
+        if (idx < 0) idx = series.length - 1;
+        if (idx >= series.length) idx = 0;
+        currentIndex = idx;
+
+        const item = series[currentIndex];
+
+        // Smooth crossfade
+        revealedFrame.style.opacity = '0.2';
+        setTimeout(() => {
+          activeHeroImg.src = item.src;
+          ghostImg.src = item.src;
+          frameIndex.textContent = item.index;
+          frameTitle.textContent = item.title;
+          curDescription.textContent = item.desc;
+          revealedFrame.style.opacity = '1';
+        }, 180);
+
+        // Update dot indicators
+        dots.forEach((dot, dIdx) => {
+          if (dIdx === currentIndex) {
+            dot.className = 'gallery-dot w-8 h-1.5 rounded-full bg-amber-400/90 transition-all duration-300';
+          } else {
+            dot.className = 'gallery-dot w-2 h-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-all duration-300';
+          }
+        });
+      }
+
+      // Gallery Controls
+      prevBtn.addEventListener('click', () => showPhoto(currentIndex - 1));
+      nextBtn.addEventListener('click', () => showPhoto(currentIndex + 1));
+      dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          const targetIdx = parseInt(e.currentTarget.getAttribute('data-index'));
+          showPhoto(targetIdx);
+        });
+      });
+
+      // Swipe gesture support on exhibition chamber for mobile
+      let startX = 0;
+      chamber.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) startX = e.touches[0].clientX;
+      }, { passive: true });
+
+      chamber.addEventListener('touchend', (e) => {
+        if (e.changedTouches.length > 0) {
+          const endX = e.changedTouches[0].clientX;
+          const diff = endX - startX;
+          if (diff > 45) {
+            showPhoto(currentIndex - 1); // Swiped right -> prev
+          } else if (diff < -45) {
+            showPhoto(currentIndex + 1); // Swiped left -> next
+          }
+        }
+      }, { passive: true });
+
+      // Info Dialog Toggle
+      infoTrigger.addEventListener('click', () => {
+        infoModal.classList.remove('opacity-0', 'pointer-events-none');
+        infoModal.classList.add('opacity-100');
+      });
+      closeInfo.addEventListener('click', () => {
+        infoModal.classList.add('opacity-0', 'pointer-events-none');
+        infoModal.classList.remove('opacity-100');
+      });
+      infoModal.addEventListener('click', (e) => {
+        if (e.target === infoModal) {
+          infoModal.classList.add('opacity-0', 'pointer-events-none');
+        }
+      });
+
+      // Toggle Lantern Mode (Night Room vs Full Illuminate)
+      torchToggle.addEventListener('click', () => {
+        isLanternEnabled = !isLanternEnabled;
+        if (isLanternEnabled) {
+          torchStatusText.textContent = "Lantern Active";
+          torchPoint.style.display = 'block';
+          glowOverlay.style.opacity = '1';
+          revealedFrame.classList.add('lantern-revealed-layer');
+          torchToggle.classList.add('text-amber-400/80', 'border-amber-500/20');
+          torchToggle.classList.remove('text-cream/40', 'border-white/10');
+        } else {
+          torchStatusText.textContent = "Ambient Mode";
+          torchPoint.style.display = 'none';
+          glowOverlay.style.opacity = '0';
+          revealedFrame.classList.remove('lantern-revealed-layer');
+          torchToggle.classList.remove('text-amber-400/80', 'border-amber-500/20');
+          torchToggle.classList.add('text-cream/40', 'border-white/10');
+        }
+      });
+
+      // Set initial center coordinates
+      const initRect = chamber.getBoundingClientRect();
+      updateLanternPosition(window.innerWidth / 2, window.innerHeight * 0.42);
+
+      // Subtle breath motion for cursor ring if idle
+      let idleTimer;
+      function resetIdle() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          // gently oscillate lantern radius
+          root.style.setProperty('--lantern-radius', window.innerWidth < 768 ? '185px' : '290px');
+        }, 3000);
+      }
+      window.addEventListener('mousemove', resetIdle);
+      window.addEventListener('touchmove', resetIdle);
+      resetIdle();
+
+    })();
+  </script>
+</body>
+</html>

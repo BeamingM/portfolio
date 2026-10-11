@@ -1,47 +1,94 @@
 "use client";
 
-import { useState } from "react";
-import HudHeader from "@/components/HudHeader";
-import HudFooter from "@/components/HudFooter";
-import ScrollytellingStage from "@/components/ScrollytellingStage";
-import AboutDrawer from "@/components/AboutDrawer";
+import { useState, useEffect, useCallback } from "react";
+import TopNav from "@/components/TopNav";
+import DraggableStage from "@/components/DraggableStage";
+import ArchiveGrid from "@/components/ArchiveGrid";
+import PolaroidDock from "@/components/PolaroidDock";
+import AtelierDrawer from "@/components/AtelierDrawer";
 import { galleryItems } from "@/config/gallery";
+import { triggerHaptic } from "@/utils/haptics";
+import { playTactileClick } from "@/utils/sound";
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
+  const [isGridView, setIsGridView] = useState<boolean>(false);
+  const [isAtelierOpen, setIsAtelierOpen] = useState<boolean>(false);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % galleryItems.length);
+  }, []);
+
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + galleryItems.length) % galleryItems.length);
+  }, []);
 
   const handleSelectIndex = (index: number) => {
     setCurrentIndex(index);
-    if (typeof window !== "undefined") {
-      const targetTop = index * window.innerHeight * 1.2;
-      window.scrollTo({ top: targetTop, behavior: "smooth" });
-    }
+    setIsGridView(false);
   };
 
+  // Keyboard navigation shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isAtelierOpen) return;
+
+      if (e.key === "ArrowRight") {
+        triggerHaptic("snap");
+        playTactileClick();
+        handleNext();
+      } else if (e.key === "ArrowLeft") {
+        triggerHaptic("snap");
+        playTactileClick();
+        handlePrev();
+      } else if (e.key.toLowerCase() === "g") {
+        triggerHaptic("medium");
+        playTactileClick();
+        setIsGridView((prev) => !prev);
+      } else if (e.key === "Escape") {
+        if (isGridView) setIsGridView(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleNext, handlePrev, isAtelierOpen, isGridView]);
+
   return (
-    <main className="relative min-h-screen bg-[#FBFBF9] text-[#121212] selection:bg-[#FF3E00] selection:text-white analog-grain">
-      {/* Dynamic HUD Header */}
-      <HudHeader onOpenAbout={() => setIsAboutOpen(true)} />
+    <main className="relative min-h-screen bg-[#FBFBF9] text-[#121212] selection:bg-[#D9381E] selection:text-white analog-grain pt-16">
+      {/* Top Minimal Craft Bar with Live Bangkok Telemetry */}
+      <TopNav onOpenAbout={() => setIsAtelierOpen(true)} />
 
-      {/* Main Scrollytelling Canvas Stage */}
-      <ScrollytellingStage
-        currentIndex={currentIndex}
-        onIndexChange={setCurrentIndex}
-      />
+      {/* Main Exhibition View: Draggable Focus Print vs Contact Sheet Grid */}
+      {isGridView ? (
+        <ArchiveGrid
+          items={galleryItems}
+          onSelectPhoto={handleSelectIndex}
+        />
+      ) : (
+        <DraggableStage
+          currentPhoto={galleryItems[currentIndex]}
+          currentIndex={currentIndex}
+          total={galleryItems.length}
+          onNext={handleNext}
+          onPrev={handlePrev}
+        />
+      )}
 
-      {/* Dynamic HUD Footer with Scrubber */}
-      <HudFooter
+      {/* Floating Polaroid Dock with Haptic Feedback */}
+      <PolaroidDock
+        items={galleryItems}
         currentIndex={currentIndex}
-        total={galleryItems.length}
-        currentPhoto={galleryItems[currentIndex]}
         onSelectIndex={handleSelectIndex}
+        onOpenAbout={() => setIsAtelierOpen(true)}
+        isGridView={isGridView}
+        onToggleGrid={() => setIsGridView((prev) => !prev)}
       />
 
-      {/* Slide-over About Drawer */}
-      <AboutDrawer
-        isOpen={isAboutOpen}
-        onClose={() => setIsAboutOpen(false)}
+      {/* Atelier & Bio Slide-over Panel */}
+      <AtelierDrawer
+        isOpen={isAtelierOpen}
+        onClose={() => setIsAtelierOpen(false)}
       />
     </main>
   );

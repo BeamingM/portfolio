@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CHAKARIN L. — Visual Archive</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-container": "#1c1b1b",
+            "surface-dim": "#dadad8",
+            "surface-container-highest": "#e2e3e1",
+            "on-tertiary-fixed-variant": "#891d00",
+            "tertiary-container": "#3c0700",
+            "tertiary-fixed-dim": "#ffb4a2",
+            "surface-container-low": "#f4f4f2",
+            "inverse-primary": "#c8c6c5",
+            "on-tertiary-fixed": "#3c0700",
+            "on-secondary": "#ffffff",
+            "on-background": "#1a1c1b",
+            "tertiary": "#000000",
+            "primary-fixed": "#e5e2e1",
+            "surface-container-high": "#e8e8e6",
+            "primary": "#000000",
+            "on-primary": "#ffffff",
+            "background": "#f9f9f7",
+            "safety-orange": "#FF3E00",
+            "outline-variant": "#c4c7c7",
+            "surface-tint": "#5f5e5e",
+            "secondary-fixed-dim": "#c7c6c6",
+            "graphite-muted": "#737373",
+            "on-secondary-container": "#646464",
+            "on-error": "#ffffff",
+            "inverse-on-surface": "#f1f1ef",
+            "outline": "#747878",
+            "secondary-fixed": "#e3e2e2",
+            "error": "#ba1a1a",
+            "on-error-container": "#93000a",
+            "hairline-border": "#E5E5DF",
+            "secondary-container": "#e3e2e2",
+            "surface-container-lowest": "#ffffff",
+            "surface-bright": "#f9f9f7",
+            "on-primary-container": "#858383",
+            "secondary": "#5e5e5e",
+            "error-container": "#ffdad6",
+            "surface": "#f9f9f7",
+            "primary-fixed-dim": "#c8c6c5",
+            "on-primary-fixed": "#1c1b1b",
+            "charcoal-black": "#121212",
+            "bone-ceramic": "#F4F4F0",
+            "on-primary-fixed-variant": "#474646",
+            "surface-container": "#eeeeec",
+            "tertiary-fixed": "#ffdad2",
+            "surface-variant": "#e2e3e1",
+            "on-surface-variant": "#444748",
+            "warm-canvas": "#FBFBF9",
+            "on-secondary-fixed-variant": "#464747",
+            "inverse-surface": "#2f3130",
+            "on-tertiary-container": "#f73c00",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed": "#1b1c1c",
+            "on-surface": "#1a1c1b"
+          },
+          "fontFamily": {
+            "headline-xl-mobile": ["Geist", "sans-serif"],
+            "headline-md": ["Geist", "sans-serif"],
+            "headline-lg": ["Geist", "sans-serif"],
+            "body-lg": ["Geist", "sans-serif"],
+            "label-md": ["Space Mono", "monospace"],
+            "headline-lg-mobile": ["Geist", "sans-serif"],
+            "label-lg": ["Space Mono", "monospace"],
+            "headline-xl": ["Geist", "sans-serif"],
+            "body-sm": ["Geist", "sans-serif"],
+            "label-sm": ["Space Mono", "monospace"],
+            "body-md": ["Geist", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-xl-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "500" }],
+            "headline-lg": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "label-md": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "400" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-lg": ["13px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+            "headline-xl": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-sm": ["9px", { "lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+    }
+    .snap-x-mandatory {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .snap-child {
+      scroll-snap-align: start;
+    }
+    /* Hide scrollbars completely */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-warm-canvas text-charcoal-black antialiased selection:bg-safety-orange selection:text-white flex justify-center min-h-screen">
+<!-- Mobile Device Shell Simulation (390px default portrait view) -->
+<main class="w-full max-w-[430px] min-h-screen relative flex flex-col justify-between overflow-x-hidden bg-warm-canvas border-x border-hairline-border shadow-2xl">
+<!-- FLOATING TOP BAR (Shared TopNavBar Anchor) -->
+<header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50 h-12 bg-warm-canvas/90 backdrop-blur-md border-b border-hairline-border px-4 flex justify-between items-center transition-none">
+<!-- Brand & Status Identity -->
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-safety-orange inline-block animate-pulse"></span>
+<a class="font-headline-md text-headline-md tracking-tight font-medium text-charcoal-black hover:text-safety-orange transition-none" href="#">
+          CHAKARIN L.
+        </a>
+</div>
+<!-- Center Telemetry Micro-Clock -->
+<div class="font-label-sm text-label-sm text-graphite-muted flex items-center gap-1.5">
+<span class="inline-block w-1 h-1 bg-graphite-muted rounded-full opacity-60"></span>
+<span>BKK 02:45:12</span>
+</div>
+<!-- Action Button Pill -->
+<button class="font-label-md text-label-md text-charcoal-black px-2.5 py-1 border border-hairline-border bg-warm-canvas hover:bg-charcoal-black hover:text-warm-canvas active:bg-safety-orange active:text-white transition-none focus:outline-none" onclick="toggleDrawer()">
+        [ABOUT / INFO]
+      </button>
+</header>
+<!-- PURE PICTURE-FIRST STAGE (Horizontal Scrollable Carousel) -->
+<section class="relative w-full h-[884px] pt-12 pb-20 flex flex-col justify-center">
+<!-- Carousel Track -->
+<div class="w-full h-full flex overflow-x-auto snap-x-mandatory no-scrollbar relative z-10" id="gallery-carousel">
+<!-- Frame 01: Hero Architectural Monolith -->
+<article class="snap-child min-w-full h-full p-4 flex flex-col justify-center items-center relative">
+<div class="w-full h-full relative overflow-hidden bg-bone-ceramic border border-hairline-border flex items-center justify-center">
+<img class="w-full h-full object-cover grayscale contrast-[1.08] select-none" data-alt="Monolithic brutalist concrete museum facade in Bangkok captured in stark high-contrast black and white photography. The geometric cast shadows are razor sharp across textured poured concrete walls under blazing tropical afternoon sun. Minimalist, quiet luxury aesthetic with deep blacks, bone whites, and clinical architectural precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe935CE-ctStyvCuYt09al0XjLh97cG7smMYWXDMI5UiskRxmFgXmaYxx39fw_N5lxuUzjOlDaGL8fWWLTXxwdkYXc8IUrEpK8fubESf4Z6fSbVr32TUbphkJSz-c3H372BgrM_uXPN-ScUcK9q5soXBv6YW6KDxySb6UKITdM2Y6fDsTsfkEMindNhUjH5rF9QgCsfKF_sU4KL7eX4-8HJFUE4QCw6gFf5hRZRGKQqFG4Fz-5hoMNacNXqP80WOIIxp3tNZeWRw"/>
+</div>
+</article>
+<!-- Frame 02: Modern Minimal Spatial Geometry -->
+<article class="snap-child min-w-full h-full p-4 flex flex-col justify-center items-center relative">
+<div class="w-full h-full relative overflow-hidden bg-bone-ceramic border border-hairline-border flex items-center justify-center">
+<img class="w-full h-full object-cover grayscale contrast-[1.05] select-none" data-alt="High-end minimalist architectural interior featuring a spiraling marble staircase illuminated by soft diffused skylight. The composition emphasizes pristine white curves, subtle stone veining, and rhythmic negative space. Ultra-clean fine art photography with zero clutter and disciplined monochrome tonal gradations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFGVKOWH_h7-oRqf74jB0OT4Ff9_Vpp7XRZFJY0s8JYhaK4LLD_ju1JD2NjkQGnQGU8Tw3h21T4PXERs5ZpsfN5llU2yUYtMRCo_-0w_E0vbWSOuh-KWgUcdEbiWtVDny-CqQkizUphPukQDm5dK4VTpuXZTkawPopyMwHVJPlWf8YPPzJIKpDIGHUeMip4xzyKSnnM9GTzIPMP0BwuMcOasz6GNndK_vSneV5zyZ3Rr8D8zyBz-TiUAXuwUGh_EIiVTFFU5EEtA"/>
+</div>
+</article>
+<!-- Frame 03: Quiet Urban Stillness -->
+<article class="snap-child min-w-full h-full p-4 flex flex-col justify-center items-center relative">
+<div class="w-full h-full relative overflow-hidden bg-bone-ceramic border border-hairline-border flex items-center justify-center">
+<img class="w-full h-full object-cover grayscale contrast-[1.1] select-none" data-alt="An ethereal silhouette of a lone figure standing beside a towering fluted glass wall in an ultra-modern Bangkok atrium. Soft backlight produces atmospheric reflections and linear grain across polished terrazzo flooring. Elegant, restrained luxury photography with serene cinematic composure." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy0RAzcgocWTZOKrQY8Q-uRRVdO5ZqeKf-zckO-h5VRdT-QD7RcTi2ZeHvRjk48IU1jGxx0m7tVLShD6h3mPEE8D3edQxlbxvzSABJb1WZYlcdCnbtBHJ4DwB9PgnjcwG8OXeJX2iyxrCbbWa-zd1QL6rILL0Q-eMAJSizWjNMh20-afhG7Ts83WwaUjfqg1AxRN8EP_sA15KT_oPr2OuFJmhVH7xW-hymhyJcgBD_DOILhhbsyZzylWAhmJ7V9CEiWwribEd6hw"/>
+</div>
+</article>
+<!-- Frame 04: Industrial Tactile Rhythm -->
+<article class="snap-child min-w-full h-full p-4 flex flex-col justify-center items-center relative">
+<div class="w-full h-full relative overflow-hidden bg-bone-ceramic border border-hairline-border flex items-center justify-center">
+<img class="w-full h-full object-cover grayscale contrast-[1.12] select-none" data-alt="Macro perspective of brushed aluminum louvers against deep matte shadows in an avant-garde laboratory pavilion. Crisp micro-textures and precise metallic highlights evoke Teenage Engineering hardware design philosophy. Pristine, clinical monochrome visual treatment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqFlclascr4FF05cCyYQgD6CCZffMxEyU3X9cHojtJhSteLyRUnNXa02Flxi9SuA7-6jxiRsbgDS2aex1ZFrbS9b5Q_HGosn-lha5Vm4L2r82hCxbdw9xECPOdqLmyLXbwHh485QfSHei8Dun6ejYy9UPwE7Kq05FhfaGO-Xo6tpIIVbm7ta6xS0g9g4laiDGgpAZA5IkwDDsHa9qF0ptAXi-4jGSdFYufj4ARqI2J-1LDd64phBdaryHI8TflP26GPJ5Li33WAA"/>
+</div>
+</article>
+</div>
+<!-- Discreet Horizontal Swipe Navigation Indicators -->
+<div class="absolute inset-y-1/2 -translate-y-1/2 inset-x-2 flex justify-between pointer-events-none z-20">
+<button class="pointer-events-auto w-8 h-8 rounded-full bg-warm-canvas/80 backdrop-blur border border-hairline-border text-charcoal-black hover:text-safety-orange flex items-center justify-center transition-none shadow-sm active:scale-95" onclick="scrollGallery(-1)">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<button class="pointer-events-auto w-8 h-8 rounded-full bg-warm-canvas/80 backdrop-blur border border-hairline-border text-charcoal-black hover:text-safety-orange flex items-center justify-center transition-none shadow-sm active:scale-95" onclick="scrollGallery(1)">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- FLOATING BOTTOM HUD DOCK (Pill Floating Over Canvas) -->
+<div class="fixed bottom-14 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[398px] z-30 pointer-events-auto">
+<div class="bg-warm-canvas/90 backdrop-blur-md border border-hairline-border py-2.5 px-3.5 flex items-center justify-between shadow-sm">
+<!-- Frame Index Counter -->
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-charcoal-black inline-block"></span>
+<span class="font-label-md text-label-md text-charcoal-black font-medium tracking-wider" id="frame-counter">
+            [FRAME 01 / 04]
+          </span>
+</div>
+<!-- Pagination Pips -->
+<div class="flex items-center gap-1.5">
+<span class="pip-dot w-2 h-0.5 bg-safety-orange transition-none"></span>
+<span class="pip-dot w-2 h-0.5 bg-hairline-border transition-none"></span>
+<span class="pip-dot w-2 h-0.5 bg-hairline-border transition-none"></span>
+<span class="pip-dot w-2 h-0.5 bg-hairline-border transition-none"></span>
+</div>
+<!-- Lens & Exposure Specs -->
+<div class="font-label-sm text-label-sm text-graphite-muted flex items-center gap-1">
+<span class="text-charcoal-black font-medium">LEICA M11</span>
+<span>·</span>
+<span>35MM</span>
+<span>·</span>
+<span>F/2.0</span>
+</div>
+</div>
+</div>
+<!-- PERSISTENT FOOTER RULER (Shared Footer Anchor) -->
+<footer class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-40 h-10 bg-warm-canvas/95 backdrop-blur-md border-t border-hairline-border px-4 flex justify-between items-center text-label-sm font-label-sm">
+<!-- Geolocation Coordinates & Copyright -->
+<div class="flex items-center gap-2 text-graphite-muted">
+<span class="text-charcoal-black font-medium">© 2026</span>
+<span>BKK · 13.7563° N</span>
+</div>
+<!-- Segmented Language Toggle Switch -->
+<div class="flex items-center gap-2">
+<div class="inline-flex border border-hairline-border bg-bone-ceramic p-0.5">
+<button class="px-1.5 py-0.5 bg-charcoal-black text-warm-canvas text-[9px] font-medium tracking-tight">EN</button>
+<button class="px-1.5 py-0.5 text-graphite-muted hover:text-charcoal-black text-[9px] font-medium tracking-tight">TH</button>
+</div>
+</div>
+</footer>
+<!-- SLIDE-OVER CERAMIC DRAWER (Shared SideNavBar Modal Anchor) -->
+<aside class="fixed inset-y-0 right-0 w-full max-w-[430px] z-50 bg-bone-ceramic transform translate-x-full transition-transform duration-200 ease-out border-l border-hairline-border flex flex-col justify-between p-6 overflow-y-auto" id="side-drawer">
+<!-- Drawer Header -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between border-b border-hairline-border pb-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-safety-orange inline-block"></span>
+<span class="font-headline-md text-headline-md font-medium text-charcoal-black">CHAKARIN L.</span>
+</div>
+<button class="font-label-md text-label-md px-2 py-1 border border-hairline-border bg-warm-canvas hover:bg-charcoal-black hover:text-warm-canvas transition-none" onclick="toggleDrawer()">
+            [CLOSE ×]
+          </button>
+</div>
+<div class="space-y-1">
+<p class="font-body-md text-body-md text-charcoal-black font-normal">Photographer &amp; Art Director</p>
+<p class="font-label-md text-label-md text-graphite-muted">Bangkok, TH · Studio Leica M-System</p>
+</div>
+<!-- Navigation Tabs Matrix -->
+<nav class="flex flex-col gap-1 border-y border-hairline-border py-4">
+<a class="text-safety-orange font-label-md text-label-md flex items-center justify-between py-2 px-2 hover:bg-warm-canvas" href="#statement">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[16px]">article</span>
+<span>Statement</span>
+</div>
+<span class="text-[9px] font-label-sm">[01]</span>
+</a>
+<a class="text-graphite-muted hover:text-charcoal-black font-label-md text-label-md flex items-center justify-between py-2 px-2 hover:bg-warm-canvas transition-none" href="#gear">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[16px]">photo_camera</span>
+<span>Gear Archive</span>
+</div>
+<span class="text-[9px] font-label-sm">[02]</span>
+</a>
+<a class="text-graphite-muted hover:text-charcoal-black font-label-md text-label-md flex items-center justify-between py-2 px-2 hover:bg-warm-canvas transition-none" href="#telemetry">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Telemetry / Colophon</span>
+</div>
+<span class="text-[9px] font-label-sm">[03]</span>
+</a>
+<a class="text-graphite-muted hover:text-charcoal-black font-label-md text-label-md flex items-center justify-between py-2 px-2 hover:bg-warm-canvas transition-none" href="#contact">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[16px]">alternate_email</span>
+<span>Contact</span>
+</div>
+<span class="text-[9px] font-label-sm">[04]</span>
+</a>
+</nav>
+<!-- Brief Philosophy Block -->
+<div class="space-y-3 bg-warm-canvas p-4 border border-hairline-border">
+<div class="font-label-sm text-label-sm text-graphite-muted uppercase tracking-widest">[CURATORIAL NOTE]</div>
+<p class="font-body-md text-body-md text-charcoal-black leading-relaxed">
+            Exploring the quiet friction between structural density and natural illumination across Southeast Asian megalopolises. Every frame represents an optical specimen captured via rangefinder mechanics.
+          </p>
+</div>
+<!-- Technical Gear Breakdown Grid -->
+<div class="space-y-2">
+<div class="font-label-sm text-label-sm text-graphite-muted">[SYSTEM HARDWARE]</div>
+<div class="grid grid-cols-2 gap-2 font-label-sm text-label-sm">
+<div class="p-2 border border-hairline-border bg-warm-canvas">
+<div class="text-graphite-muted">CHASSIS</div>
+<div class="font-medium text-charcoal-black">Leica M11 Silver</div>
+</div>
+<div class="p-2 border border-hairline-border bg-warm-canvas">
+<div class="text-graphite-muted">OPTIC</div>
+<div class="font-medium text-charcoal-black">Summicron 35 f/2</div>
+</div>
+<div class="p-2 border border-hairline-border bg-warm-canvas">
+<div class="text-graphite-muted">SECONDARY</div>
+<div class="font-medium text-charcoal-black">Sony α7R V</div>
+</div>
+<div class="p-2 border border-hairline-border bg-warm-canvas">
+<div class="text-graphite-muted">CALIBRATION</div>
+<div class="font-medium text-charcoal-black">DCI-P3 / Monochrome</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Drawer Bottom / Direct Action -->
+<div class="pt-6 border-t border-hairline-border space-y-3">
+<a class="w-full py-3 bg-charcoal-black text-warm-canvas font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-safety-orange active:bg-charcoal-black transition-none" href="mailto:hello@chakarin.com">
+<span class="material-symbols-outlined text-[16px]">mail</span>
+<span>hello@chakarin.com</span>
+</a>
+<div class="flex justify-between items-center text-label-sm font-label-sm text-graphite-muted px-1">
+<span>INSTAGRAM: @CHAKARIN</span>
+<span>BANGKOK 10110</span>
+</div>
+</div>
+</aside>
+</main>
+<!-- Interactive Carousel & Microswitch Drawer Scripts -->
+<script>
+    const carousel = document.getElementById('gallery-carousel');
+    const frameCounter = document.getElementById('frame-counter');
+    const pips = document.querySelectorAll('.pip-dot');
+    const totalFrames = 4;
+    let currentIndex = 0;
+
+    function updateHUD(index) {
+      currentIndex = index;
+      const formatted = String(index + 1).padStart(2, '0');
+      frameCounter.textContent = `[FRAME ${formatted} / 04]`;
+      
+      pips.forEach((pip, i) => {
+        if (i === index) {
+          pip.className = 'pip-dot w-2 h-0.5 bg-safety-orange transition-none';
+        } else {
+          pip.className = 'pip-dot w-2 h-0.5 bg-hairline-border transition-none';
+        }
+      });
+    }
+
+    function scrollGallery(direction) {
+      const nextIndex = Math.min(Math.max(currentIndex + direction, 0), totalFrames - 1);
+      const targetScroll = nextIndex * carousel.clientWidth;
+      carousel.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      updateHUD(nextIndex);
+    }
+
+    carousel.addEventListener('scroll', () => {
+      const index = Math.round(carousel.scrollLeft / carousel.clientWidth);
+      if (index !== currentIndex && index < totalFrames) {
+        updateHUD(index);
+      }
+    }, { passive: true });
+
+    function toggleDrawer() {
+      const drawer = document.getElementById('side-drawer');
+      const isOpen = drawer.classList.contains('translate-x-0');
+      if (isOpen) {
+        drawer.classList.remove('translate-x-0');
+        drawer.classList.add('translate-x-full');
+      } else {
+        drawer.classList.remove('translate-x-full');
+        drawer.classList.add('translate-x-0');
+      }
+    }
+  </script>
+</body></html>
