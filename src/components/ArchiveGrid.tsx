@@ -37,8 +37,8 @@ export default function ArchiveGrid({ items, activeSection, onSelectPhoto }: Arc
             {/* Project / Folder Header */}
             <div className="flex items-baseline justify-between border-b border-[#E5E5DF] pb-3 mb-7 font-mono text-xs">
               <div className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-xs bg-[#FF3E00]" />
-                <span className="text-[#121212] font-black tracking-wider uppercase text-xs md:text-sm">
+                <span className="w-2 h-2 rounded-xs bg-[#FF9500] dark:bg-[#FFA000]" />
+                <span className="text-[#121212] dark:text-[#F5F5F3] font-black tracking-wider uppercase text-xs md:text-sm">
                   {section.folderName}
                 </span>
                 <span className="text-[#737373] text-[11px]">

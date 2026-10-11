@@ -59,7 +59,7 @@ export default function Home() {
   }, [selectedPhoto]);
 
   return (
-    <main className="relative min-h-screen bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] selection:bg-[#FF3E00] dark:selection:bg-[#FF5722] selection:text-white analog-grain pt-16 transition-colors duration-200">
+    <main className="relative min-h-screen bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] selection:bg-[#FF9500] dark:selection:bg-[#FFA000] selection:text-white analog-grain pt-16 transition-colors duration-200">
       {/* Top Header: Progressive Blur & Center-to-Top-Left Morphing BrandMark */}
       <TopNav
         onOpenAbout={() => setIsAtelierOpen(true)}

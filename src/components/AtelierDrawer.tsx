@@ -70,7 +70,7 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
               {/* Bio & Documentary Philosophy */}
               <div className="mt-7 space-y-3.5">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#FF3E00]" />
+                  <span className="w-2 h-2 rounded-full bg-[#FF9500] dark:bg-[#FFA000]" />
                   <span className="font-mono text-[10px] tracking-wider text-[#737373] dark:text-[#9E9E9C] uppercase font-semibold">
                     {t("tagline")}
                   </span>
@@ -116,9 +116,9 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                       triggerHaptic("light");
                       playTactileClick();
                     }}
-                    className="flex items-center gap-2 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px] group-hover:text-[#FF3E00] dark:group-hover:text-[#FF5722] transition-colors"
+                    className="flex items-center gap-2 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
                   >
-                    <Mail className="w-3.5 h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF3E00] dark:group-hover:text-[#FF5722] transition-colors" />
+                    <Mail className="w-3.5 h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
                     <span className="truncate">{siteProfile.contact.email}</span>
                   </a>
                   <button
@@ -133,8 +133,8 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                   >
                     {copied ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-[#FF3E00]" />
-                        <span className="text-[#FF3E00] font-bold">[{t("copied")}]</span>
+                        <Check className="w-3.5 h-3.5 text-[#FF9500] dark:text-[#FFA000]" />
+                        <span className="text-[#FF9500] dark:text-[#FFA000] font-bold">[{t("copied")}]</span>
                       </>
                     ) : (
                       <>

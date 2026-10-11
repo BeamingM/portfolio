@@ -187,7 +187,7 @@ export default function TopNav({
               onOpenAbout();
             }}
             type="button"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#121212] dark:border-[#F5F5F3] bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] hover:bg-[#FF3E00] dark:hover:bg-[#FF5722] hover:border-[#FF3E00] dark:hover:border-[#FF5722] hover:text-white dark:hover:text-white transition-colors cursor-pointer text-[11px] font-sans font-bold tracking-wide shadow-xs"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#121212] dark:border-[#F5F5F3] bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] hover:bg-[#FF9500] dark:hover:bg-[#FFA000] hover:border-[#FF9500] dark:hover:border-[#FFA000] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer text-[11px] font-sans font-bold tracking-wide shadow-xs"
           >
             <span>{t("contact")}</span>
           </button>

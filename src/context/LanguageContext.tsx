@@ -29,11 +29,11 @@ const translations: Record<string, { th: string; en: string }> = {
   prints: { th: "PRINTS", en: "PRINTS" },
   allArchive: { th: "ALL ARCHIVE", en: "ALL ARCHIVE" },
   personalTitle: { th: "Personal Projects 2026", en: "Personal Projects 2026" },
-  personalDesc: { th: "Hua Hin 2026 — Beam's Edited & Coastal Studies", en: "Hua Hin 2026 — Beam's Edited & Coastal Studies" },
+  personalDesc: { th: "Hua Hin 2026 — ทะเล แสงเงา และสตรีทศึกษา", en: "Hua Hin 2026 — Beam's Edited & Coastal Studies" },
   tuPhotoTitle: { th: "TU PHOTO 2026", en: "TU PHOTO 2026" },
-  tuPhotoDesc: { th: "One Day Trip 2026 — บึม_beamingmotion", en: "One Day Trip 2026 — บึม_beamingmotion" },
+  tuPhotoDesc: { th: "50*6th OCT — บันทึกภาพงานรำลึก 6 ตุลาฯ 2569", en: "50*6th OCT — October 6 Commemoration Series" },
   pscTuTitle: { th: "PSC.TU", en: "PSC.TU" },
-  pscTuDesc: { th: "Faculty of Political Science · First Meet & Music", en: "Faculty of Political Science · First Meet & Music" },
+  pscTuDesc: { th: "Polsci Music - FirstM33t 2026 · คอนเสิร์ตและโทนฟิล์ม", en: "Polsci Music - FirstM33t 2026 · Film Look & Stage Performance" },
 
   // Instagram Publication
   officialPublication: { th: "Official Feature", en: "Official Feature" },

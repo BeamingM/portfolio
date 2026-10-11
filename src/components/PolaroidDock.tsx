@@ -126,9 +126,9 @@ export default function PolaroidDock({
         <button
           onClick={handleAboutClick}
           type="button"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E5DF] bg-[#F4F4F0] hover:bg-[#121212] hover:text-white text-[#121212] transition-colors cursor-pointer text-[10px] md:text-[11px] font-mono tracking-wider shadow-2xs shrink-0"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#F4F4F0] dark:bg-[#1A1A19] hover:bg-[#121212] dark:hover:bg-[#F5F5F3] hover:text-white dark:hover:text-[#121212] text-[#121212] dark:text-[#F5F5F3] transition-colors cursor-pointer text-[10px] md:text-[11px] font-mono tracking-wider shadow-2xs shrink-0"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#FF3E00] animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#FF9500] dark:bg-[#FFA000] animate-pulse" />
           <span>[INFO]</span>
         </button>
       </div>

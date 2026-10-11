@@ -95,8 +95,8 @@ export default function DraggableStage({
               stiffness: 340,
               damping: 28,
             }}
-            className={`relative max-h-[74vh] md:max-h-[78vh] bg-white p-3 md:p-4 pb-7 md:pb-9 shadow-2xl rounded-xs border border-[#E5E5DF] cursor-grab active:cursor-grabbing transition-shadow ${
-              isDragging ? "shadow-3xl ring-1 ring-[#FF3E00]/30" : ""
+            className={`relative max-h-[74vh] md:max-h-[78vh] bg-white dark:bg-[#161616] p-3 md:p-4 pb-7 md:pb-9 shadow-2xl rounded-xs border border-[#E5E5DF] dark:border-[#282827] cursor-grab active:cursor-grabbing transition-shadow ${
+              isDragging ? "shadow-3xl ring-1 ring-[#FF9500]/30 dark:ring-[#FFA000]/30" : ""
             }`}
           >
             {/* The Actual Photograph with Dynamic Aspect Ratio */}

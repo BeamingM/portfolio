@@ -16,7 +16,6 @@ export default function FigmaCanvasOverlay() {
   const [isVisible, setIsVisible] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [cursorContext, setCursorContext] = useState<CursorContext>({ type: "default" });
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
 
   // Direct mouse positions for 0-latency crisp cursor replacement
   const mouseX = useMotionValue(-100);
@@ -29,7 +28,9 @@ export default function FigmaCanvasOverlay() {
   useEffect(() => {
     // Only enable on desktop mouse/trackpad viewports
     const mediaQuery = window.matchMedia("(pointer: fine)");
-    setIsFinePointer(mediaQuery.matches);
+    queueMicrotask(() => {
+      setIsFinePointer(mediaQuery.matches);
+    });
 
     if (mediaQuery.matches) {
       document.documentElement.classList.add("figma-cursor-active");
@@ -48,7 +49,6 @@ export default function FigmaCanvasOverlay() {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
-      setCoords({ x: Math.round(e.clientX), y: Math.round(e.clientY) });
       if (!isVisible) setIsVisible(true);
 
       // Detect hover target context
@@ -111,26 +111,14 @@ export default function FigmaCanvasOverlay() {
   if (!isFinePointer || !isVisible) return null;
 
   const isDark = resolvedTheme === "dark";
+  const accentOrange = isDark ? "#FFA000" : "#FF9500";
 
   return (
     <div
       className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden select-none"
       aria-hidden="true"
     >
-      {/* 1. Figma-style Canvas Coordinate HUD in bottom-right corner */}
-      <div className="fixed bottom-4 right-4 hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#F4F4F0]/90 dark:bg-[#1A1A19]/90 border border-[#E5E5DF] dark:border-[#282827] backdrop-blur-xs font-mono text-[9px] tracking-wider text-[#737373] dark:text-[#9E9E9C] shadow-2xs">
-        <span className="flex items-center gap-1 font-semibold text-[#121212] dark:text-[#F5F5F3]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#FF3E00] animate-pulse" />
-          FIGMA HUD
-        </span>
-        <span className="text-[#D1D1CB] dark:text-[#383837]">·</span>
-        <span>X: {coords.x}px</span>
-        <span>Y: {coords.y}px</span>
-        <span className="text-[#D1D1CB] dark:text-[#383837]">·</span>
-        <span className="font-semibold text-[#FF3E00] dark:text-[#FF5722]">100%</span>
-      </div>
-
-      {/* 2. Primary Figma Vector Cursor (Zero-latency direct follow) */}
+      {/* 1. Primary Figma Vector Cursor (Zero-latency direct follow) */}
       <motion.div
         style={{
           x: mouseX,
@@ -157,7 +145,7 @@ export default function FigmaCanvasOverlay() {
             {/* Outer high-contrast stroke + inner fill */}
             <path
               d="M3 3L10.5 21L13.5 13.5L21 10.5L3 3Z"
-              fill={cursorContext.type === "photo" ? "#FF3E00" : isDark ? "#FFFFFF" : "#0D0D0D"}
+              fill={cursorContext.type === "photo" ? accentOrange : isDark ? "#FFFFFF" : "#0D0D0D"}
               stroke={isDark ? "#000000" : "#FFFFFF"}
               strokeWidth="1.6"
               strokeLinejoin="round"
@@ -166,7 +154,7 @@ export default function FigmaCanvasOverlay() {
         </div>
       </motion.div>
 
-      {/* 3. Trailing Figma Tag Badge (Follows with gentle fluid spring) */}
+      {/* 2. Trailing Figma Tag Badge (Follows with gentle fluid spring) */}
       {cursorContext.type !== "default" && (
         <motion.div
           style={{
@@ -184,7 +172,7 @@ export default function FigmaCanvasOverlay() {
             style={{
               backgroundColor:
                 cursorContext.type === "photo"
-                  ? "#FF3E00"
+                  ? accentOrange
                   : cursorContext.type === "email"
                   ? "#0D99FF"
                   : isDark

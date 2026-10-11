@@ -10,7 +10,7 @@
   --border: #E5E5DF;
   --border-subtle: #EBEBE6;
   --muted: #737373;
-  --accent: #FF3E00;
+  --accent: #FF9500;
   --nav-blur-bg: rgba(251, 251, 249, 0.94);
   --nav-blur-mid: rgba(251, 251, 249, 0.72);
 }
@@ -24,7 +24,7 @@
   --border: #2B2B2A;
   --border-subtle: #222221;
   --muted: #9E9E9C;
-  --accent: #FF5722;
+  --accent: #FFA000;
   --nav-blur-bg: rgba(13, 13, 13, 0.94);
   --nav-blur-mid: rgba(13, 13, 13, 0.72);
 }

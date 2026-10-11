@@ -90,14 +90,14 @@ export default function EditorialPhotobook({
           data-figma-photo="true"
           data-photo-title={photo.title}
           data-photo-specs={`${photo.specs.camera || "Sony α7 III"} · ${photo.specs.lens || "35mm"}`}
-          className="w-full relative bg-white dark:bg-[#151515] p-3 sm:p-4 md:p-5 pb-5 md:pb-6 shadow-sm hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 border border-[#EBEBE6] dark:border-[#262625] group-hover:border-[#FF3E00]/70 dark:group-hover:border-[#FF5722]/70 rounded-xs cursor-pointer"
+          className="w-full relative bg-white dark:bg-[#151515] p-3 sm:p-4 md:p-5 pb-5 md:pb-6 shadow-sm hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 border border-[#EBEBE6] dark:border-[#262625] group-hover:border-[#FF9500]/70 dark:group-hover:border-[#FFA000]/70 rounded-xs cursor-pointer"
         >
           {/* Figma-Style Artboard Selection Corner Handles & Dimensions on Hover */}
-          <div className="absolute -top-1 -left-1 w-2 h-2 border border-[#FF3E00] bg-white dark:bg-[#0D0D0D] opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none" />
-          <div className="absolute -top-1 -right-1 w-2 h-2 border border-[#FF3E00] bg-white dark:bg-[#0D0D0D] opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none" />
-          <div className="absolute -bottom-1 -left-1 w-2 h-2 border border-[#FF3E00] bg-white dark:bg-[#0D0D0D] opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none" />
-          <div className="absolute -bottom-1 -right-1 w-2 h-2 border border-[#FF3E00] bg-white dark:bg-[#0D0D0D] opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none" />
-          <div className="absolute -top-2.5 left-3 px-1.5 py-0.2 rounded-xs bg-[#FF3E00] text-white font-mono text-[8px] font-bold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none shadow-xs">
+          <div className="absolute -top-1 -left-1 w-2 h-2 border border-[#FF9500] dark:border-[#FFA000] bg-white dark:bg-[#0D0D0D] opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none" />
+          <div className="absolute -top-1 -right-1 w-2 h-2 border border-[#FF9500] dark:border-[#FFA000] bg-white dark:bg-[#0D0D0D] opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none" />
+          <div className="absolute -bottom-1 -left-1 w-2 h-2 border border-[#FF9500] dark:border-[#FFA000] bg-white dark:bg-[#0D0D0D] opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none" />
+          <div className="absolute -bottom-1 -right-1 w-2 h-2 border border-[#FF9500] dark:border-[#FFA000] bg-white dark:bg-[#0D0D0D] opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none" />
+          <div className="absolute -top-2.5 left-3 px-1.5 py-0.2 rounded-xs bg-[#FF9500] dark:bg-[#FFA000] text-white font-mono text-[8px] font-bold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none shadow-xs">
             {photo.width || 2400} × {photo.height || 1600}
           </div>
 
