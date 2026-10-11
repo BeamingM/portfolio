@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ExternalLink, CheckCircle2 } from "lucide-react";
 import { triggerHaptic } from "@/utils/haptics";
 import { playTactileClick } from "@/utils/sound";
@@ -25,18 +25,15 @@ function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
 
 interface InstagramEmbedProps {
   postUrl?: string;
-  defaultCaptioned?: boolean;
 }
 
 export default function InstagramEmbed({
   postUrl = "https://www.instagram.com/p/DcbOhDcmWNE/",
-  defaultCaptioned = true,
 }: InstagramEmbedProps) {
-  const [captioned, setCaptioned] = useState<boolean>(defaultCaptioned);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Process Instagram embed whenever component mounts or captioned state changes
+    // Process Instagram embed on mount
     const processEmbed = () => {
       if (typeof window !== "undefined") {
         if ((window as any).instgrm) {
@@ -61,13 +58,7 @@ export default function InstagramEmbed({
     processEmbed();
     const timer = setTimeout(processEmbed, 400);
     return () => clearTimeout(timer);
-  }, [captioned]);
-
-  const toggleCaptioned = (val: boolean) => {
-    triggerHaptic("light");
-    playTactileClick();
-    setCaptioned(val);
-  };
+  }, []);
 
   return (
     <div className="w-full max-w-xl mx-auto my-12">
@@ -115,39 +106,20 @@ export default function InstagramEmbed({
             <span className="text-[#121212] font-semibold">@beamingmotion</span>
           </div>
 
-          {/* Captioned vs Compact View Switcher */}
-          <div className="flex items-center gap-1 bg-[#F4F4F0] border border-[#E5E5DF] rounded-md p-0.5 self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => toggleCaptioned(true)}
-              className={`px-2 py-0.5 rounded-xs transition-colors cursor-pointer ${
-                captioned ? "bg-[#121212] text-white font-bold" : "text-[#737373] hover:text-[#121212]"
-              }`}
-            >
-              Captioned
-            </button>
-            <button
-              type="button"
-              onClick={() => toggleCaptioned(false)}
-              className={`px-2 py-0.5 rounded-xs transition-colors cursor-pointer ${
-                !captioned ? "bg-[#121212] text-white font-bold" : "text-[#737373] hover:text-[#121212]"
-              }`}
-            >
-              Compact
-            </button>
-          </div>
+          <span className="text-[9px] tracking-wider text-[#A3A3A3] uppercase">
+            Official Feed Embed
+          </span>
         </div>
       </div>
 
-      {/* Instagram Embed Box */}
+      {/* Instagram Embed Box (Captioned) */}
       <div
         ref={containerRef}
-        key={captioned ? "ig-captioned" : "ig-compact"}
         className="bg-[#FFFFFF] border border-[#EBEBE6] rounded-b-sm p-2 sm:p-4 flex justify-center items-center overflow-hidden min-h-[500px]"
       >
         <blockquote
           className="instagram-media"
-          {...(captioned ? { "data-instgrm-captioned": "" } : {})}
+          data-instgrm-captioned=""
           data-instgrm-permalink="https://www.instagram.com/p/DcbOhDcmWNE/?utm_source=ig_embed&utm_campaign=loading"
           data-instgrm-version="14"
           style={{
