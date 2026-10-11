@@ -4,30 +4,47 @@ interface BrandMarkProps {
   showSubtitle?: boolean;
   className?: string;
   isCenter?: boolean;
+  centerFactor?: number; // 1 = fully centered (hero), 0 = fully left-aligned (top nav)
 }
 
 export default function BrandMark({
   showSubtitle = true,
   className = "",
   isCenter = false,
+  centerFactor,
 }: BrandMarkProps) {
   const { t } = useLanguage();
 
+  const isExplicitlyCentered = isCenter || (centerFactor !== undefined && centerFactor > 0.95);
+
   return (
-    <div className={`flex flex-col select-none ${isCenter ? "items-center text-center" : "items-start text-left"} ${className}`}>
+    <div
+      className={`flex flex-col select-none ${
+        isExplicitlyCentered ? "items-center text-center" : "items-start text-left"
+      } ${className}`}
+    >
       {/* Primary Dominant Name: CHAKARIN L. */}
       <div className="flex items-baseline gap-2">
-        <span className="font-sans text-[17px] md:text-[20px] font-black tracking-tight text-[#121212] leading-none uppercase">
+        <span className="font-sans text-[17px] md:text-[20px] font-black tracking-tight text-[#121212] dark:text-[#F5F5F3] leading-none uppercase transition-colors duration-200">
           CHAKARIN L.
         </span>
-        <span className="text-[#D1D1CB] text-xs">/</span>
-        <span className="font-macintosh text-[19px] md:text-[21px] text-[#737373] hover:text-[#121212] transition-colors leading-none">
+        <span className="text-[#D1D1CB] dark:text-[#383837] text-xs transition-colors duration-200">
+          /
+        </span>
+        <span className="font-macintosh text-[19px] md:text-[21px] text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] transition-colors duration-200 leading-none">
           BeamingMotion
         </span>
       </div>
 
       {showSubtitle && (
-        <div className="flex items-center gap-1.5 mt-1 font-mono text-[9px] md:text-[10px] tracking-[0.14em] text-[#737373] uppercase">
+        <div
+          style={
+            centerFactor !== undefined && !isExplicitlyCentered
+              ? { transform: `translateX(${centerFactor * 46}px)` }
+              : undefined
+          }
+          className="flex items-center gap-1.5 mt-1 font-mono text-[9px] md:text-[10px] tracking-[0.14em] text-[#737373] dark:text-[#9E9E9C] uppercase transition-colors duration-200"
+        >
           <span>{t("tagline")}</span>
         </div>
       )}

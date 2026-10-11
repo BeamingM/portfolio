@@ -7,10 +7,8 @@ import EditorialPhotobook from "@/components/EditorialPhotobook";
 import PhotoModal from "@/components/PhotoModal";
 import AtelierDrawer from "@/components/AtelierDrawer";
 import { galleryItems, gallerySections, PhotoItem } from "@/config/gallery";
-import { useLanguage } from "@/context/LanguageContext";
 
 export default function Home() {
-  const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState<string>("all");
   const [isAtelierOpen, setIsAtelierOpen] = useState<boolean>(false);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
@@ -69,7 +67,7 @@ export default function Home() {
       />
 
       {/* Hero Welcome Space: The Brand Identity begins here in the center, then morphs to top-left */}
-      <section className="relative w-full pt-14 pb-8 flex flex-col items-center justify-center min-h-[30vh] sm:min-h-[34vh] select-none text-center">
+      <section className="relative w-full pt-14 pb-4 flex flex-col items-center justify-center select-none text-center">
         {/* Invisible spacer matching where the BrandMark sits at scroll 0 */}
         <div className="h-16 md:h-20" aria-hidden="true" />
 
@@ -78,12 +76,6 @@ export default function Home() {
           <span>Sony α7 III</span>
           <span className="text-[#D1D1CB] dark:text-[#383837]">·</span>
           <span>FE 35mm & 55mm ZA</span>
-        </div>
-
-        {/* Scroll Prompt */}
-        <div className="mt-8 flex flex-col items-center gap-1 font-mono text-[9px] md:text-[10px] text-[#A3A3A3] dark:text-[#777] uppercase tracking-[0.2em]">
-          <span>{t("scrollPrompt")}</span>
-          <span className="animate-bounce mt-1">↓</span>
         </div>
       </section>
 

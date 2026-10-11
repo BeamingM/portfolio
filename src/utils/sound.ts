@@ -48,7 +48,7 @@ export function playTactileClick() {
 
     osc.start(audioCtx.currentTime);
     osc.stop(audioCtx.currentTime + 0.022);
-  } catch (e) {
+  } catch {
     // Audio context may require prior user interaction
   }
 }

@@ -38,9 +38,11 @@ export default function TopNav({
 
   useEffect(() => {
     return scrollY.on("change", (latest) => {
-      // 0 at top of hero, 1 once scrolled past 140px
-      const p = Math.min(Math.max(latest / 140, 0), 1);
-      setProgress(p);
+      // 0 at top of hero, 1 once scrolled past 180px
+      const raw = Math.min(Math.max(latest / 180, 0), 1);
+      // Organic smoothstep curve: 3x^2 - 2x^3 (smooth acceleration & deceleration)
+      const eased = raw * raw * (3 - 2 * raw);
+      setProgress(eased);
     });
   }, [scrollY]);
 
@@ -54,9 +56,11 @@ export default function TopNav({
   // Dynamic calculations for Hero -> Top-Left morph
   const sidePadding = isMobile ? 16 : 32; // px-4 vs px-8
   const factor = 1 - progress;
-  const xOffset = `calc(${factor} * (50vw - 50% - ${sidePadding}px))`;
-  const yOffset = `calc(${factor} * 18vh)`;
-  const scale = 1 + factor * 0.32;
+  // Exact horizontal centering formula with top-left transform-origin and scale factor
+  const xOffset = `calc(${factor} * (50vw - ${sidePadding}px - 65%))`;
+  // Vertical travel distance to align with hero spacer across all screen sizes
+  const yOffset = `calc(${factor} * ${isMobile ? 116 : 126}px)`;
+  const scale = 1 + factor * 0.3;
 
   return (
     <>
@@ -76,17 +80,20 @@ export default function TopNav({
         <div
           style={{
             transform: `translate(${xOffset}, ${yOffset}) scale(${scale})`,
-            transformOrigin: isMobile ? "top center" : "top left",
-            transition: "transform 0.05s linear",
+            transformOrigin: "top left",
+            willChange: "transform",
           }}
           className="pointer-events-auto cursor-pointer"
           onClick={() => {
-            if (progress > 0.5) {
+            if (progress > 0.3) {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
         >
-          <BrandMark isCenter={progress < 0.2 && isMobile} />
+          <BrandMark
+            isCenter={progress < 0.05}
+            centerFactor={factor}
+          />
         </div>
 
         {/* Center: Editorial Project Index Links (Visible on desktop) */}

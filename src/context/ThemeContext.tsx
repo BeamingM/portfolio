@@ -26,7 +26,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // 1. Check saved user preference, fallback to "system"
     const saved = localStorage.getItem("portfolio_theme") as Theme | null;
     const initialTheme: Theme = saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
-    setThemeState(initialTheme);
+    queueMicrotask(() => {
+      setThemeState(initialTheme);
+    });
 
     // 2. Resolve theme based on system preference
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -34,12 +36,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const applyTheme = (currentTheme: Theme) => {
       const isDark = currentTheme === "dark" || (currentTheme === "system" && mediaQuery.matches);
       const effective: "light" | "dark" = isDark ? "dark" : "light";
-      setResolvedTheme(effective);
+      queueMicrotask(() => {
+        setResolvedTheme(effective);
+      });
 
       if (isDark) {
         document.documentElement.classList.add("dark");
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.documentElement.style.colorScheme = "dark";
       } else {
         document.documentElement.classList.remove("dark");
+        document.documentElement.setAttribute("data-theme", "light");
+        document.documentElement.style.colorScheme = "light";
       }
     };
 
@@ -72,8 +80,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     if (isDark) {
       document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+      document.documentElement.style.colorScheme = "dark";
     } else {
       document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
+      document.documentElement.style.colorScheme = "light";
     }
   };
 

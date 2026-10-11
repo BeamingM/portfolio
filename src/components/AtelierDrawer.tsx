@@ -6,7 +6,7 @@ import BrandMark from "./BrandMark";
 import { siteProfile } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
 import { playTactileClick } from "@/utils/sound";
-import { X, Copy, Check, ExternalLink } from "lucide-react";
+import { X, Copy, Check, ExternalLink, Mail } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface AtelierDrawerProps {
@@ -108,15 +108,28 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
                   [{t("getInTouch")}]
                 </div>
 
-                {/* Email Box */}
-                <div className="flex items-center justify-between p-3 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19]">
-                  <span className="text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px]">
-                    {siteProfile.contact.email}
-                  </span>
+                {/* Email Box (Direct Mailto Link + Copy Action) */}
+                <div className="flex items-center justify-between p-3 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group">
+                  <a
+                    href={`mailto:${siteProfile.contact.email}`}
+                    onClick={() => {
+                      triggerHaptic("light");
+                      playTactileClick();
+                    }}
+                    className="flex items-center gap-2 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px] group-hover:text-[#FF3E00] dark:group-hover:text-[#FF5722] transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF3E00] dark:group-hover:text-[#FF5722] transition-colors" />
+                    <span className="truncate">{siteProfile.contact.email}</span>
+                  </a>
                   <button
-                    onClick={handleCopyEmail}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleCopyEmail();
+                    }}
                     type="button"
-                    className="flex items-center gap-1.5 text-[10px] text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer"
+                    title={copied ? "Copied" : "Copy email address"}
+                    className="flex items-center gap-1.5 pl-2 text-[10px] text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0"
                   >
                     {copied ? (
                       <>

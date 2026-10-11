@@ -19,7 +19,7 @@ export function triggerHaptic(type: "light" | "medium" | "snap" | "success" = "l
         navigator.vibrate([10, 40, 15]);
         break;
     }
-  } catch (e) {
+  } catch {
     // Ignore unsupported/blocked vibration calls
   }
 }

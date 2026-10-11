@@ -28,6 +28,14 @@ interface InstagramEmbedProps {
   postUrl?: string;
 }
 
+interface InstagramWindow extends Window {
+  instgrm?: {
+    Embeds: {
+      process: () => void;
+    };
+  };
+}
+
 export default function InstagramEmbed({
   postUrl = "https://www.instagram.com/p/DcbOhDcmWNE/",
 }: InstagramEmbedProps) {
@@ -37,8 +45,9 @@ export default function InstagramEmbed({
     // Process Instagram embed on mount
     const processEmbed = () => {
       if (typeof window !== "undefined") {
-        if ((window as any).instgrm) {
-          (window as any).instgrm.Embeds.process();
+        const win = window as unknown as InstagramWindow;
+        if (win.instgrm) {
+          win.instgrm.Embeds.process();
         } else {
           // If script tag does not exist yet, inject it
           const existingScript = document.getElementById("instagram-embed-script");
@@ -48,7 +57,8 @@ export default function InstagramEmbed({
             script.src = "https://www.instagram.com/embed.js";
             script.async = true;
             script.onload = () => {
-              (window as any).instgrm?.Embeds?.process();
+              const loadedWin = window as unknown as InstagramWindow;
+              loadedWin.instgrm?.Embeds?.process();
             };
             document.body.appendChild(script);
           }
