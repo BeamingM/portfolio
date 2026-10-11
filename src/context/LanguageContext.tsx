@@ -32,7 +32,7 @@ const translations: Record<string, { th: string; en: string }> = {
   personalTitle: { th: "Personal Projects 2026", en: "Personal Projects 2026" },
   personalDesc: { th: "Hua Hin 2026 — ทะเล แสงเงา และสตรีทศึกษา", en: "Hua Hin 2026 — Beam's Edited & Coastal Studies" },
   tuPhotoTitle: { th: "TU PHOTO 2026", en: "TU PHOTO 2026" },
-  tuPhotoDesc: { th: "50*6th OCT — บันทึกภาพงานรำลึก 6 ตุลาฯ 2569", en: "50*6th OCT — October 6 Commemoration Series" },
+  tuPhotoDesc: { th: "ครบรอบ 50 ปี 6 ตุลา — TU Photo", en: "50th Anniversary of October 6 — TU Photo" },
   pscTuTitle: { th: "PSC.TU", en: "PSC.TU" },
   pscTuDesc: { th: "Polsci Music - FirstM33t 2026 · คอนเสิร์ตและโทนฟิล์ม", en: "Polsci Music - FirstM33t 2026 · Film Look & Stage Performance" },
 

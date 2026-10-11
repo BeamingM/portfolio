@@ -39,8 +39,8 @@ const GREETINGS: Record<string, NarrativeItem> = {
       en: "TU Photo",
     },
     description: {
-      th: "ชุมนุมถ่ายภาพ มหาวิทยาลัยธรรมศาสตร์ — บันทึกงานประวัติศาสตร์และกิจกรรมท่าพระจันทร์",
-      en: "Thammasat University Photo Club — Historic campus documentation",
+      th: "ชุมนุมถ่ายภาพ มหาวิทยาลัยธรรมศาสตร์ — ครบรอบ 50 ปี 6 ตุลา และกิจกรรมท่าพระจันทร์",
+      en: "Thammasat University Photo Club — 50th Anniversary of Oct 6 and campus documentation",
     },
   },
   psctu: {
@@ -49,8 +49,8 @@ const GREETINGS: Record<string, NarrativeItem> = {
       en: "PSC.TU",
     },
     description: {
-      th: "อนุกรรมการนักศึกษาคณะรัฐศาสตร์ — บันทึกภาพกิจกรรมและคอนเสิร์ต Polsci Music",
-      en: "Political Science Student Committee — Live performance frames and campus energy",
+      th: "บันทึกภาพกิจกรรมและคอนเสิร์ต Polsci Music — ท่าพระจันทร์",
+      en: "Live performance frames and campus concert atmosphere at Tha Phra Chan",
     },
   },
 };
@@ -72,8 +72,8 @@ export default function ProjectDescriptionHeader({
           transition={{ duration: 0.28, ease: "easeOut" }}
           className="space-y-2.5"
         >
-          {/* Apple-Style Clean Floating Typography (No rigid boxes, no tags, no orange badges) */}
-          <h2 className="font-serif italic text-xl sm:text-2xl md:text-3xl lg:text-4xl text-[#121212] dark:text-[#F5F5F3] tracking-tight leading-snug break-words max-w-2xl mx-auto">
+          {/* Apple-Style Clean Floating Typography (Bold, modern Anuphan Thai typography) */}
+          <h2 className="font-sans font-semibold sm:font-bold text-xl sm:text-2xl md:text-3xl text-[#121212] dark:text-[#F5F5F3] tracking-tight leading-relaxed break-words max-w-2xl mx-auto">
             {current.title[lang]}
           </h2>
           <p className="font-sans text-sm sm:text-[15px] leading-relaxed text-[#595955] dark:text-[#A8A8A4] max-w-xl mx-auto font-normal">

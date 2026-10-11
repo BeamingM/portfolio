@@ -104,7 +104,7 @@ export default function EditorialPhotobook({
             BeamingMotion
           </div>
           <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] mt-2 tracking-wider uppercase">
-            Photographer based in Bangkok · Faculty of Political Science, Thammasat
+            Photographer based in Bangkok · Thammasat University
           </div>
 
           {/* Social & Contact Direct Links */}
@@ -133,9 +133,9 @@ export default function EditorialPhotobook({
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors font-semibold"
+              className="flex items-center gap-1.5 text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors"
             >
-              <FileText className="w-3.5 h-3.5 text-[#FF9500]" />
+              <FileText className="w-3.5 h-3.5" />
               <span>Resume</span>
             </a>
             <span className="text-[#D1D1CB] dark:text-[#383837]">·</span>

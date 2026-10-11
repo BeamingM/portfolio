@@ -25,8 +25,15 @@ export default function BrandMark({
       ? 1
       : 0;
 
+  // Tagline opacity: fully visible in hero, smoothly fades out and collapses as user scrolls
+  const subtitleOpacity = Math.max(0, (factor - 0.4) / 0.6);
+
   return (
-    <div className={`flex flex-col select-none items-start text-left w-fit ${className}`}>
+    <div
+      className={`flex flex-col select-none transition-all duration-200 ${
+        factor > 0.6 ? "items-center text-center" : "items-start text-left"
+      } w-fit ${className}`}
+    >
       {/* Primary Dominant Name: CHAKARIN L. */}
       <div className="flex items-baseline gap-2 whitespace-nowrap">
         <span className="font-sans text-[16px] sm:text-[17px] md:text-[20px] font-black tracking-tight text-[#121212] dark:text-[#F5F5F3] leading-none uppercase transition-colors duration-200 shrink-0">
@@ -50,22 +57,17 @@ export default function BrandMark({
         </span>
       </div>
 
+      {/* Subtitle / Tagline: Perfectly centered in hero, cleanly vanishes when docked in sticky navbar */}
       {showSubtitle && (
         <div
-          style={
-            factor > 0
-              ? {
-                  position: "relative",
-                  left: `${factor * 50}%`,
-                  transform: `translateX(-${factor * 50}%)`,
-                }
-              : undefined
-          }
-          className={`flex items-center gap-1.5 mt-1 font-mono text-[9px] md:text-[10px] tracking-[0.14em] text-[#737373] dark:text-[#9E9E9C] uppercase transition-all duration-300 whitespace-nowrap ${
-            collapseSecondary
-              ? "max-h-0 opacity-0 overflow-hidden md:max-h-6 md:opacity-100 md:overflow-visible"
-              : "max-h-6 opacity-100"
-          }`}
+          style={{
+            opacity: subtitleOpacity,
+            maxHeight: subtitleOpacity > 0 ? "24px" : "0px",
+            marginTop: subtitleOpacity > 0 ? "4px" : "0px",
+            overflow: "hidden",
+            pointerEvents: subtitleOpacity > 0 ? "auto" : "none",
+          }}
+          className="flex items-center justify-center gap-1.5 font-mono text-[9px] md:text-[10px] tracking-[0.14em] text-[#737373] dark:text-[#9E9E9C] uppercase transition-all duration-200 whitespace-nowrap"
         >
           <span>{t("tagline")}</span>
         </div>

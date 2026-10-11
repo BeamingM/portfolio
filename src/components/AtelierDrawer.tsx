@@ -34,43 +34,47 @@ export default function AtelierDrawer({ isOpen, onClose }: AtelierDrawerProps) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Frosted Glass Backdrop with Rich Bokeh Blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 z-50 bg-[#121212]/40 dark:bg-black/60 backdrop-blur-xs cursor-pointer"
+            className="fixed inset-0 z-50 bg-black/35 dark:bg-black/60 backdrop-blur-md cursor-pointer transition-opacity"
+            aria-label="Close drawer backdrop"
           />
 
-          {/* Slide-over Clean Panel */}
+          {/* Chic Floating Frosted Glass Panel (Breathable 88vw on mobile, never suffocating) */}
           <motion.aside
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed top-0 right-0 h-full w-full max-w-md z-50 bg-[#FFFFFF] dark:bg-[#141414] border-l border-[#E5E5DF] dark:border-[#282827] text-[#121212] dark:text-[#F5F5F3] flex flex-col justify-between p-6 md:p-8 shadow-2xl overflow-y-auto"
+            transition={{ type: "spring", damping: 32, stiffness: 320 }}
+            className="fixed top-0 right-0 h-full w-[88vw] sm:w-[420px] max-w-md z-50 bg-[#FFFFFF]/85 dark:bg-[#141414]/85 backdrop-blur-2xl border-l border-white/60 dark:border-white/10 text-[#121212] dark:text-[#F5F5F3] flex flex-col justify-between p-6 md:p-8 shadow-[-16px_0_48px_rgba(0,0,0,0.22)] rounded-l-2xl sm:rounded-l-3xl overflow-y-auto"
           >
             <div>
               {/* Header */}
-              <div className="flex items-center justify-between pb-5 border-b border-[#EBEBE6] dark:border-[#222221]">
-                <BrandMark showSubtitle={true} />
+              <div className="flex items-center justify-between pb-5 border-b border-[#EBEBE6]/60 dark:border-[#222221]/60">
+                <BrandMark showSubtitle={false} />
                 <button
                   onClick={handleClose}
                   type="button"
-                  className="p-2 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5] dark:bg-[#1E1E1D] hover:bg-[#121212] dark:hover:bg-[#F5F5F3] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer"
+                  className="p-2 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5]/80 dark:bg-[#1E1E1D]/80 hover:bg-[#121212] dark:hover:bg-[#F5F5F3] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer"
                   aria-label="Close profile panel"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Bio & Intro (Clean, Floating Typography - No rigid boxes, no hashtag soup) */}
-              <div className="mt-8 space-y-4">
-                <p className="font-sans text-sm md:text-[15px] leading-relaxed text-[#262626] dark:text-[#D4D4D0]">
+              {/* Bio & Intro (Clean, Floating Typography - Left Aligned with Large Hello) */}
+              <div className="mt-8 space-y-3 text-left">
+                <h2 className="font-serif italic text-3xl sm:text-4xl text-[#121212] dark:text-[#F5F5F3] tracking-tight text-left">
+                  Hello
+                </h2>
+                <p className="font-sans text-sm md:text-[15px] leading-relaxed text-[#262626] dark:text-[#D4D4D0] text-left">
                   {lang === "en"
-                    ? "Hi, I'm Beam (Chakarin Limudom). I fell in love with photography through the honest, unposed moments of everyday life—the transient light falling on streets and the quiet stories of people passing by. To me, pressing the shutter is simply about preserving honest human moments."
-                    : "สวัสดีครับ ผมบีม (จักริน ลิ้มป์อุดม) เริ่มต้นหยิบกล้องเพราะหลงใหลในความจริงใจของจังหวะเสี้ยววินาที—แสงเงาที่ไม่เคยซ้ำเดิมบนถนน และผู้คนที่เคลื่อนไหวโดยไม่ต้องจัดฉาก สำหรับผม การกดชัตเตอร์คือการบันทึกความทรงจำธรรมดาๆ ให้กลายเป็นสิ่งที่มีความหมาย"}
+                    ? "I started taking photos because I fell in love with unposed, candid moments—people simply living their lives, rather than standing still for a countdown and posing for the lens. For me, pressing the shutter is just a way to hold onto ordinary, fleeting moments that come and go. The rest of the time is spent wandering aimlessly, observing, and trying to blend in as naturally as possible whenever I hold a camera :)"
+                    : "เริ่มถ่ายรูปเพราะ ชอบจังหวะเผลอๆ เวลาคนกำลังใช้ชีวิตมากกว่าให้มายืนนับหนึ่งสองสามแล้วเก๊กใส่กล้อง ส่วนตัวแล้ว การกดชัตเตอร์ก็แค่วิธีเก็บโมเมนต์ธรรมดาๆ ที่ผ่านมาแล้วก็ผ่านไป ส่วนเวลาที่เหลือก็หมดไปกับการเดินดูนู่นดูนี่เรื่อยเปื่อย แล้วพยายามทำตัวให้กลมกลืนที่สุดเวลาถือกล้อง :)"}
                 </p>
               </div>
 

@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://chakarin.pics"),
   title: "CHAKARIN L. — Photographer based in Bangkok",
   description:
-    "Photography by Chakarin L. (BeamingMotion), photographer based in Bangkok, Thailand. Faculty of Political Science, Thammasat University (Singhdang #77). Sony α7 III documentary, stage, and coastal photography.",
+    "Photography by Chakarin L. (BeamingMotion), photographer based in Bangkok, Thailand. Thammasat University. Sony α7 III documentary, stage, and coastal photography.",
   keywords: [
     "Chakarin Limudom",
     "Chakarin L.",
@@ -44,7 +44,6 @@ export const metadata: Metadata = {
     "Sony α7 III",
     "TU Photo",
     "Thammasat University",
-    "Singhdang 77",
     "chakarin.pics",
   ],
   authors: [{ name: "Chakarin Limudom", url: "https://chakarin.pics" }],

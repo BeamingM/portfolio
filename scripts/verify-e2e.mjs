@@ -122,11 +122,10 @@ test("TopNav: Right controls never overflow on mobile viewports", () => {
   assert(topNavCode.includes("max-w-[calc(100vw-180px)]"), "BrandMark must reserve room for right controls on mobile");
 });
 
-test("Instagram Embed: Mouse capture overlay present to prevent custom cursor from freezing", () => {
+test("Instagram Embed: Embed is interactive and swipeable without blocking overlay", () => {
   const igCode = fs.readFileSync(path.join(root, "src/components/InstagramEmbed.tsx"), "utf-8");
-  assert(igCode.includes("absolute inset-0 z-20 cursor-pointer"), "InstagramEmbed must have pointer overlay");
   assert(igCode.includes("data-figma-photo=\"true\""), "InstagramEmbed must provide data-figma-photo attribute");
-  assert(igCode.includes("window.open(postUrl"), "InstagramEmbed must handle click gracefully");
+  assert(!igCode.includes("absolute inset-0 z-20 cursor-pointer"), "InstagramEmbed must not have blocking overlay so carousel photos can be swiped");
 });
 
 // -----------------------------------------------------------------
@@ -188,6 +187,24 @@ test("Social Channels: Twitter / X (@beamingmotion), Email, Instagram, and Resum
   assert(drawerCode.includes("contact.chakarin@gmail.com"), "AtelierDrawer must display email");
   assert(drawerCode.includes("/resume.pdf"), "AtelierDrawer must offer download resume PDF");
   assert(drawerCode.includes("beamingmotion"), "AtelierDrawer must link to Instagram");
+  assert(drawerCode.includes("Hello"), "AtelierDrawer must include prominent Hello heading");
+  assert(drawerCode.includes("backdrop-blur-2xl"), "AtelierDrawer must use frosted glass backdrop blur");
+});
+
+test("October 6 Series: Strictly ครบรอบ 50 ปี 6 ตุลา without 'Commemoration'", () => {
+  const galleryCode = fs.readFileSync(path.join(root, "src/config/gallery.ts"), "utf-8");
+  assert(galleryCode.includes("ครบรอบ 50 ปี 6 ตุลา"), "gallery.ts must include ครบรอบ 50 ปี 6 ตุลา");
+  assert(!galleryCode.includes("Commemoration"), "gallery.ts must NOT include 'Commemoration'");
+  assert(!galleryCode.includes("commoderation"), "gallery.ts must NOT include 'commoderation'");
+});
+
+test("Faculty Omission: Strictly no 'Faculty of Political Science' in gallery, layout or headers", () => {
+  const galleryCode = fs.readFileSync(path.join(root, "src/config/gallery.ts"), "utf-8");
+  assert(!galleryCode.includes("Faculty of Political Science"), "gallery.ts must not mention Faculty of Political Science");
+  
+  const layoutCode = fs.readFileSync(path.join(root, "src/app/layout.tsx"), "utf-8");
+  assert(!layoutCode.includes("Faculty of Political Science"), "layout.tsx must not mention Faculty of Political Science");
+  assert(!layoutCode.includes("คณะรัฐศาสตร์"), "layout.tsx must not mention คณะรัฐศาสตร์");
 });
 
 // -----------------------------------------------------------------
