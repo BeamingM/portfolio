@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import BrandMark from "./BrandMark";
 import { toggleSound, playTactileClick } from "@/utils/sound";
 import { triggerHaptic } from "@/utils/haptics";
@@ -8,28 +8,16 @@ import { Volume2, VolumeX } from "lucide-react";
 
 interface TopNavProps {
   onOpenAbout: () => void;
+  onSelectSection?: (sectionId: string) => void;
+  activeSection?: string;
 }
 
-export default function TopNav({ onOpenAbout }: TopNavProps) {
-  const [timeStr, setTimeStr] = useState("");
+export default function TopNav({
+  onOpenAbout,
+  onSelectSection,
+  activeSection = "all",
+}: TopNavProps) {
   const [soundOn, setSoundOn] = useState(true);
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setTimeStr(
-        now.toLocaleTimeString("en-GB", {
-          timeZone: "Asia/Bangkok",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })
-      );
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleSoundToggle = () => {
     const newState = toggleSound();
@@ -38,19 +26,44 @@ export default function TopNav({ onOpenAbout }: TopNavProps) {
     if (newState) playTactileClick();
   };
 
+  const navLinks = [
+    { id: "all", label: "ALL" },
+    { id: "personal", label: "PERSONAL PROJECTS" },
+    { id: "tu-photo", label: "TU PHOTO" },
+    { id: "psctu", label: "PSC.TU" },
+  ];
+
   return (
-    <header className="fixed top-0 left-0 w-full z-40 h-16 bg-[#FBFBF9]/90 backdrop-blur-md border-b border-[#EBEBE6] flex items-center justify-between px-4 md:px-8 select-none">
-      {/* Brand: BeamingMotion by Chakarin L. */}
+    <header className="fixed top-0 left-0 w-full z-40 h-16 bg-[#FBFBF9]/92 backdrop-blur-md border-b border-[#EBEBE6] flex items-center justify-between px-4 md:px-8 select-none">
+      {/* Brand: Pure Typography (No icon box) */}
       <BrandMark />
 
-      {/* Realtime Bangkok Clock Telemetry */}
-      <div className="hidden sm:flex items-center gap-2 font-mono text-[11px] text-[#737373]">
-        <span className="w-2 h-2 rounded-full bg-[#FF3E00] animate-pulse" />
-        <span className="text-[#121212] font-semibold">BKK {timeStr || "01:35 AM"}</span>
-        <span className="text-[#A0A09A]">· UTC+7</span>
-      </div>
+      {/* Center: Editorial Project Index Links (Hidden on small mobile, visible sm+) */}
+      <nav className="hidden md:flex items-center gap-1 font-mono text-[11px]">
+        {navLinks.map((link) => {
+          const isActive = activeSection === link.id;
+          return (
+            <button
+              key={link.id}
+              onClick={() => {
+                triggerHaptic("light");
+                playTactileClick();
+                onSelectSection?.(link.id);
+              }}
+              type="button"
+              className={`px-3 py-1 rounded-full transition-colors cursor-pointer ${
+                isActive
+                  ? "bg-[#121212] text-white font-bold"
+                  : "text-[#737373] hover:text-[#121212] hover:bg-[#F4F4F0]"
+              }`}
+            >
+              {link.label}
+            </button>
+          );
+        })}
+      </nav>
 
-      {/* Action Controls */}
+      {/* Right Controls */}
       <div className="flex items-center gap-2.5 font-mono text-xs">
         {/* Sound FX Toggle */}
         <button

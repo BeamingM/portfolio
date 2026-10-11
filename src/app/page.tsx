@@ -1,91 +1,97 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import TopNav from "@/components/TopNav";
-import DraggableStage from "@/components/DraggableStage";
-import ArchiveGrid from "@/components/ArchiveGrid";
-import PolaroidDock from "@/components/PolaroidDock";
+import SectionFilterBar from "@/components/SectionFilterBar";
+import EditorialPhotobook from "@/components/EditorialPhotobook";
+import PhotoModal from "@/components/PhotoModal";
 import AtelierDrawer from "@/components/AtelierDrawer";
-import { galleryItems } from "@/config/gallery";
-import { triggerHaptic } from "@/utils/haptics";
-import { playTactileClick } from "@/utils/sound";
+import { galleryItems, gallerySections, PhotoItem } from "@/config/gallery";
 
 export default function Home() {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isGridView, setIsGridView] = useState<boolean>(false);
+  const [activeSection, setActiveSection] = useState<string>("all");
   const [isAtelierOpen, setIsAtelierOpen] = useState<boolean>(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
 
-  const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % galleryItems.length);
+  const sectionCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      all: galleryItems.length,
+    };
+    gallerySections.forEach((sec) => {
+      if (sec.id !== "all") {
+        counts[sec.id] = galleryItems.filter((item) => item.sectionId === sec.id).length;
+      }
+    });
+    return counts;
   }, []);
 
-  const handlePrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + galleryItems.length) % galleryItems.length);
-  }, []);
-
-  const handleSelectIndex = (index: number) => {
-    setCurrentIndex(index);
-    setIsGridView(false);
+  const handleSelectSection = (sectionId: string) => {
+    setActiveSection(sectionId);
+    if (sectionId === "all") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 50);
+    }
   };
 
-  // Keyboard navigation shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (isAtelierOpen) return;
+  const handleModalNext = useCallback(() => {
+    if (!selectedPhoto) return;
+    const curIdx = galleryItems.findIndex((p) => p.id === selectedPhoto.id);
+    if (curIdx !== -1) {
+      const nextIdx = (curIdx + 1) % galleryItems.length;
+      setSelectedPhoto(galleryItems[nextIdx]);
+    }
+  }, [selectedPhoto]);
 
-      if (e.key === "ArrowRight") {
-        triggerHaptic("snap");
-        playTactileClick();
-        handleNext();
-      } else if (e.key === "ArrowLeft") {
-        triggerHaptic("snap");
-        playTactileClick();
-        handlePrev();
-      } else if (e.key.toLowerCase() === "g") {
-        triggerHaptic("medium");
-        playTactileClick();
-        setIsGridView((prev) => !prev);
-      } else if (e.key === "Escape") {
-        if (isGridView) setIsGridView(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleNext, handlePrev, isAtelierOpen, isGridView]);
+  const handleModalPrev = useCallback(() => {
+    if (!selectedPhoto) return;
+    const curIdx = galleryItems.findIndex((p) => p.id === selectedPhoto.id);
+    if (curIdx !== -1) {
+      const prevIdx = (curIdx - 1 + galleryItems.length) % galleryItems.length;
+      setSelectedPhoto(galleryItems[prevIdx]);
+    }
+  }, [selectedPhoto]);
 
   return (
-    <main className="relative min-h-screen bg-[#FBFBF9] text-[#121212] selection:bg-[#D9381E] selection:text-white analog-grain pt-16">
-      {/* Top Minimal Craft Bar with Live Bangkok Telemetry */}
-      <TopNav onOpenAbout={() => setIsAtelierOpen(true)} />
-
-      {/* Main Exhibition View: Draggable Focus Print vs Contact Sheet Grid */}
-      {isGridView ? (
-        <ArchiveGrid
-          items={galleryItems}
-          onSelectPhoto={handleSelectIndex}
-        />
-      ) : (
-        <DraggableStage
-          currentPhoto={galleryItems[currentIndex]}
-          currentIndex={currentIndex}
-          total={galleryItems.length}
-          onNext={handleNext}
-          onPrev={handlePrev}
-        />
-      )}
-
-      {/* Floating Polaroid Dock with Haptic Feedback */}
-      <PolaroidDock
-        items={galleryItems}
-        currentIndex={currentIndex}
-        onSelectIndex={handleSelectIndex}
+    <main className="relative min-h-screen bg-[#FBFBF9] text-[#121212] selection:bg-[#FF3E00] selection:text-white analog-grain pt-16">
+      {/* Top Header: Pure Typography Imprint & Controls */}
+      <TopNav
         onOpenAbout={() => setIsAtelierOpen(true)}
-        isGridView={isGridView}
-        onToggleGrid={() => setIsGridView((prev) => !prev)}
+        onSelectSection={handleSelectSection}
+        activeSection={activeSection}
       />
 
-      {/* Atelier & Bio Slide-over Panel */}
+      {/* Project Section Filter Pills */}
+      <div className="pt-3 pb-1">
+        <SectionFilterBar
+          sections={gallerySections}
+          activeSection={activeSection}
+          onSelectSection={handleSelectSection}
+          counts={sectionCounts}
+        />
+      </div>
+
+      {/* Main Exhibition: Vertical Scroll Editorial Photobook (No bottom bar) */}
+      <EditorialPhotobook
+        items={galleryItems}
+        activeSection={activeSection}
+        onSelectPhoto={(photo) => setSelectedPhoto(photo)}
+      />
+
+      {/* High-Resolution Focus Lightbox */}
+      <PhotoModal
+        photo={selectedPhoto}
+        onClose={() => setSelectedPhoto(null)}
+        onNext={handleModalNext}
+        onPrev={handleModalPrev}
+      />
+
+      {/* Slide-over Profile & Contact Panel */}
       <AtelierDrawer
         isOpen={isAtelierOpen}
         onClose={() => setIsAtelierOpen(false)}
