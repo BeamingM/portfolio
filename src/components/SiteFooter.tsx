@@ -53,10 +53,10 @@ export default function SiteFooter({
         </div>
 
         {/* 3-Column Editorial Sitemap Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 md:gap-8 py-12 border-b border-[#E5E5DF] dark:border-[#222221] text-[13px] sm:text-xs font-mono">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 md:gap-8 py-12 border-b border-[#E5E5DF] dark:border-[#222221] text-sm sm:text-[13px] font-mono">
           {/* Column 1: Series & Archive (No counts/numbers) */}
           <div className="space-y-3.5">
-            <div className="text-[11px] sm:text-[10px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
+            <div className="text-xs sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
               {lang === "th" ? "ผังเว็บไซต์" : "Sitemap"}
             </div>
             <ul className="space-y-3">
@@ -70,7 +70,7 @@ export default function SiteFooter({
                       : "text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white"
                   }`}
                 >
-                  <span>{lang === "th" ? "ผลงานทั้งหมด" : "All Works"}</span>
+                  <span>{lang === "th" ? "ทั้งหมด" : "All Works"}</span>
                 </Link>
               </li>
               <li>
@@ -83,7 +83,7 @@ export default function SiteFooter({
                       : "text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white"
                   }`}
                 >
-                  <span>{lang === "th" ? "งานส่วนตัว" : "Personal Works"}</span>
+                  <span>{lang === "th" ? "ส่วนตัว" : "Personal Works"}</span>
                 </Link>
               </li>
               <li>
@@ -96,7 +96,7 @@ export default function SiteFooter({
                       : "text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white"
                   }`}
                 >
-                  <span>{lang === "th" ? "งานกิจกรรม" : "Activities & Events"}</span>
+                  <span>{lang === "th" ? "กิจกรรม" : "Activities & Events"}</span>
                 </Link>
               </li>
               <li>
@@ -109,7 +109,7 @@ export default function SiteFooter({
                       : "text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white"
                   }`}
                 >
-                  <span>{lang === "th" ? "งานต่างๆ" : "Various Projects"}</span>
+                  <span>{lang === "th" ? "อื่นๆ" : "Various Projects"}</span>
                 </Link>
               </li>
             </ul>
@@ -117,7 +117,7 @@ export default function SiteFooter({
 
           {/* Column 2: Profile & Navigation */}
           <div className="space-y-3.5">
-            <div className="text-[11px] sm:text-[10px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
+            <div className="text-xs sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
               {lang === "th" ? "ข้อมูลและประวัติ" : "Navigation"}
             </div>
             <ul className="space-y-3">
@@ -134,10 +134,9 @@ export default function SiteFooter({
                 <Link
                   href="/about"
                   onClick={() => triggerHaptic("light")}
-                  className="flex items-center gap-1.5 text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white transition-colors group"
+                  className="text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white transition-colors"
                 >
-                  <span>About</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#8C8C88] group-hover:text-[#121212] dark:group-hover:text-white" />
+                  About
                 </Link>
               </li>
               <li>
@@ -150,6 +149,7 @@ export default function SiteFooter({
                 >
                   <FileText className="w-3.5 h-3.5 text-[#8C8C88]" />
                   <span>Resume</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-[#8C8C88] group-hover:text-[#121212] dark:group-hover:text-white" />
                 </a>
               </li>
             </ul>
@@ -157,7 +157,7 @@ export default function SiteFooter({
 
           {/* Column 3: Inquiries & Social */}
           <div className="space-y-3.5">
-            <div className="text-[11px] sm:text-[10px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
+            <div className="text-xs sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
               {lang === "th" ? "ติดต่อและติดตาม" : "Get In Touch"}
             </div>
             <ul className="space-y-3">
@@ -201,69 +201,45 @@ export default function SiteFooter({
 
         {/* Bottom Utility Bar: Theme, Language Switchers & Clean Copyright */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 font-mono text-xs">
-          {/* Controls: Theme & Language Switchers */}
+          {/* Controls: Single Theme & Language Switcher Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-3">
-            {/* Dark / Light Mode Toggle */}
+            {/* Dark / Light Mode Icon-Only Toggle */}
             <button
               onClick={() => {
                 triggerHaptic("light");
                 toggleTheme();
               }}
               type="button"
-              className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer shadow-2xs text-xs sm:text-[11px]"
+              aria-label={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              className="w-9 h-9 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer flex items-center justify-center shadow-2xs"
             >
               {resolvedTheme === "dark" ? (
-                <>
-                  <Sun className="w-4 h-4 text-[#FFA000]" />
-                  <span>{lang === "th" ? "โหมดสว่าง" : "Light Mode"}</span>
-                </>
+                <Sun className="w-4 h-4 text-[#FFA000]" />
               ) : (
-                <>
-                  <Moon className="w-4 h-4 text-[#121212]" />
-                  <span>{lang === "th" ? "โหมดมืด" : "Dark Mode"}</span>
-                </>
+                <Moon className="w-4 h-4 text-[#121212]" />
               )}
             </button>
 
-            {/* Language Switcher */}
-            <div className="flex items-center bg-[#FFFFFF] dark:bg-[#181818] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full p-0.5 text-xs sm:text-[10px]">
-              <button
-                onClick={() => {
-                  triggerHaptic("light");
-                  setLang("th");
-                }}
-                type="button"
-                className={`px-3 py-1.5 rounded-full transition-colors cursor-pointer ${
-                  lang === "th"
-                    ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                    : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3]"
-                }`}
-              >
-                ภาษาไทย
-              </button>
-              <button
-                onClick={() => {
-                  triggerHaptic("light");
-                  setLang("en");
-                }}
-                type="button"
-                className={`px-3 py-1.5 rounded-full transition-colors cursor-pointer ${
-                  lang === "en"
-                    ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                    : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3]"
-                }`}
-              >
-                English
-              </button>
-            </div>
+            {/* Single Language Switcher Button (TH ⇄ EN) */}
+            <button
+              onClick={() => {
+                triggerHaptic("light");
+                setLang(lang === "th" ? "en" : "th");
+              }}
+              type="button"
+              aria-label="Toggle language"
+              className="h-9 px-3.5 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer shadow-2xs font-mono text-xs font-semibold"
+            >
+              {lang === "th" ? "EN" : "TH"}
+            </button>
           </div>
 
           {/* Copyright & Domain */}
-          <div className="flex flex-col md:items-end gap-1 text-xs sm:text-[11px] text-center md:text-right">
+          <div className="flex flex-col md:items-end gap-1 text-sm sm:text-xs text-center md:text-right">
             <div className="font-semibold text-[#121212] dark:text-[#F5F5F3]">
               chakarin.pics
             </div>
-            <div className="text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider">
+            <div className="text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider">
               © 2026 CHAKARIN L. · ALL RIGHTS RESERVED.
             </div>
           </div>

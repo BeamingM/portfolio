@@ -13,10 +13,10 @@ interface LanguageContextType {
 
 const translations: Record<string, { th: string; en: string }> = {
   // Navigation & Header
-  navAll: { th: "ALL ARCHIVE", en: "ALL ARCHIVE" },
-  navPersonal: { th: "PERSONAL PROJECTS", en: "PERSONAL PROJECTS" },
-  navTuPhoto: { th: "TU PHOTO", en: "TU PHOTO" },
-  navPscTu: { th: "PSC.TU", en: "PSC.TU" },
+  navAll: { th: "ทั้งหมด", en: "ALL" },
+  navPersonal: { th: "ส่วนตัว", en: "PERSONAL" },
+  navTuPhoto: { th: "กิจกรรม", en: "ACTIVITIES" },
+  navPscTu: { th: "อื่นๆ", en: "OTHERS" },
   aboutMe: { th: "เกี่ยวกับฉัน", en: "About Me" },
   contact: { th: "CONTACT", en: "CONTACT" },
   
@@ -29,12 +29,12 @@ const translations: Record<string, { th: string; en: string }> = {
   chapter: { th: "CHAPTER", en: "CHAPTER" },
   prints: { th: "PRINTS", en: "PRINTS" },
   allArchive: { th: "ALL ARCHIVE", en: "ALL ARCHIVE" },
-  personalTitle: { th: "Personal Projects 2026", en: "Personal Projects 2026" },
-  personalDesc: { th: "Hua Hin 2026 — ทะเล แสงเงา และสตรีทศึกษา", en: "Hua Hin 2026 — Beam's Edited & Coastal Studies" },
-  tuPhotoTitle: { th: "TU PHOTO 2026", en: "TU PHOTO 2026" },
-  tuPhotoDesc: { th: "ครบรอบ 50 ปี 6 ตุลา — TU Photo", en: "50th Anniversary of October 6 — TU Photo" },
-  pscTuTitle: { th: "PSC.TU", en: "PSC.TU" },
-  pscTuDesc: { th: "Polsci Music - FirstM33t 2026 · คอนเสิร์ตและโทนฟิล์ม", en: "Polsci Music - FirstM33t 2026 · Film Look & Stage Performance" },
+  personalTitle: { th: "ส่วนตัว", en: "Personal" },
+  personalDesc: { th: "ส่วนตัว — ทะเล แสงเงา และช่วงเวลาทั่วไป", en: "Personal — Coastal light, ambient moments, and quiet scenes" },
+  tuPhotoTitle: { th: "กิจกรรม", en: "Activities" },
+  tuPhotoDesc: { th: "กิจกรรม — บรรยากาศงานและผู้คนรอบตัว", en: "Activities — Campus events, movement, and people" },
+  pscTuTitle: { th: "อื่นๆ", en: "Others" },
+  pscTuDesc: { th: "อื่นๆ — แสงเวที คอนเสิร์ต และช่วงเวลาหลากหลาย", en: "Others — Stage lights, concerts, and various moments" },
 
   // Instagram Publication
   officialPublication: { th: "Official Feature", en: "Official Feature" },

@@ -25,32 +25,32 @@ const GREETINGS: Record<string, NarrativeItem> = {
   },
   personal: {
     title: {
-      th: "Hua Hin 2026",
-      en: "Hua Hin 2026",
+      th: "ส่วนตัว",
+      en: "Personal",
     },
     description: {
-      th: "บันทึกแสงเงา ทะเล และจังหวะสตรีทริมชายหาด",
-      en: "Coastal light and quiet street rhythms along the Gulf of Thailand",
+      th: "บันทึกแสงเงา ริมทะเล และช่วงเวลาเงียบๆ รอบตัว",
+      en: "Coastal light and quiet moments along the way",
     },
   },
   "tu-photo": {
     title: {
-      th: "TU Photo",
-      en: "TU Photo",
+      th: "กิจกรรม",
+      en: "Activities",
     },
     description: {
-      th: "ชุมนุมถ่ายภาพ มหาวิทยาลัยธรรมศาสตร์ — ครบรอบ 50 ปี 6 ตุลา และกิจกรรมท่าพระจันทร์",
-      en: "Thammasat University Photo Club — 50th Anniversary of Oct 6 and campus documentation",
+      th: "บรรยากาศและช่วงเวลาในกิจกรรมต่างๆ — ครบรอบ 50 ปี 6 ตุลา",
+      en: "Moments and atmosphere — 50th Anniversary of October 6",
     },
   },
   psctu: {
     title: {
-      th: "PSC.TU",
-      en: "PSC.TU",
+      th: "อื่นๆ",
+      en: "Others",
     },
     description: {
-      th: "บันทึกภาพกิจกรรมและคอนเสิร์ต Polsci Music — ท่าพระจันทร์",
-      en: "Live performance frames and campus concert atmosphere at Tha Phra Chan",
+      th: "บรรยากาศบนเวที แสงสี และงานต่างๆ ที่ได้มีโอกาสไปร่วม",
+      en: "Stage lights, atmosphere, and various moments captured along the way",
     },
   },
 };
@@ -76,7 +76,7 @@ export default function ProjectDescriptionHeader({
           <h2 className="font-sans font-semibold sm:font-bold text-lg sm:text-2xl md:text-3xl text-[#121212] dark:text-[#F5F5F3] tracking-tight leading-snug sm:leading-relaxed [text-wrap:balance] max-w-2xl mx-auto">
             {current.title[lang]}
           </h2>
-          <p className="font-sans text-sm sm:text-[15px] leading-relaxed text-[#595955] dark:text-[#A8A8A4] max-w-xl mx-auto font-normal">
+          <p className="font-sans text-[15px] sm:text-base md:text-[17px] leading-relaxed text-[#595955] dark:text-[#A8A8A4] max-w-xl mx-auto font-normal">
             {current.description[lang]}
           </p>
         </motion.div>

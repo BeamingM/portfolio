@@ -7,6 +7,7 @@ import SiteFooter from "@/components/SiteFooter";
 import AtelierDrawer from "@/components/AtelierDrawer";
 import InteractivePrintCard from "@/components/InteractivePrintCard";
 import PhotoModal from "@/components/PhotoModal";
+import CountdownOverlay from "@/components/CountdownOverlay";
 import { galleryItems, PhotoItem } from "@/config/gallery";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -25,18 +26,6 @@ import {
   MapPin,
 } from "lucide-react";
 import { TwitterXIcon, InstagramIcon } from "@/components/SocialIcons";
-
-function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-      />
-    </svg>
-  );
-}
 
 export default function AboutClient() {
   const { lang, setLang } = useLanguage();
@@ -101,36 +90,18 @@ export default function AboutClient() {
               )}
             </button>
 
-            <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full p-0.5 text-[10px]">
-              <button
-                onClick={() => {
-                  triggerHaptic("light");
-                  setLang("th");
-                }}
-                type="button"
-                className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
-                  lang === "th"
-                    ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                    : "text-[#737373] dark:text-[#9E9E9C]"
-                }`}
-              >
-                TH
-              </button>
-              <button
-                onClick={() => {
-                  triggerHaptic("light");
-                  setLang("en");
-                }}
-                type="button"
-                className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
-                  lang === "en"
-                    ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                    : "text-[#737373] dark:text-[#9E9E9C]"
-                }`}
-              >
-                EN
-              </button>
-            </div>
+            {/* Single Language Switcher Button (TH ⇄ EN) */}
+            <button
+              onClick={() => {
+                triggerHaptic("light");
+                setLang(lang === "th" ? "en" : "th");
+              }}
+              type="button"
+              aria-label="Toggle language"
+              className="h-8 px-2.5 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer shadow-2xs font-mono text-[11px] font-semibold"
+            >
+              {lang === "th" ? "EN" : "TH"}
+            </button>
           </div>
 
           {/* Mobile Menu Trigger (< 768px): Icon-only button without redundant text */}
@@ -154,7 +125,7 @@ export default function AboutClient() {
       <article className="max-w-4xl mx-auto px-4 sm:px-6 md:px-12 pt-12 sm:pt-20 pb-16">
         {/* Overline & Category */}
         <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#737373] dark:text-[#9E9E9C] mb-4">
-          <span>[ABOUT &amp; ARCHIVE]</span>
+          <span>[ABOUT]</span>
           <span>·</span>
           <span className="flex items-center gap-1">
             <MapPin className="w-3 h-3 text-[#FF9500]" />
@@ -162,9 +133,9 @@ export default function AboutClient() {
           </span>
         </div>
 
-        {/* Hero Title: Hello */}
+        {/* Hero Title: Hello! */}
         <h1 className="font-serif italic text-6xl sm:text-8xl md:text-9xl tracking-tight text-[#121212] dark:text-[#F5F5F3] leading-[0.9] mb-8">
-          Hello
+          Hello!
         </h1>
 
         {/* Identity & Invariant Names */}
@@ -183,28 +154,28 @@ export default function AboutClient() {
         </div>
 
         {/* Narrative Bio Story (Thai & English side-by-side or stacked) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-[#262626] dark:text-[#D4D4D0] leading-relaxed text-[15px] sm:text-base mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-[#262626] dark:text-[#D4D4D0] leading-relaxed text-base sm:text-[17px] mb-16">
           <div className="space-y-4">
-            <div className="font-mono text-[10px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
+            <div className="font-mono text-xs uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
               [ภาษาไทย]
             </div>
-            <p className="font-sans">
+            <p className="font-sans leading-relaxed">
               เริ่มถ่ายรูปเพราะ ชอบจังหวะเผลอๆ เวลาคนกำลังใช้ชีวิตมากกว่าให้มายืนนับหนึ่งสองสามแล้วเก๊กใส่กล้อง ส่วนตัวแล้ว การกดชัตเตอร์ก็แค่วิธีเก็บโมเมนต์ธรรมดาๆ ที่ผ่านมาแล้วก็ผ่านไป ส่วนเวลาที่เหลือก็หมดไปกับการเดินดูนู่นดูนี่เรื่อยเปื่อย แล้วพยายามทำตัวให้กลมกลืนที่สุดเวลาถือกล้อง :)
             </p>
-            <p className="font-sans text-sm text-[#737373] dark:text-[#9E9E9C]">
-              โฟกัสหลักอยู่ที่ภาพถ่ายสตรีท สารคดีความเคลื่อนไหว และแสงเงาในชีวิตประจำวัน บันทึกเรื่องราวผ่านสายตาและจังหวะธรรมชาติ
+            <p className="font-sans text-[15px] sm:text-base text-[#737373] dark:text-[#9E9E9C] leading-relaxed">
+              โฟกัสหลักอยู่ที่ภาพถ่ายแสงเงา จังหวะชีวิตประจำวัน และผู้คนรอบตัว บันทึกเรื่องราวผ่านสายตาที่เป็นธรรมชาติ
             </p>
           </div>
 
           <div className="space-y-4">
-            <div className="font-mono text-[10px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
+            <div className="font-mono text-xs uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
               [ENGLISH]
             </div>
-            <p className="font-sans">
+            <p className="font-sans leading-relaxed">
               I started taking photos because I fell in love with unposed, candid moments—people simply living their lives, rather than standing still for a countdown and posing for the lens. For me, pressing the shutter is just a way to hold onto ordinary, fleeting moments that come and go. The rest of the time is spent wandering aimlessly, observing, and trying to blend in as naturally as possible whenever I hold a camera :)
             </p>
-            <p className="font-sans text-sm text-[#737373] dark:text-[#9E9E9C]">
-              Documenting everyday rhythms, ambient light, and unscripted human stories across Bangkok and coastal Thailand.
+            <p className="font-sans text-[15px] sm:text-base text-[#737373] dark:text-[#9E9E9C] leading-relaxed">
+              Documenting everyday rhythms, ambient light, and unscripted moments.
             </p>
           </div>
         </div>
@@ -243,71 +214,50 @@ export default function AboutClient() {
 
             <div className="space-y-3">
               <div className="text-[10px] uppercase tracking-widest text-[#737373] dark:text-[#9E9E9C]">
-                {lang === "th" ? "ชุดเลนส์ประจำตัว" : "Prime & Zoom Optics"}
+                {lang === "th" ? "ชุดเลนส์ประจำตัว" : "Optics"}
               </div>
               <ul className="space-y-1.5 text-xs text-[#121212] dark:text-[#F5F5F3] font-medium">
-                <li>· Zeiss Sonnar FE 35mm F2.8 ZA (Candid Street Prime)</li>
-                <li>· Zeiss Sonnar FE 55mm F1.8 ZA (Portrait &amp; Detail Study)</li>
-                <li>· FE 28-70mm F3.5-5.6 OSS (Standard Documentary Zoom)</li>
+                <li>· FE 28-70mm F3.5-5.6 OSS</li>
               </ul>
             </div>
           </div>
         </section>
 
-        {/* Series Overview */}
-        <section className="border-t border-[#E5E5DF] dark:border-[#222221] pt-12 mb-16 font-mono text-xs">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mb-6">
-            [{lang === "th" ? "ซีรีส์ภาพถ่ายที่ผ่านมา" : "Exhibition Series"}]
+        {/* Series Overview: Continuous Unified Editorial Narrative */}
+        <section className="border-t border-[#E5E5DF] dark:border-[#222221] pt-12 mb-16 text-xs sm:text-sm">
+          <div className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mb-4">
+            [{lang === "th" ? "ซีรีส์ภาพถ่ายที่ผ่านมา" : "Photo Series"}]
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Link
-              href="/?section=personal"
-              onClick={() => triggerHaptic("light")}
-              className="p-4 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FFFFFF]/70 dark:bg-[#161615]/70 hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
-            >
-              <div className="text-[10px] text-[#FF9500] uppercase font-bold tracking-wider mb-1">
-                2026 · 5 Prints
-              </div>
-              <div className="font-sans font-bold text-sm text-[#121212] dark:text-[#F5F5F3] group-hover:text-[#FF9500] transition-colors">
-                {lang === "th" ? "งานส่วนตัว" : "Personal Works"}
-              </div>
-              <div className="text-[11px] text-[#737373] dark:text-[#9E9E9C] mt-1">
-                {lang === "th" ? "บันทึกภาพถ่ายและสตรีทศึกษา" : "Street Studies & Candid Moments"}
-              </div>
-            </Link>
-
-            <Link
-              href="/?section=tu-photo"
-              onClick={() => triggerHaptic("light")}
-              className="p-4 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FFFFFF]/70 dark:bg-[#161615]/70 hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
-            >
-              <div className="text-[10px] text-[#FF9500] uppercase font-bold tracking-wider mb-1">
-                2026 · 6 Prints
-              </div>
-              <div className="font-sans font-bold text-sm text-[#121212] dark:text-[#F5F5F3] group-hover:text-[#FF9500] transition-colors">
-                {lang === "th" ? "งานกิจกรรม" : "Activities & Events"}
-              </div>
-              <div className="text-[11px] text-[#737373] dark:text-[#9E9E9C] mt-1">
-                {lang === "th" ? "ภาพถ่ายสารคดีและบรรยากาศ" : "Documentary & Event Moments"}
-              </div>
-            </Link>
-
-            <Link
-              href="/?section=psctu"
-              onClick={() => triggerHaptic("light")}
-              className="p-4 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FFFFFF]/70 dark:bg-[#161615]/70 hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
-            >
-              <div className="text-[10px] text-[#FF9500] uppercase font-bold tracking-wider mb-1">
-                2026 · 5 Prints
-              </div>
-              <div className="font-sans font-bold text-sm text-[#121212] dark:text-[#F5F5F3] group-hover:text-[#FF9500] transition-colors">
-                {lang === "th" ? "งานต่างๆ" : "Various Projects"}
-              </div>
-              <div className="text-[11px] text-[#737373] dark:text-[#9E9E9C] mt-1">
-                {lang === "th" ? "การแสดงดนตรีและกิจกรรมสร้างสรรค์" : "Stage Performance & Creative Works"}
-              </div>
-            </Link>
+          <div className="bg-[#FFFFFF]/60 dark:bg-[#141414]/60 p-6 sm:p-8 rounded-2xl border border-[#E5E5DF] dark:border-[#222221] space-y-4">
+            <p className="font-sans text-[15px] sm:text-base leading-relaxed text-[#262626] dark:text-[#D4D4D0]">
+              {lang === "th"
+                ? "ผลงานที่คัดสรรมาแบ่งออกเป็น 3 หมวดตามสิ่งที่ได้ไปพบเจอ เริ่มตั้งแต่งานส่วนตัวที่บันทึกแสงเงา ท้องฟ้า และความเงียบสงบริมทะเลหัวหิน ถัดมาคืองานกิจกรรมที่ได้ร่วมบันทึกบรรยากาศจริงและผู้คนรอบตัว เช่น งานครบรอบ 50 ปี 6 ตุลา ตลอดจนงานอื่นๆ อย่างแสงสีบนเวทีและงานต่างๆ ที่ได้มีโอกาสไปร่วมเก็บบรรยากาศ ทั้งหมดบันทึกผ่านมุมมองที่ตรงไปตรงมาและเป็นธรรมชาติ"
+                : "The collection curated here spans three chapters gathered along the way: personal frames capturing seaside light and quiet coastal rhythms; campus activities preserving authentic moments and people, including the 50th Anniversary of October 6; and various projects documenting stage atmosphere and diverse gatherings."}
+            </p>
+            <div className="flex flex-wrap items-center gap-2.5 pt-2 font-mono text-xs">
+              <Link
+                href="/?section=personal"
+                onClick={() => triggerHaptic("light")}
+                className="px-3.5 py-2 rounded-xl bg-[#F7F7F5] dark:bg-[#1C1C1B] hover:bg-[#121212] hover:text-white dark:hover:bg-[#F5F5F3] dark:hover:text-[#121212] transition-colors cursor-pointer"
+              >
+                {lang === "th" ? "ส่วนตัว" : "Personal"} →
+              </Link>
+              <Link
+                href="/?section=tu-photo"
+                onClick={() => triggerHaptic("light")}
+                className="px-3.5 py-2 rounded-xl bg-[#F7F7F5] dark:bg-[#1C1C1B] hover:bg-[#121212] hover:text-white dark:hover:bg-[#F5F5F3] dark:hover:text-[#121212] transition-colors cursor-pointer"
+              >
+                {lang === "th" ? "กิจกรรม" : "Activities"} →
+              </Link>
+              <Link
+                href="/?section=psctu"
+                onClick={() => triggerHaptic("light")}
+                className="px-3.5 py-2 rounded-xl bg-[#F7F7F5] dark:bg-[#1C1C1B] hover:bg-[#121212] hover:text-white dark:hover:bg-[#F5F5F3] dark:hover:text-[#121212] transition-colors cursor-pointer"
+              >
+                {lang === "th" ? "อื่นๆ" : "Others"} →
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -374,7 +324,6 @@ export default function AboutClient() {
                 <InstagramIcon className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
                 <span>Instagram · @beamingmotion</span>
               </div>
-              <ExternalLink className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3] transition-colors" />
             </a>
 
             {/* Twitter / X Link */}
@@ -389,22 +338,6 @@ export default function AboutClient() {
                 <TwitterXIcon className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
                 <span>Twitter / X · @beamingmotion</span>
               </div>
-              <ExternalLink className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3] transition-colors" />
-            </a>
-
-            {/* GitHub Portfolio Link */}
-            <a
-              href="https://github.com/BeamingM"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => triggerHaptic("light")}
-              className="flex items-center justify-between p-4 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FFFFFF] dark:bg-[#161615] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer sm:col-span-2"
-            >
-              <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs">
-                <GithubIcon className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
-                <span>GitHub · github.com/BeamingM</span>
-              </div>
-              <ExternalLink className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3] transition-colors" />
             </a>
           </div>
         </section>
@@ -424,6 +357,9 @@ export default function AboutClient() {
         photo={selectedPhoto}
         onClose={() => setSelectedPhoto(null)}
       />
+
+      {/* Countdown Overlay for pre-launch protection */}
+      <CountdownOverlay />
     </main>
   );
 }

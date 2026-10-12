@@ -122,7 +122,7 @@ export default function CommandPalette({
       },
       {
         id: "sec-tu-photo",
-        title: "Section: TU Photo (Thammasat Photo Club)",
+        title: lang === "th" ? "หมวด: งานกิจกรรม (Activities & Events)" : "Section: Activities & Events (งานกิจกรรม)",
         category: "Navigation",
         icon: <ImageIcon className="w-4 h-4 text-[#FF9500]" />,
         perform: () => {
@@ -132,7 +132,7 @@ export default function CommandPalette({
       },
       {
         id: "sec-psctu",
-        title: "Section: PSC.TU (Political Science Student Committee)",
+        title: lang === "th" ? "หมวด: งานต่างๆ (Various Projects)" : "Section: Various Projects (งานต่างๆ)",
         category: "Navigation",
         icon: <ImageIcon className="w-4 h-4 text-[#FF9500]" />,
         perform: () => {
@@ -142,7 +142,7 @@ export default function CommandPalette({
       },
       {
         id: "sec-personal",
-        title: "Section: Personal Projects (Hua Hin 2026)",
+        title: lang === "th" ? "หมวด: งานส่วนตัว (Personal Works)" : "Section: Personal Works (งานส่วนตัว)",
         category: "Navigation",
         icon: <ImageIcon className="w-4 h-4 text-[#FF9500]" />,
         perform: () => {

@@ -67,7 +67,7 @@ export default function BrandMark({
             overflow: "hidden",
             pointerEvents: subtitleOpacity > 0 ? "auto" : "none",
           }}
-          className="flex items-center justify-center gap-1.5 font-mono text-[10px] sm:text-[11px] tracking-[0.16em] text-[#737373] dark:text-[#9E9E9C] uppercase transition-all duration-200 whitespace-nowrap"
+          className="flex items-center justify-center gap-1.5 font-mono text-[11px] sm:text-xs tracking-[0.16em] text-[#737373] dark:text-[#9E9E9C] uppercase transition-all duration-200 whitespace-nowrap"
         >
           <span>{t("tagline")}</span>
         </div>

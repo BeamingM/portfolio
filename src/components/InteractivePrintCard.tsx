@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { PhotoItem } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
@@ -42,6 +42,10 @@ export default function InteractivePrintCard({
     // Angle of optical specular reflection sweeping across the glossy paper
     const angle = Math.atan2(yRatio, xRatio) * (180 / Math.PI) + 135;
 
+    // Set CSS custom properties on card container for hardware-accelerated cursor spotlight
+    cardRef.current.style.setProperty("--x", `${Math.round(x)}px`);
+    cardRef.current.style.setProperty("--y", `${Math.round(y)}px`);
+
     setTilt({ x: rotateX, y: rotateY });
     setGlare({ x: glareX, y: glareY, opacity: 1, angle });
   }, []);
@@ -55,36 +59,6 @@ export default function InteractivePrintCard({
     setTilt({ x: 0, y: 0 });
     setGlare((prev) => ({ ...prev, opacity: 0 }));
   };
-
-  // Shared RAF-throttled gyroscope listener for subtle mobile print tilt
-  useEffect(() => {
-    if (typeof window === "undefined" || !("DeviceOrientationEvent" in window)) return;
-    if (!window.matchMedia("(hover: none) and (pointer: coarse)").matches) return;
-
-    let rafId: number | null = null;
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      const g = e.gamma;
-      const b = e.beta;
-      if (g !== null && b !== null) {
-        if (rafId !== null) return;
-        rafId = requestAnimationFrame(() => {
-          rafId = null;
-          const clampedGamma = Math.max(Math.min(g, 15), -15);
-          const clampedBeta = Math.max(Math.min(b - 40, 15), -15);
-          setTilt({
-            x: -clampedBeta * 0.12,
-            y: clampedGamma * 0.12,
-          });
-        });
-      }
-    };
-
-    window.addEventListener("deviceorientation", handleOrientation, { passive: true });
-    return () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      window.removeEventListener("deviceorientation", handleOrientation);
-    };
-  }, []);
 
   const handleClick = () => {
     triggerHaptic("light");
@@ -135,6 +109,21 @@ export default function InteractivePrintCard({
         }}
         className="w-full relative bg-[#FFFFFF] p-3 sm:p-4 md:p-5 pb-4 md:pb-5 border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-sm cursor-pointer group will-change-transform overflow-hidden"
       >
+        {/* NameThatUI Cursor Spotlight: Soft radial glow following pointermove that brightens the nearest 1px border */}
+        <div
+          aria-hidden="true"
+          style={{
+            opacity: isHovered ? 1 : 0,
+            background: `radial-gradient(circle 280px at var(--x, ${glare.x}%) var(--y, ${glare.y}%), rgba(255, 149, 0, 0.45) 0%, rgba(255, 255, 255, 0.3) 30%, transparent 70%)`,
+            WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            padding: "1px",
+            transition: "opacity 0.2s ease-out",
+          }}
+          className="pointer-events-none absolute inset-0 rounded-sm z-30"
+        />
+
         {/* Full-Card Glossy Photo Paper Specular Sheen (Soft, authentic ambient reflection) */}
         <div
           style={{
@@ -159,10 +148,14 @@ export default function InteractivePrintCard({
           aria-hidden="true"
         />
 
-        {/* Image Container with Photographic Paper Inset Bevel */}
+        {/* Image Container with Photographic Paper Inset Bevel & Anti-Theft Protection Shield */}
         <div
           style={{ aspectRatio }}
-          className="relative w-full bg-[#121212] overflow-hidden rounded-xs ring-1 ring-black/5 dark:ring-white/10 shadow-[inset_0_1px_2px_rgba(0,0,0,0.18)]"
+          onContextMenu={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          className="relative w-full bg-[#121212] overflow-hidden rounded-xs ring-1 ring-black/5 dark:ring-white/10 shadow-[inset_0_1px_2px_rgba(0,0,0,0.18)] select-none"
         >
           <Image
             src={photo.src}
@@ -171,7 +164,9 @@ export default function InteractivePrintCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1400px) 50vw, 680px"
             priority={priority}
             loading={priority ? "eager" : "lazy"}
-            className="object-cover select-none group-hover:scale-[1.015] transition-transform duration-700 ease-out"
+            draggable={false}
+            data-protected="true"
+            className="object-cover select-none pointer-events-none group-hover:scale-[1.015] transition-transform duration-700 ease-out"
           />
 
           {/* Micro-Vignette for Photographic Depth */}
@@ -179,14 +174,25 @@ export default function InteractivePrintCard({
             className="absolute inset-0 pointer-events-none opacity-25 mix-blend-soft-light bg-gradient-to-t from-black/50 via-transparent to-black/20"
             aria-hidden="true"
           />
+
+          {/* Transparent Anti-Theft Shield (Blocks right-click context menu, dragging, and mobile callout saving) */}
+          <div
+            className="photo-shield cursor-pointer"
+            onContextMenu={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onDragStart={(e) => e.preventDefault()}
+            aria-hidden="true"
+          />
         </div>
 
         {/* Clean Documentary Metadata Bar with Strict Priority: 1. Project (NO ELLIPSIS) > 2. Location > 3. Camera (NEVER 'SONY ...') */}
-        <div className="mt-3 px-0.5 flex items-center justify-between gap-3 font-mono text-[11px] sm:text-xs text-[#6B6B67] border-t border-[#F0F0EA] pt-2.5 min-w-0">
+        <div className="mt-3 px-0.5 flex items-center justify-between gap-3 font-mono text-xs sm:text-[13px] text-[#6B6B67] border-t border-[#F0F0EA] pt-2.5 min-w-0">
           {/* Main Info Block (Priority 1: Project Name [NO TRUNCATION] + Priority 2: Location) */}
           <div className="flex items-center gap-1.5 min-w-0 flex-1 overflow-hidden">
             {/* Priority 1: Project Name — Styled with font-sans (Anuphan) for clean Thai & Latin typography */}
-            <span className="font-sans font-bold tracking-wide text-[#121212] uppercase text-[11px] sm:text-xs shrink-0 whitespace-nowrap group-hover:text-[#FF9500] transition-colors">
+            <span className="font-sans font-bold tracking-wide text-[#121212] uppercase text-xs sm:text-[13px] shrink-0 whitespace-nowrap group-hover:text-[#FF9500] transition-colors">
               {photo.series}
             </span>
 
@@ -194,13 +200,13 @@ export default function InteractivePrintCard({
             <span className="text-[#D1D1CB] shrink-0">·</span>
 
             {/* Priority 2: Location — High priority, fills remaining width, only truncates if space completely runs out */}
-            <span className="text-[#6B6B67] truncate min-w-0 tracking-wide text-[11px] sm:text-xs">
+            <span className="text-[#6B6B67] truncate min-w-0 tracking-wide text-xs sm:text-[13px]">
               {photo.specs.location}
             </span>
           </div>
 
           {/* Priority 3: Camera — Strictly complete Sony α7 III, NEVER truncated into ugly 'SONY ...' */}
-          <div className="hidden sm:flex items-center gap-1.5 text-[10px] sm:text-[11px] tracking-wider uppercase shrink-0 whitespace-nowrap">
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] sm:text-xs tracking-wider shrink-0 whitespace-nowrap">
             <span className="font-semibold text-[#121212] shrink-0 whitespace-nowrap">
               Sony α7 III
             </span>

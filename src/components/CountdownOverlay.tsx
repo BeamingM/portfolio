@@ -103,7 +103,10 @@ export default function CountdownOverlay() {
         if (params.get("preview") === "true") return true;
         const isLocal =
           window.location.hostname === "localhost" ||
-          window.location.hostname === "127.0.0.1";
+          window.location.hostname === "127.0.0.1" ||
+          window.location.hostname.startsWith("192.168.") ||
+          window.location.hostname.startsWith("10.") ||
+          window.location.hostname.endsWith(".local");
         const hasCountdownParam =
           params.has("countdown") || params.has("demoCountdown");
         if (isLocal && !hasCountdownParam) {

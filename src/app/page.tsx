@@ -158,12 +158,18 @@ export default function Home() {
         counts={sectionCounts}
       />
 
-      {/* High-Resolution Focus Lightbox */}
+      {/* High-Resolution Focus Lightbox with Archival Photo Shield */}
       <PhotoModal
         photo={selectedPhoto}
         onClose={() => setSelectedPhoto(null)}
         onNext={handleModalNext}
         onPrev={handleModalPrev}
+        currentIndex={
+          selectedPhoto
+            ? displayedPhotos.findIndex((p) => p.id === selectedPhoto.id) + 1
+            : undefined
+        }
+        totalCount={displayedPhotos.length}
       />
 
       {/* Slide-over Profile & Contact Panel (Unified Mobile Hamburger Drawer) */}

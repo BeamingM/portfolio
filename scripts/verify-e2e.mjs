@@ -311,21 +311,32 @@ function getJpgDimensions(filePath) {
   return null;
 }
 
-test("Gallery Asset Catalog: Total count is strictly 16 (5 Personal, 6 TU Photo, 5 PSC.TU)", () => {
-  assert.strictEqual(galleryItems.length, 16, "Gallery items count must be exactly 16");
+test("Gallery Asset Catalog: Total count is strictly 45 (15 Personal, 15 Event, 15 Various)", () => {
+  assert.strictEqual(galleryItems.length, 45, "Gallery items count must be exactly 45");
   const counts = { personal: 0, "tu-photo": 0, psctu: 0 };
   for (const item of galleryItems) {
     counts[item.sectionId] = (counts[item.sectionId] || 0) + 1;
   }
-  assert.strictEqual(counts.personal, 5, "Personal projects must contain exactly 5 photos");
-  assert.strictEqual(counts["tu-photo"], 6, "TU Photo must contain exactly 6 photos");
-  assert.strictEqual(counts.psctu, 5, "PSC.TU must contain exactly 5 photos");
+  assert.strictEqual(counts.personal, 15, "Personal projects must contain exactly 15 photos");
+  assert.strictEqual(counts["tu-photo"], 15, "TU Photo must contain exactly 15 photos");
+  assert.strictEqual(counts.psctu, 15, "PSC.TU must contain exactly 15 photos");
 });
 
 test("Gallery Asset Catalog: Every item points to an existing file in public/photos/", () => {
   for (const item of galleryItems) {
     const photoPath = path.join(root, "public", item.src);
     assert(fs.existsSync(photoPath), `Photo file must exist: ${item.src} (${item.id})`);
+  }
+});
+
+test("Gallery Asset Optimization: Every photo file size is strictly under 1.5MB", () => {
+  for (const item of galleryItems) {
+    const photoPath = path.join(root, "public", item.src);
+    const stats = fs.statSync(photoPath);
+    assert(
+      stats.size < 1.5 * 1024 * 1024,
+      `Photo file exceeds 1.5MB: ${item.src} (${(stats.size / 1024 / 1024).toFixed(2)} MB)`
+    );
   }
 });
 
@@ -344,7 +355,12 @@ test("Gallery Geometry: True JPEG dimensions and aspect ratio strictly match con
 test("Gallery EXIF Authenticity: Strictly authentic Sony α7 III, lens, aperture, shutter, ISO, and year 2026", () => {
   for (const item of galleryItems) {
     assert.strictEqual(item.specs.camera, "Sony α7 III", `Camera invariant violated on ${item.id}`);
-    assert(item.specs.lens.startsWith("FE 28-70mm"), `Lens invariant violated on ${item.id}`);
+    assert(
+      item.specs.lens.startsWith("FE 28-70mm") ||
+      item.specs.lens.includes("35mm") ||
+      item.specs.lens.includes("55mm"),
+      `Lens invariant violated on ${item.id}: ${item.specs.lens}`
+    );
     assert(/^f\/\d+(\.\d+)?$/.test(item.specs.aperture), `Aperture format invalid on ${item.id}: ${item.specs.aperture}`);
     assert(item.specs.shutter.endsWith("s"), `Shutter format invalid on ${item.id}: ${item.specs.shutter}`);
     assert(typeof item.specs.iso === "number" && item.specs.iso > 0, `ISO must be positive number on ${item.id}`);
@@ -353,7 +369,7 @@ test("Gallery EXIF Authenticity: Strictly authentic Sony α7 III, lens, aperture
   }
 });
 
-test("Gallery Bilingual Metadata: Non-empty title, titleTh, subtitle, series, and category for all 16 items", () => {
+test("Gallery Bilingual Metadata: Non-empty title, titleTh, subtitle, series, and category for all 45 items", () => {
   for (const item of galleryItems) {
     assert(item.title && item.title.trim().length > 0, `Missing title on ${item.id}`);
     assert(item.titleTh && item.titleTh.trim().length > 0, `Missing Thai title on ${item.id}`);

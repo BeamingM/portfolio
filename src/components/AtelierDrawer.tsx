@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import BrandMark from "./BrandMark";
@@ -123,25 +124,25 @@ export default function AtelierDrawer({
     {
       id: "all",
       label: "ALL ARCHIVE",
-      labelTh: "ผลงานทั้งหมด",
+      labelTh: "ทั้งหมด",
       count: effectiveCounts.all,
     },
     {
       id: "personal",
       label: "PERSONAL PROJECTS",
-      labelTh: "หัวหิน 2026 (งานส่วนตัว)",
+      labelTh: "ส่วนตัว",
       count: effectiveCounts.personal,
     },
     {
       id: "tu-photo",
       label: "TU PHOTO",
-      labelTh: "ครบรอบ 50 ปี 6 ตุลา",
+      labelTh: "กิจกรรม",
       count: effectiveCounts["tu-photo"],
     },
     {
       id: "psctu",
       label: "PSC.TU",
-      labelTh: "Polsci Music (PSC.TU)",
+      labelTh: "อื่นๆ",
       count: effectiveCounts.psctu,
     },
   ];
@@ -172,7 +173,7 @@ export default function AtelierDrawer({
             transition={{ type: "spring", damping: 32, stiffness: 320 }}
             role="dialog"
             aria-modal="true"
-            aria-label="Profile and menu drawer"
+            aria-label="Profile and menu drawer for จักริน ลิ้มป์อุดม"
             className="fixed top-0 right-0 h-full w-[88vw] sm:w-[420px] max-w-md z-[60] bg-[#FFFFFF]/90 dark:bg-[#141414]/90 backdrop-blur-2xl border-l border-white/60 dark:border-white/10 text-[#121212] dark:text-[#F5F5F3] flex flex-col justify-between p-6 md:p-8 shadow-[-16px_0_48px_rgba(0,0,0,0.22)] rounded-l-2xl sm:rounded-l-3xl overflow-y-auto overscroll-contain"
           >
             <div className="space-y-6">
@@ -189,9 +190,9 @@ export default function AtelierDrawer({
                 </button>
               </div>
 
-              {/* 1. Category / Series Filter */}
+              {/* 1. Category / Series Filter (No numbers) */}
               <div className="space-y-2 font-mono">
-                <div className="text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
+                <div className="text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
                   [{lang === "th" ? "หมวดภาพถ่าย" : "SERIES ARCHIVE"}]
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -202,75 +203,81 @@ export default function AtelierDrawer({
                         key={cat.id}
                         onClick={() => handleCategoryClick(cat.id)}
                         type="button"
-                        className={`w-full flex items-center justify-between px-4 py-3 sm:py-2.5 rounded-xl text-[13px] sm:text-xs font-mono transition-all text-left cursor-pointer ${
+                        className={`w-full flex items-center gap-2.5 px-4 py-3 sm:py-2.5 rounded-xl text-sm sm:text-[13px] font-mono transition-all text-left cursor-pointer ${
                           isActive
                             ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
                             : "bg-[#F7F7F5]/80 dark:bg-[#1A1A19]/80 text-[#4A4A48] dark:text-[#B5B5B0] hover:bg-black/5 dark:hover:bg-white/5"
                         }`}
                       >
-                        <div className="flex items-center gap-2.5">
-                          <span
-                            className={`w-2 h-2 sm:w-1.5 sm:h-1.5 rounded-full ${
-                              isActive ? "bg-[#FF9500]" : "bg-transparent"
-                            }`}
-                          />
-                          <span>{lang === "th" ? cat.labelTh : cat.label}</span>
-                        </div>
                         <span
-                          className={`text-[11px] sm:text-[10px] px-2.5 py-0.5 rounded-full font-mono ${
-                            isActive
-                              ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#121212]"
-                              : "bg-black/5 dark:bg-white/5 text-[#737373] dark:text-[#9E9E9C]"
+                          className={`w-2 h-2 sm:w-1.5 sm:h-1.5 rounded-full ${
+                            isActive ? "bg-[#FF9500]" : "bg-transparent"
                           }`}
-                        >
-                          {cat.count}
-                        </span>
+                        />
+                        <span>{lang === "th" ? cat.labelTh : cat.label}</span>
                       </button>
                     );
                   })}
                 </div>
               </div>
 
-              {/* 2. Bio & Intro (Clean, Floating Typography - Left Aligned with Large Hello) */}
+              {/* 2. Bio & Intro (Clean, Floating Typography - Hello!) */}
               <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2.5 text-left">
                 <div className="flex items-baseline justify-between gap-2">
                   <h2 className="font-serif italic text-3xl sm:text-4xl text-[#121212] dark:text-[#F5F5F3] tracking-tight text-left">
-                    Hello
+                    Hello!
                   </h2>
-                  <span className="font-sans font-bold text-sm sm:text-xs text-[#121212] dark:text-[#F5F5F3]">
-                    จักริน ลิ้มป์อุดม
-                  </span>
                 </div>
-                <div className="font-mono text-[11px] sm:text-[10px] text-[#FF9500] dark:text-[#FFA000] tracking-wider uppercase font-semibold">
+                <div className="font-mono text-xs sm:text-[11px] text-[#FF9500] dark:text-[#FFA000] tracking-wider uppercase font-semibold">
                   Photographer based in Bangkok
                 </div>
-                <p className="font-sans text-[13px] sm:text-xs md:text-[13px] leading-relaxed text-[#262626] dark:text-[#D4D4D0] text-left">
+                <p className="font-sans text-sm sm:text-[14px] leading-relaxed text-[#262626] dark:text-[#D4D4D0] text-left">
                   {lang === "en"
                     ? "I started taking photos because I fell in love with unposed, candid moments—people simply living their lives, rather than standing still for a countdown and posing for the lens. For me, pressing the shutter is just a way to hold onto ordinary, fleeting moments that come and go. The rest of the time is spent wandering aimlessly, observing, and trying to blend in as naturally as possible whenever I hold a camera :)"
                     : "เริ่มถ่ายรูปเพราะ ชอบจังหวะเผลอๆ เวลาคนกำลังใช้ชีวิตมากกว่าให้มายืนนับหนึ่งสองสามแล้วเก๊กใส่กล้อง ส่วนตัวแล้ว การกดชัตเตอร์ก็แค่วิธีเก็บโมเมนต์ธรรมดาๆ ที่ผ่านมาแล้วก็ผ่านไป ส่วนเวลาที่เหลือก็หมดไปกับการเดินดูนู่นดูนี่เรื่อยเปื่อย แล้วพยายามทำตัวให้กลมกลืนที่สุดเวลาถือกล้อง :)"}
                 </p>
+
+                {/* Pure Brand Emblems (Direct logos without borders or labels) */}
+                <div className="pt-2.5 flex items-center gap-4 select-none">
+                  <Image
+                    src="/brand/tuphoto-logo-black.png"
+                    alt="TU PHOTO"
+                    width={28}
+                    height={28}
+                    unoptimized
+                    className="h-6 w-auto object-contain dark:invert opacity-85 hover:opacity-100 transition-opacity"
+                  />
+                  <Image
+                    src="/brand/ตรากน.png"
+                    alt="กน."
+                    width={28}
+                    height={28}
+                    unoptimized
+                    className="h-6 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+                  />
+                </div>
               </div>
 
               {/* 3. Equipment Specs */}
               <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 font-mono text-xs">
-                <div className="text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
+                <div className="text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
                   [{t("equipment")}]
                 </div>
-                <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-xs sm:text-[11px]">
+                <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-sm sm:text-xs">
                   <span className="text-[#737373] dark:text-[#9E9E9C]">{t("system")}</span>
                   <span className="text-[#121212] dark:text-[#F5F5F3] font-medium">Sony α7 III</span>
                 </div>
-                <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-xs sm:text-[11px]">
+                <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-sm sm:text-xs">
                   <span className="text-[#737373] dark:text-[#9E9E9C]">{t("lens")}</span>
                   <span className="text-[#121212] dark:text-[#F5F5F3] font-medium leading-relaxed">
-                    FE 28-70mm OSS · FE 35mm F1.8 · Sonnar T* FE 55mm F1.8 ZA
+                    FE 28-70mm F3.5-5.6 OSS
                   </span>
                 </div>
               </div>
 
               {/* 4. Direct Inquiries & Contact Channels */}
               <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 font-mono text-xs">
-                <div className="text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
+                <div className="text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
                   [{t("getInTouch")}]
                 </div>
 
@@ -279,7 +286,7 @@ export default function AtelierDrawer({
                   <a
                     href="mailto:contact.chakarin@gmail.com"
                     onClick={() => triggerHaptic("light")}
-                    className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs sm:text-[11px] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
+                    className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-sm sm:text-xs group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
                   >
                     <Mail className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
                     <span className="truncate">contact.chakarin@gmail.com</span>
@@ -310,13 +317,12 @@ export default function AtelierDrawer({
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
                 >
-                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs sm:text-[11px]">
+                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-sm sm:text-xs">
                     <TwitterXIcon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000]" />
                     <span>@beamingmotion</span>
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
+                  <div className="flex items-center gap-1 text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
                     <span>TWITTER / X</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
                   </div>
                 </a>
 
@@ -327,13 +333,12 @@ export default function AtelierDrawer({
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
                 >
-                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs sm:text-[11px]">
+                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-sm sm:text-xs">
                     <InstagramIcon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000]" />
                     <span>@{siteProfile.contact.instagram}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
+                  <div className="flex items-center gap-1 text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
                     <span>INSTAGRAM</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
                   </div>
                 </a>
 
@@ -345,7 +350,7 @@ export default function AtelierDrawer({
                   onClick={() => triggerHaptic("light")}
                   className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
                 >
-                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs sm:text-[11px]">
+                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-sm sm:text-xs">
                     <FileText className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
                     <span>Resume</span>
                   </div>
@@ -354,65 +359,37 @@ export default function AtelierDrawer({
               </div>
             </div>
 
-            {/* Bottom Utility: Theme Toggle + Language Switcher */}
+            {/* Bottom Utility: Single Theme Toggle & Single Language Switcher */}
             <div className="pt-5 mt-6 border-t border-[#EBEBE6] dark:border-[#222221] flex items-center justify-between font-mono text-xs select-none">
-              {/* Dark / Light Toggle */}
+              {/* Single Dark / Light Icon-Only Toggle */}
               <button
                 onClick={() => {
                   triggerHaptic("light");
                   toggleTheme();
                 }}
                 type="button"
-                className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5] dark:bg-[#1C1C1B] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer text-xs sm:text-[11px]"
+                aria-label={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                className="w-10 h-10 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5] dark:bg-[#1C1C1B] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer flex items-center justify-center"
               >
                 {resolvedTheme === "dark" ? (
-                  <>
-                    <Sun className="w-4 h-4 text-[#FFA000]" />
-                    <span>Light Mode</span>
-                  </>
+                  <Sun className="w-4 h-4 text-[#FFA000]" />
                 ) : (
-                  <>
-                    <Moon className="w-4 h-4 text-[#121212]" />
-                    <span>Dark Mode</span>
-                  </>
+                  <Moon className="w-4 h-4 text-[#121212]" />
                 )}
               </button>
 
-              {/* Language Switch */}
-              <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#282827] rounded-full p-0.5 text-xs sm:text-[10px]">
-                <button
-                  onClick={() => {
-                    triggerHaptic("light");
-                    setLang("th");
-                  }}
-                  type="button"
-                  aria-label="Switch language to Thai"
-                  aria-pressed={lang === "th"}
-                  className={`px-3 py-1.5 rounded-full transition-colors cursor-pointer min-h-[36px] flex items-center justify-center ${
-                    lang === "th"
-                      ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                      : "text-[#737373] dark:text-[#9E9E9C]"
-                  }`}
-                >
-                  TH
-                </button>
-                <button
-                  onClick={() => {
-                    triggerHaptic("light");
-                    setLang("en");
-                  }}
-                  type="button"
-                  aria-label="Switch language to English"
-                  aria-pressed={lang === "en"}
-                  className={`px-3 py-1.5 rounded-full transition-colors cursor-pointer min-h-[36px] flex items-center justify-center ${
-                    lang === "en"
-                      ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                      : "text-[#737373] dark:text-[#9E9E9C]"
-                  }`}
-                >
-                  EN
-                </button>
-              </div>
+              {/* Single Language Switcher Button (TH ⇄ EN) */}
+              <button
+                onClick={() => {
+                  triggerHaptic("light");
+                  setLang(lang === "th" ? "en" : "th");
+                }}
+                type="button"
+                aria-label="Toggle language"
+                className="h-10 px-4 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5] dark:bg-[#1C1C1B] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer font-bold text-xs"
+              >
+                {lang === "th" ? "EN" : "TH"}
+              </button>
             </div>
           </motion.aside>
         </>

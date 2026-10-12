@@ -18,7 +18,6 @@ export default function TopNav({
   onOpenAbout,
   onSelectSection,
   activeSection = "all",
-  counts,
 }: TopNavProps) {
   const { lang, setLang, t } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
@@ -189,7 +188,6 @@ export default function TopNav({
           <div className="flex items-center gap-1 sm:gap-1.5 p-1 bg-[#F4F4F0] dark:bg-[#1A1A19] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full overflow-x-auto no-scrollbar shadow-2xs">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
-              const count = counts?.[link.id] ?? 0;
               return (
                 <button
                   key={link.id}
@@ -198,24 +196,13 @@ export default function TopNav({
                     onSelectSection?.(link.id);
                   }}
                   type="button"
-                  className={`flex items-center gap-1.5 px-3.5 sm:px-3.5 py-2 sm:py-1.5 min-h-[36px] sm:min-h-0 rounded-full text-[11px] sm:text-xs font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  className={`flex items-center px-4 sm:px-4 py-2 sm:py-1.5 min-h-[36px] sm:min-h-0 rounded-full text-xs sm:text-[13px] font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                     isActive
                       ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
                       : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] hover:bg-white/70 dark:hover:bg-[#282827]"
                   }`}
                 >
                   <span>{link.label}</span>
-                  {count > 0 && (
-                    <span
-                      className={`text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-full ${
-                        isActive
-                          ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#121212]"
-                          : "text-[#A0A09A] dark:text-[#666]"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  )}
                 </button>
               );
             })}
@@ -227,7 +214,7 @@ export default function TopNav({
       <header className="fixed top-0 left-0 w-full z-50 h-14 sm:h-20 flex items-center justify-end px-4 sm:px-6 md:px-12 select-none pointer-events-none overflow-x-hidden max-w-full">
         {/* Desktop Controls (>= 768px): Full navigation with Dark Mode, TH|EN, and About Me button */}
         <div className="hidden md:flex items-center gap-2 font-mono text-xs pointer-events-auto shrink-0 ml-auto">
-          {/* Theme Toggle (Dark / Light mode) */}
+          {/* Theme Toggle (Dark / Light mode - Single Icon Button) */}
           <button
             onClick={() => {
               triggerHaptic("light");
@@ -245,37 +232,19 @@ export default function TopNav({
             )}
           </button>
 
-          {/* Language Switcher: TH | EN */}
-          <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full p-0.5 text-[10px] shrink-0">
-            <button
-              onClick={() => {
-                triggerHaptic("light");
-                setLang("th");
-              }}
-              type="button"
-              className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
-                lang === "th"
-                  ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                  : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3]"
-              }`}
-            >
-              TH
-            </button>
-            <button
-              onClick={() => {
-                triggerHaptic("light");
-                setLang("en");
-              }}
-              type="button"
-              className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
-                lang === "en"
-                  ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
-                  : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3]"
-              }`}
-            >
-              EN
-            </button>
-          </div>
+          {/* Language Switcher: Single Toggle Button */}
+          <button
+            onClick={() => {
+              triggerHaptic("light");
+              setLang(lang === "th" ? "en" : "th");
+            }}
+            type="button"
+            title={lang === "th" ? "Switch to English" : "เปลี่ยนเป็นภาษาไทย"}
+            aria-label="Toggle language"
+            className="h-8 px-2.5 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer text-xs font-mono font-bold shadow-2xs shrink-0 flex items-center justify-center"
+          >
+            <span>{lang === "th" ? "EN" : "TH"}</span>
+          </button>
 
           {/* About Me Trigger */}
           <button
@@ -284,7 +253,7 @@ export default function TopNav({
               onOpenAbout();
             }}
             type="button"
-            className="flex items-center gap-1 px-3.5 py-1.5 rounded-full border border-[#121212] dark:border-[#F5F5F3] bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] hover:bg-[#FF9500] dark:hover:bg-[#FFA000] hover:border-[#FF9500] dark:hover:border-[#FFA000] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer text-[11px] font-sans font-bold tracking-wide shadow-xs shrink-0"
+            className="flex items-center gap-1 px-3.5 py-1.5 rounded-full border border-[#121212] dark:border-[#F5F5F3] bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] hover:bg-[#FF9500] dark:hover:bg-[#FFA000] hover:border-[#FF9500] dark:hover:border-[#FFA000] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer text-xs sm:text-[13px] font-sans font-semibold tracking-wide shadow-xs shrink-0"
           >
             <span>{t("aboutMe")}</span>
           </button>
