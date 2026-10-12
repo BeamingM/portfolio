@@ -62,7 +62,7 @@ export default function Home() {
   }, [selectedPhoto, displayedPhotos]);
 
   return (
-    <main className="relative min-h-screen bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] selection:bg-[#FF9500] dark:selection:bg-[#FFA000] selection:text-white paper-texture pt-16 sm:pt-20 transition-colors duration-200">
+    <main className="relative min-h-screen bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] selection:bg-[#FF9500] dark:selection:bg-[#FFA000] selection:text-white paper-texture transition-colors duration-200">
       {/* Top Header: Progressive Blur & Center-to-Top-Left Morphing BrandMark with Project Tabs */}
       <TopNav
         onOpenAbout={() => setIsAtelierOpen(true)}
@@ -72,10 +72,7 @@ export default function Home() {
       />
 
       {/* Hero Welcome Space: BrandMark + Floating Greeting + Unified Filter Bar at scroll 0 */}
-      <section className="relative w-full pt-12 md:pt-16 pb-3 flex flex-col items-center justify-center select-none text-center">
-        {/* Spacer where the BrandMark sits at scroll 0 */}
-        <div className="h-16 md:h-20" aria-hidden="true" />
-
+      <section className="relative w-full pt-28 sm:pt-32 md:pt-36 pb-2 flex flex-col items-center justify-center select-none text-center">
         {/* Authentic Apple-Style Floating Narrative Greeting (No boxes, no badges, pure typography) */}
         <ProjectDescriptionHeader activeSection={activeSection} />
 

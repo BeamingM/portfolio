@@ -187,8 +187,8 @@ export default function InteractivePrintCard({
         <div className="mt-3 px-0.5 flex items-center justify-between gap-3 font-mono text-[10px] sm:text-[11px] text-[#6B6B67] border-t border-[#F0F0EA] pt-2.5 min-w-0">
           {/* Main Info Block (Priority 1: Project Name [NO TRUNCATION] + Priority 2: Location) */}
           <div className="flex items-center gap-1.5 min-w-0 flex-1 overflow-hidden">
-            {/* Priority 1: Project Name — Strictly preserved full width, NEVER truncated with ellipsis */}
-            <span className="font-bold tracking-wider text-[#121212] uppercase text-[10px] sm:text-[11px] shrink-0 whitespace-nowrap group-hover:text-[#FF9500] transition-colors">
+            {/* Priority 1: Project Name — Styled with font-sans (Anuphan) for clean Thai & Latin typography */}
+            <span className="font-sans font-bold tracking-wide text-[#121212] uppercase text-[10px] sm:text-[11px] shrink-0 whitespace-nowrap group-hover:text-[#FF9500] transition-colors">
               {photo.series}
             </span>
 

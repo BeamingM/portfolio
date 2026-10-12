@@ -38,7 +38,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --font-sans: var(--font-inter), var(--font-anuphan), sans-serif;
-  --font-mono: var(--font-jetbrains-mono), monospace;
+  --font-mono: var(--font-jetbrains-mono), var(--font-anuphan), monospace;
   --font-serif: var(--font-newsreader), Georgia, serif;
   --font-macintosh: var(--font-newsreader), Georgia, serif;
   --font-anuphan: var(--font-anuphan);

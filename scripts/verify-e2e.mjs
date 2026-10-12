@@ -247,6 +247,19 @@ test("InteractivePrintCard: Documentary metadata bar preserves Sony α7 III inva
   assert(cardCode.includes("photo.series"), "PrintCard must display project series name");
   assert(cardCode.includes("photo.specs.location"), "PrintCard must display location");
   assert(!cardCode.includes("max-w-[200px]"), "PrintCard must not constrain camera container with cramped max-width");
+  assert(cardCode.includes("font-sans font-bold"), "PrintCard must style photo.series with font-sans (Anuphan) for authentic Thai typography");
+});
+
+test("Thai Typography: font-mono includes Anuphan fallback in globals.css", () => {
+  const cssCode = fs.readFileSync(path.join(root, "src/app/globals.css"), "utf-8");
+  assert(cssCode.includes("var(--font-anuphan)"), "globals.css must include var(--font-anuphan)");
+});
+
+test("Mobile Category Dropdown Pill: Implemented in TopNav with ChevronDown and frosted glass popover", () => {
+  const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
+  assert(topNavCode.includes("ChevronDown"), "TopNav must import ChevronDown");
+  assert(topNavCode.includes("isDropdownOpen"), "TopNav must track isDropdownOpen state");
+  assert(topNavCode.includes("backdrop-blur-2xl"), "Dropdown menu must use frosted glass backdrop blur");
 });
 
 // -----------------------------------------------------------------
