@@ -266,4 +266,9 @@ img,
   }
 }
 
+/* Zero-Flicker Instant Secret Preview Bypass: Executes before browser paints frame 0 */
+html.secret-preview #countdown-curtain {
+  display: none !important;
+}
+
 

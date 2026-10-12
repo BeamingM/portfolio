@@ -156,6 +156,12 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
+                  var p = new URLSearchParams(window.location.search);
+                  if (p.get('preview') === 'true') {
+                    document.documentElement.classList.add('secret-preview');
+                  }
+                } catch (e) {}
+                try {
                   var saved = localStorage.getItem('portfolio_theme');
                   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                   var isDark = saved === 'dark' || ((!saved || saved === 'system') && prefersDark);

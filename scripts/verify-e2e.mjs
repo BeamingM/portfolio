@@ -282,6 +282,18 @@ test("CountdownOverlay: Live ticking countdown implemented without bypass button
   assert(pageCode.includes("<CountdownOverlay"), "Home page must render CountdownOverlay");
 });
 
+test("CountdownOverlay: Zero-Flicker Frame-0 SSR Curtain & Secret Bypass Architecture", () => {
+  const overlayCode = fs.readFileSync(path.join(root, "src/components/CountdownOverlay.tsx"), "utf-8");
+  assert(overlayCode.includes('id="countdown-curtain"'), "CountdownOverlay must have id='countdown-curtain'");
+  assert(!overlayCode.includes("const mounted = useSyncExternalStore"), "Must not gate countdown curtain behind mounted hydration flag");
+
+  const cssCode = fs.readFileSync(path.join(root, "src/app/globals.css"), "utf-8");
+  assert(cssCode.includes("html.secret-preview #countdown-curtain"), "globals.css must include zero-flicker display:none rule for secret preview");
+
+  const layoutCode = fs.readFileSync(path.join(root, "src/app/layout.tsx"), "utf-8");
+  assert(layoutCode.includes("secret-preview"), "layout.tsx head script must check ?preview=true synchronously before first paint");
+});
+
 // -----------------------------------------------------------------
 // Tier 7: Gallery Asset Catalog, EXIF & Bilingual Integrity
 // -----------------------------------------------------------------

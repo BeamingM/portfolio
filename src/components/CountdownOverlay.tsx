@@ -94,25 +94,12 @@ const emptySubscribe = () => () => {};
 export default function CountdownOverlay() {
   const { lang } = useLanguage();
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft);
-  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const isSecretBypass = useSyncExternalStore(
     emptySubscribe,
     () => {
       if (typeof window !== "undefined") {
         const params = new URLSearchParams(window.location.search);
-        if (params.get("preview") === "true") return true;
-        const isLocal =
-          window.location.hostname === "localhost" ||
-          window.location.hostname === "127.0.0.1" ||
-          window.location.hostname.startsWith("192.168.") ||
-          window.location.hostname.startsWith("10.") ||
-          window.location.hostname.endsWith(".local");
-        const hasCountdownParam =
-          params.has("countdown") || params.has("demoCountdown");
-        if (isLocal && !hasCountdownParam) {
-          return true;
-        }
-        return false;
+        return params.get("preview") === "true";
       }
       return false;
     },
@@ -121,6 +108,7 @@ export default function CountdownOverlay() {
 
   useEffect(() => {
     let target = TARGET_TIMESTAMP;
+    let hasDemoParam = false;
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const demoParam = params.get("countdown") || params.get("demoCountdown");
@@ -128,6 +116,7 @@ export default function CountdownOverlay() {
         const secs = parseInt(demoParam, 10);
         if (!isNaN(secs) && secs > 0) {
           target = Date.now() + secs * 1000;
+          hasDemoParam = true;
         }
       }
     }
@@ -146,12 +135,11 @@ export default function CountdownOverlay() {
       };
     };
 
-    const initial = calc();
-    if (initial.isExpired) {
-      queueMicrotask(() => setTimeLeft(initial));
-      return;
+    if (hasDemoParam) {
+      queueMicrotask(() => {
+        setTimeLeft(calc());
+      });
     }
-    queueMicrotask(() => setTimeLeft(initial));
 
     const timer = setInterval(() => {
       const updated = calc();
@@ -166,10 +154,11 @@ export default function CountdownOverlay() {
 
   return (
     <AnimatePresence>
-      {mounted && !timeLeft.isExpired && !isSecretBypass && (
+      {!timeLeft.isExpired && !isSecretBypass && (
         <motion.div
+          id="countdown-curtain"
           key="countdown-overlay"
-          initial={{ opacity: 0 }}
+          initial={false}
           animate={{ opacity: 1 }}
           exit={{
             opacity: 0,
@@ -177,10 +166,9 @@ export default function CountdownOverlay() {
             filter: "blur(28px)",
             transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
           }}
-          transition={{ duration: 0.5 }}
           role="region"
           aria-label="Coming Soon Countdown"
-          className="fixed inset-0 z-[75] flex flex-col items-center justify-between p-4 sm:p-10 md:p-14 bg-[#FBFBF9]/90 dark:bg-[#0C0C0C]/92 backdrop-blur-3xl text-[#121212] dark:text-[#F5F5F3] select-none overflow-hidden"
+          className="fixed inset-0 z-[75] flex flex-col items-center justify-between p-4 sm:p-10 md:p-14 bg-[#FBFBF9] dark:bg-[#0C0C0C] text-[#121212] dark:text-[#F5F5F3] select-none overflow-hidden"
         >
       {/* Ambient Editorial Background Accents */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30 dark:opacity-20">
