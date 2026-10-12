@@ -57,9 +57,9 @@ export const metadata: Metadata = {
     siteName: "CHAKARIN L. Portfolio",
     images: [
       {
-        url: "/photos/personal-01.jpg",
+        url: "https://chakarin.pics/og-image.png",
         width: 1200,
-        height: 800,
+        height: 630,
         alt: "CHAKARIN L. — Photographer based in Bangkok",
       },
     ],
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     title: "CHAKARIN L. — Photographer based in Bangkok",
     description:
       "Documentary, stage, and coastal photography portfolio of Chakarin Limudom (Sony α7 III).",
-    images: ["/photos/personal-01.jpg"],
+    images: ["https://chakarin.pics/og-image.png"],
   },
   alternates: {
     canonical: "https://chakarin.pics",
@@ -116,7 +116,7 @@ const jsonLd = {
       alternateName: ["จักริน ลิ้มป์อุดม", "Chakarin L.", "BeamingMotion"],
       jobTitle: "Photographer based in Bangkok",
       url: "https://chakarin.pics",
-      image: "https://chakarin.pics/photos/personal-01.jpg",
+      image: "https://chakarin.pics/og-image.png",
       description: "Documentary, street, and stage photographer based in Bangkok, Thailand (Sony α7 III).",
       sameAs: [
         "https://www.instagram.com/beamingmotion",

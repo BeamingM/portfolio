@@ -86,6 +86,20 @@ test("Resume PDF generated and accessible in public directory", () => {
   assert(stats.size > 10000, "public/resume.pdf must be a valid non-empty PDF file");
 });
 
+test("Open Graph & Social Share Preview 16:9 Editorial Asset & Metadata Configuration", () => {
+  assert(fs.existsSync(path.join(root, "public/og-image.png")), "public/og-image.png must exist");
+  assert(fs.existsSync(path.join(root, "src/app/opengraph-image.png")), "src/app/opengraph-image.png must exist");
+  assert(fs.existsSync(path.join(root, "src/app/twitter-image.png")), "src/app/twitter-image.png must exist");
+
+  const layoutCode = fs.readFileSync(path.join(root, "src/app/layout.tsx"), "utf-8");
+  assert(layoutCode.includes("og-image.png"), "layout.tsx must configure og-image.png");
+  assert(!layoutCode.includes("personal-01.jpg"), "layout.tsx metadata must no longer use raw photo personal-01.jpg");
+
+  const aboutCode = fs.readFileSync(path.join(root, "src/app/about/page.tsx"), "utf-8");
+  assert(aboutCode.includes("og-image.png"), "about/page.tsx must configure og-image.png");
+  assert(!aboutCode.includes("personal-01.jpg"), "about/page.tsx metadata must no longer use raw photo personal-01.jpg");
+});
+
 // -----------------------------------------------------------------
 // Tier 2: Sound Removal & Single Toolbar
 // -----------------------------------------------------------------
