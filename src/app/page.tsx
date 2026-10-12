@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import TopNav from "@/components/TopNav";
 import ProjectDescriptionHeader from "@/components/ProjectDescriptionHeader";
 import EditorialPhotobook from "@/components/EditorialPhotobook";
+import SiteFooter from "@/components/SiteFooter";
 import PhotoModal from "@/components/PhotoModal";
 import AtelierDrawer from "@/components/AtelierDrawer";
 import FigmaCanvasOverlay from "@/components/FigmaCanvasOverlay";
@@ -14,6 +15,17 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState<string>("all");
   const [isAtelierOpen, setIsAtelierOpen] = useState<boolean>(false);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
+
+  // Sync active section from URL query param if present
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const sec = params.get("section");
+      if (sec && ["all", "personal", "tu-photo", "psctu"].includes(sec)) {
+        setActiveSection(sec);
+      }
+    }
+  }, []);
 
   // Filter gallery items by active project section
   const displayedPhotos = useMemo(() => {
@@ -91,6 +103,13 @@ export default function Home() {
         onSelectPhoto={(photo) => setSelectedPhoto(photo)}
       />
 
+      {/* Comprehensive Editorial Sitemap & Footer */}
+      <SiteFooter
+        activeSection={activeSection}
+        onSelectSection={handleSelectSection}
+        counts={sectionCounts}
+      />
+
       {/* High-Resolution Focus Lightbox */}
       <PhotoModal
         photo={selectedPhoto}
@@ -99,10 +118,13 @@ export default function Home() {
         onPrev={handleModalPrev}
       />
 
-      {/* Slide-over Profile & Contact Panel */}
+      {/* Slide-over Profile & Contact Panel (Unified Mobile Hamburger Drawer) */}
       <AtelierDrawer
         isOpen={isAtelierOpen}
         onClose={() => setIsAtelierOpen(false)}
+        activeSection={activeSection}
+        onSelectSection={handleSelectSection}
+        counts={sectionCounts}
       />
 
       {/* Interactive Figma Canvas Cursor Overlay */}

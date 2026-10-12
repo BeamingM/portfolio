@@ -5,7 +5,7 @@ import BrandMark from "./BrandMark";
 import { triggerHaptic } from "@/utils/haptics";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
-import { Sun, Moon, ChevronDown } from "lucide-react";
+import { Sun, Moon, Menu } from "lucide-react";
 
 interface TopNavProps {
   onOpenAbout: () => void;
@@ -26,7 +26,6 @@ export default function TopNav({
   const [progress, setProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1200);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -96,22 +95,6 @@ export default function TopNav({
     };
   }, [scrollThreshold]);
 
-  // Close dropdown menu on scroll or Escape key
-  useEffect(() => {
-    const handleScrollClose = () => {
-      if (isDropdownOpen) setIsDropdownOpen(false);
-    };
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsDropdownOpen(false);
-    };
-    window.addEventListener("scroll", handleScrollClose, { passive: true });
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("scroll", handleScrollClose);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isDropdownOpen]);
-
   const navLinks = [
     { id: "all", label: t("navAll") },
     { id: "personal", label: t("navPersonal") },
@@ -172,7 +155,7 @@ export default function TopNav({
           />
         </div>
 
-        {/* Unified Filter Bar: Center Hero -> Top Nav beside BrandMark */}
+        {/* Filter Bar: Center Hero -> Top Nav beside BrandMark (desktop) / fades out on mobile */}
         <div
           style={{
             position: "absolute",
@@ -183,140 +166,56 @@ export default function TopNav({
             maxWidth:
               factor > 0.35
                 ? "94vw"
-                : isMobile
-                ? "140px"
                 : `calc(100vw - ${navLeft + 200}px)`,
+            opacity: isMobile ? Math.max(0, (factor - 0.25) / 0.75) : 1,
+            pointerEvents: isMobile && factor <= 0.25 ? "none" : "auto",
           }}
-          className="pointer-events-auto flex items-center select-none"
+          className={`pointer-events-auto flex items-center select-none ${
+            isMobile && factor <= 0.25 ? "hidden" : ""
+          }`}
         >
-          {isMobile && factor <= 0.35 ? (
-            /* On Mobile & Scrolled: Sleek Category Dropdown Pill */
-            <div className="relative">
-              <button
-                onClick={() => {
-                  triggerHaptic("light");
-                  setIsDropdownOpen((prev) => !prev);
-                }}
-                type="button"
-                className="flex items-center gap-1.5 px-2.5 py-1 bg-[#F4F4F0] dark:bg-[#1A1A19] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full text-[10px] font-mono tracking-wider text-[#121212] dark:text-[#F5F5F3] shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap"
-                aria-expanded={isDropdownOpen}
-                aria-haspopup="listbox"
-              >
-                <span className="font-bold truncate max-w-[76px]">
-                  {activeLink.label}
-                </span>
-                {activeCount > 0 && (
-                  <span className="text-[8px] px-1 py-0.2 rounded-full bg-black/10 dark:bg-white/10 text-[#737373] dark:text-[#9E9E9C]">
-                    {activeCount}
-                  </span>
-                )}
-                <ChevronDown
-                  className={`w-3 h-3 text-[#737373] dark:text-[#9E9E9C] transition-transform duration-200 shrink-0 ${
-                    isDropdownOpen ? "rotate-180" : ""
+          {/* Full Horizontal Tabs (in hero on mobile, and morphs into top nav on desktop) */}
+          <div className="flex items-center gap-1 sm:gap-1.5 p-1 bg-[#F4F4F0] dark:bg-[#1A1A19] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full overflow-x-auto no-scrollbar shadow-2xs">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.id;
+              const count = counts?.[link.id] ?? 0;
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => {
+                    triggerHaptic("light");
+                    onSelectSection?.(link.id);
+                  }}
+                  type="button"
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                    isActive
+                      ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
+                      : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] hover:bg-white/70 dark:hover:bg-[#282827]"
                   }`}
-                />
-              </button>
-
-              {/* Floating Frosted Glass Dropdown Menu */}
-              {isDropdownOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40 bg-black/20 dark:bg-black/50 backdrop-blur-xs"
-                    onClick={() => setIsDropdownOpen(false)}
-                  />
-                  <div className="absolute top-full left-0 mt-1.5 z-50 min-w-[210px] p-1.5 rounded-2xl bg-[#FFFFFF]/95 dark:bg-[#181818]/95 backdrop-blur-2xl border border-[#E5E5DF] dark:border-[#2C2C2B] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3 py-1.5 text-[9px] font-mono tracking-widest text-[#8E8E8A] dark:text-[#6E6E6B] uppercase border-b border-[#EFEFEA] dark:border-[#262625] mb-1">
-                      {lang === "th" ? "เลือกหมวดภาพถ่าย" : "Select Series"}
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      {navLinks.map((link) => {
-                        const isActive = activeSection === link.id;
-                        const count = counts?.[link.id] ?? 0;
-                        return (
-                          <button
-                            key={link.id}
-                            onClick={() => {
-                              triggerHaptic("light");
-                              onSelectSection?.(link.id);
-                              setIsDropdownOpen(false);
-                            }}
-                            type="button"
-                            className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono transition-all text-left cursor-pointer ${
-                              isActive
-                                ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
-                                : "text-[#555] dark:text-[#AAA] hover:bg-black/5 dark:hover:bg-white/5"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2">
-                              <span
-                                className={`w-1.5 h-1.5 rounded-full ${
-                                  isActive ? "bg-[#FF9500]" : "bg-transparent"
-                                }`}
-                              />
-                              <span>{link.label}</span>
-                            </div>
-                            {count > 0 && (
-                              <span
-                                className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                                  isActive
-                                    ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#121212]"
-                                    : "text-[#888] dark:text-[#777]"
-                                }`}
-                              >
-                                {count}
-                              </span>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          ) : (
-            /* Full Horizontal Tabs (in hero, or on desktop navbar) */
-            <div className="flex items-center gap-1 sm:gap-1.5 p-1 bg-[#F4F4F0] dark:bg-[#1A1A19] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full overflow-x-auto no-scrollbar shadow-2xs">
-              {navLinks.map((link) => {
-                const isActive = activeSection === link.id;
-                const count = counts?.[link.id] ?? 0;
-                return (
-                  <button
-                    key={link.id}
-                    onClick={() => {
-                      triggerHaptic("light");
-                      onSelectSection?.(link.id);
-                    }}
-                    type="button"
-                    className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                      isActive
-                        ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
-                        : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] hover:bg-white/70 dark:hover:bg-[#282827]"
-                    }`}
-                  >
-                    <span>{link.label}</span>
-                    {count > 0 && (
-                      <span
-                        className={`text-[8px] sm:text-[9px] px-1 py-0.2 rounded-full ${
-                          isActive
-                            ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#121212]"
-                            : "text-[#A0A09A] dark:text-[#666]"
-                        }`}
-                      >
-                        {count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+                >
+                  <span>{link.label}</span>
+                  {count > 0 && (
+                    <span
+                      className={`text-[8px] sm:text-[9px] px-1 py-0.2 rounded-full ${
+                        isActive
+                          ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#121212]"
+                          : "text-[#A0A09A] dark:text-[#666]"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       {/* 3. Top Navigation Right Controls */}
       <header className="fixed top-0 left-0 w-full z-40 h-14 sm:h-20 flex items-center justify-end px-3 sm:px-6 md:px-12 select-none pointer-events-none overflow-x-hidden max-w-full">
-        <div className="flex items-center gap-1 sm:gap-2 font-mono text-xs pointer-events-auto shrink-0 ml-auto">
+        {/* Desktop Controls (>= 768px): Full navigation with Dark Mode, TH|EN, and About Me button */}
+        <div className="hidden md:flex items-center gap-2 font-mono text-xs pointer-events-auto shrink-0 ml-auto">
           {/* Theme Toggle (Dark / Light mode) */}
           <button
             onClick={() => {
@@ -325,7 +224,7 @@ export default function TopNav({
             }}
             type="button"
             title={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] flex items-center justify-center transition-colors cursor-pointer shadow-2xs shrink-0"
+            className="w-8 h-8 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF] dark:bg-[#181818] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] flex items-center justify-center transition-colors cursor-pointer shadow-2xs shrink-0"
             aria-label="Toggle theme mode"
           >
             {resolvedTheme === "dark" ? (
@@ -336,14 +235,14 @@ export default function TopNav({
           </button>
 
           {/* Language Switcher: TH | EN */}
-          <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full p-0.5 text-[9px] sm:text-[10px] shrink-0">
+          <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-full p-0.5 text-[10px] shrink-0">
             <button
               onClick={() => {
                 triggerHaptic("light");
                 setLang("th");
               }}
               type="button"
-              className={`px-1.5 sm:px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
+              className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
                 lang === "th"
                   ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
                   : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3]"
@@ -357,7 +256,7 @@ export default function TopNav({
                 setLang("en");
               }}
               type="button"
-              className={`px-1.5 sm:px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
+              className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
                 lang === "en"
                   ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
                   : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3]"
@@ -374,9 +273,25 @@ export default function TopNav({
               onOpenAbout();
             }}
             type="button"
-            className="flex items-center gap-1 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-[#121212] dark:border-[#F5F5F3] bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] hover:bg-[#FF9500] dark:hover:bg-[#FFA000] hover:border-[#FF9500] dark:hover:border-[#FFA000] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer text-[9px] sm:text-[11px] font-sans font-bold tracking-wide shadow-xs shrink-0"
+            className="flex items-center gap-1 px-3.5 py-1.5 rounded-full border border-[#121212] dark:border-[#F5F5F3] bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] hover:bg-[#FF9500] dark:hover:bg-[#FFA000] hover:border-[#FF9500] dark:hover:border-[#FFA000] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer text-[11px] font-sans font-bold tracking-wide shadow-xs shrink-0"
           >
             <span>{t("aboutMe")}</span>
+          </button>
+        </div>
+
+        {/* Mobile Controls (< 768px): Sleek Hamburger/Menu button */}
+        <div className="flex md:hidden items-center pointer-events-auto shrink-0 ml-auto">
+          <button
+            onClick={() => {
+              triggerHaptic("light");
+              onOpenAbout();
+            }}
+            type="button"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer font-mono text-[11px] font-medium shadow-2xs"
+            aria-label="Open menu"
+          >
+            <Menu className="w-3.5 h-3.5 text-[#121212] dark:text-[#F5F5F3]" />
+            <span>Menu</span>
           </button>
         </div>
       </header>

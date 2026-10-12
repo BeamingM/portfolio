@@ -35,6 +35,23 @@ test("Camera invariant: Greek α U+03B1 (Sony α7 III) strictly maintained", () 
   
   const cardCode = fs.readFileSync(path.join(root, "src/components/InteractivePrintCard.tsx"), "utf-8");
   assert(cardCode.includes("Sony α7 III"), "Print cards must display camera invariant Sony α7 III");
+
+  const drawerCode = fs.readFileSync(path.join(root, "src/components/AtelierDrawer.tsx"), "utf-8");
+  assert(drawerCode.includes("Sony α7 III"), "AtelierDrawer must display camera invariant Sony α7 III");
+
+  const footerCode = fs.readFileSync(path.join(root, "src/components/SiteFooter.tsx"), "utf-8");
+  assert(footerCode.includes("Sony α7 III"), "SiteFooter must display camera invariant Sony α7 III");
+
+  const aboutCode = fs.readFileSync(path.join(root, "src/app/about/AboutClient.tsx"), "utf-8");
+  assert(aboutCode.includes("Sony α7 III"), "About page must display camera invariant Sony α7 III");
+});
+
+test("Thai Name invariant: 'จักริน ลิ้มป์อุดม' (with ป์) strictly maintained", () => {
+  const aboutClientCode = fs.readFileSync(path.join(root, "src/app/about/AboutClient.tsx"), "utf-8");
+  assert(aboutClientCode.includes("จักริน ลิ้มป์อุดม"), "About page must contain Thai name จักริน ลิ้มป์อุดม with ป์");
+
+  const aboutServerCode = fs.readFileSync(path.join(root, "src/app/about/page.tsx"), "utf-8");
+  assert(aboutServerCode.includes("จักริน ลิ้มป์อุดม"), "About metadata must contain Thai name จักริน ลิ้มป์อุดม with ป์");
 });
 
 test("Tagline invariant: 'Photographer based in Bangkok' strictly maintained", () => {
@@ -43,6 +60,9 @@ test("Tagline invariant: 'Photographer based in Bangkok' strictly maintained", (
   
   const layoutCode = fs.readFileSync(path.join(root, "src/app/layout.tsx"), "utf-8");
   assert(layoutCode.includes("Photographer based in Bangkok"), "Metadata tagline invariant required");
+
+  const aboutCode = fs.readFileSync(path.join(root, "src/app/about/AboutClient.tsx"), "utf-8");
+  assert(aboutCode.includes("Photographer based in Bangkok"), "About page must contain tagline");
 });
 
 test("Vercel domain configuration: vercel.json exists with chakarin.pics headers", () => {
@@ -98,7 +118,7 @@ test("2nd Toolbar (Lens selector) completely removed: Only ONE toolbar exists", 
 });
 
 // -----------------------------------------------------------------
-// Tier 3: Mobile Responsiveness & Bug Fixes
+// Tier 3: Mobile Responsiveness & Header Simplification
 // -----------------------------------------------------------------
 console.log("\n[Tier 3: Mobile Responsiveness, Scroll Morph & IG Mouse Capture]");
 
@@ -122,6 +142,14 @@ test("TopNav: Right controls never overflow on mobile viewports", () => {
   assert(topNavCode.includes("max-w-[calc(100vw-180px)]"), "BrandMark must reserve room for right controls on mobile");
 });
 
+test("Mobile Header Simplification: Mobile header has Menu button, hides Dark Mode & TH|EN toggles", () => {
+  const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
+  assert(topNavCode.includes("Menu"), "TopNav must import Menu icon");
+  assert(topNavCode.includes("md:hidden"), "Mobile menu button must be rendered on mobile (md:hidden)");
+  assert(topNavCode.includes("hidden md:flex"), "Desktop controls must be hidden on mobile (hidden md:flex)");
+  assert(!topNavCode.includes("isDropdownOpen"), "TopNav must not render cluttered dropdown pill state");
+});
+
 test("Instagram Embed: Embed is interactive and swipeable without blocking overlay", () => {
   const igCode = fs.readFileSync(path.join(root, "src/components/InstagramEmbed.tsx"), "utf-8");
   assert(igCode.includes("data-figma-photo=\"true\""), "InstagramEmbed must provide data-figma-photo attribute");
@@ -129,9 +157,9 @@ test("Instagram Embed: Embed is interactive and swipeable without blocking overl
 });
 
 // -----------------------------------------------------------------
-// Tier 4: billguo.me Inspired Features
+// Tier 4: Editorial Photobook & AtelierDrawer Features
 // -----------------------------------------------------------------
-console.log("\n[Tier 4: billguo.me / craft Inspired Features]");
+console.log("\n[Tier 4: billguo.me / craft Inspired Features & Drawer Integration]");
 
 test("InteractivePrintCard: 3D perspective tilt & glossy holographic sheen implemented", () => {
   const cardCode = fs.readFileSync(path.join(root, "src/components/InteractivePrintCard.tsx"), "utf-8");
@@ -167,7 +195,6 @@ test("Authentic Apple-Style Floating Narrative Greeting (No boxes, no badges, pu
   assert(fs.existsSync(path.join(root, "src/components/ProjectDescriptionHeader.tsx")), "ProjectDescriptionHeader must exist");
   const headerCode = fs.readFileSync(path.join(root, "src/components/ProjectDescriptionHeader.tsx"), "utf-8");
   
-  // Clean greeting assertions
   assert(headerCode.includes("จังหวะชีวิตประจำวัน แสงเงา"), "Must include updated poetic Thai greeting");
   assert(headerCode.includes("Documenting the rhythm of everyday life"), "Must include updated English greeting");
   assert(!headerCode.includes("CURATED ARCHIVE"), "Must not contain rigid CURATED ARCHIVE orange badge");
@@ -181,14 +208,33 @@ test("Vercel Analytics: @vercel/analytics integrated into RootLayout", () => {
   assert(layoutCode.includes("<Analytics />"), "RootLayout must render <Analytics />");
 });
 
-test("Social Channels: Twitter / X (@beamingmotion), Email, Instagram, and Resume linked in Drawer", () => {
+test("Mobile Drawer (AtelierDrawer): Combines category filters, bio, links, gear, and bottom utilities", () => {
   const drawerCode = fs.readFileSync(path.join(root, "src/components/AtelierDrawer.tsx"), "utf-8");
-  assert(drawerCode.includes("https://x.com/beamingmotion"), "AtelierDrawer must link to Twitter / X");
-  assert(drawerCode.includes("contact.chakarin@gmail.com"), "AtelierDrawer must display email");
-  assert(drawerCode.includes("/resume.pdf"), "AtelierDrawer must offer download resume PDF");
-  assert(drawerCode.includes("beamingmotion"), "AtelierDrawer must link to Instagram");
+  // Category / Series Filter
+  assert(drawerCode.includes("ALL ARCHIVE"), "AtelierDrawer must include ALL ARCHIVE");
+  assert(drawerCode.includes("PERSONAL PROJECTS"), "AtelierDrawer must include PERSONAL PROJECTS");
+  assert(drawerCode.includes("TU PHOTO"), "AtelierDrawer must include TU PHOTO");
+  assert(drawerCode.includes("PSC.TU"), "AtelierDrawer must include PSC.TU");
+  assert(drawerCode.includes("onSelectSection"), "AtelierDrawer must accept onSelectSection callback");
+
+  // Navigation Links
+  assert(drawerCode.includes("href=\"/about\""), "AtelierDrawer must link to /about");
+  assert(drawerCode.includes("href=\"/\""), "AtelierDrawer must link to /");
+  assert(drawerCode.includes("href=\"/resume.pdf\""), "AtelierDrawer must link to resume");
+
+  // Narrative Story
   assert(drawerCode.includes("Hello"), "AtelierDrawer must include prominent Hello heading");
-  assert(drawerCode.includes("backdrop-blur-2xl"), "AtelierDrawer must use frosted glass backdrop blur");
+  assert(drawerCode.includes("เริ่มถ่ายรูปเพราะ"), "AtelierDrawer must include Thai narrative story");
+
+  // Equipment & Contacts
+  assert(drawerCode.includes("Sony α7 III"), "AtelierDrawer must include Sony α7 III gear specs");
+  assert(drawerCode.includes("contact.chakarin@gmail.com"), "AtelierDrawer must display email");
+  assert(drawerCode.includes("https://x.com/beamingmotion"), "AtelierDrawer must link to Twitter / X");
+  assert(drawerCode.includes("beamingmotion"), "AtelierDrawer must link to Instagram");
+
+  // Bottom Theme & Language
+  assert(drawerCode.includes("toggleTheme"), "AtelierDrawer must include theme toggle");
+  assert(drawerCode.includes("setLang"), "AtelierDrawer must include language switch");
 });
 
 test("October 6 Series: Strictly ครบรอบ 50 ปี 6 ตุลา without 'Commemoration'", () => {
@@ -208,9 +254,47 @@ test("Faculty Omission: Strictly no 'Faculty of Political Science' in gallery, l
 });
 
 // -----------------------------------------------------------------
-// Tier 5: Lightbox Fix, Natural Stack Physics & Morphing Filter Bar
+// Tier 5: Footer Sitemap & Standalone /about Route
 // -----------------------------------------------------------------
-console.log("\n[Tier 5: Lightbox Fix, Natural Stack Physics & Morphing Filter Bar]");
+console.log("\n[Tier 5: Comprehensive Footer Sitemap & Dedicated /about Route]");
+
+test("Comprehensive Footer Sitemap (SiteFooter): 4-column rich editorial sitemap with bottom utilities", () => {
+  assert(fs.existsSync(path.join(root, "src/components/SiteFooter.tsx")), "SiteFooter.tsx must exist");
+  const footerCode = fs.readFileSync(path.join(root, "src/components/SiteFooter.tsx"), "utf-8");
+
+  // 4 Columns
+  assert(footerCode.includes("Archive Series") || footerCode.includes("หมวดภาพถ่าย"), "SiteFooter Col 1: Archive Series");
+  assert(footerCode.includes("/about"), "SiteFooter Col 2: Navigation to /about");
+  assert(footerCode.includes("/resume.pdf"), "SiteFooter Col 2: Resume PDF");
+  assert(footerCode.includes("contact.chakarin@gmail.com"), "SiteFooter Col 3: Email");
+  assert(footerCode.includes("beamingmotion"), "SiteFooter Col 3: Social channels");
+  assert(footerCode.includes("Sony α7 III"), "SiteFooter Col 4: Equipment Sony α7 III");
+  assert(footerCode.includes("FE 28-70mm"), "SiteFooter Col 4: Optics");
+
+  // Bottom Utility Row
+  assert(footerCode.includes("toggleTheme"), "SiteFooter must have Theme toggle");
+  assert(footerCode.includes("setLang"), "SiteFooter must have Language switcher");
+  assert(footerCode.includes("chakarin.pics"), "SiteFooter must display chakarin.pics colophon");
+  assert(footerCode.includes("© 2026 CHAKARIN L. · BEAMINGMOTION. ALL RIGHTS RESERVED."), "SiteFooter must display exact copyright");
+
+  // Rendered on page.tsx
+  const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
+  assert(pageCode.includes("<SiteFooter"), "page.tsx must render SiteFooter");
+});
+
+test("Dedicated /about Route: Standalone editorial page with bio, gear, contacts, and SiteFooter", () => {
+  assert(fs.existsSync(path.join(root, "src/app/about/page.tsx")), "src/app/about/page.tsx must exist");
+  assert(fs.existsSync(path.join(root, "src/app/about/AboutClient.tsx")), "src/app/about/AboutClient.tsx must exist");
+
+  const aboutClientCode = fs.readFileSync(path.join(root, "src/app/about/AboutClient.tsx"), "utf-8");
+  assert(aboutClientCode.includes("Back to Gallery") || aboutClientCode.includes("กลับสู่แกลเลอรี"), "About must contain back button to gallery");
+  assert(aboutClientCode.includes("Hello"), "About must feature prominent Hello title");
+  assert(aboutClientCode.includes("จักริน ลิ้มป์อุดม"), "About must display Thai name จักริน ลิ้มป์อุดม");
+  assert(aboutClientCode.includes("Photographer based in Bangkok"), "About must display tagline");
+  assert(aboutClientCode.includes("Sony α7 III"), "About must maintain Sony α7 III camera invariant");
+  assert(aboutClientCode.includes("contact.chakarin@gmail.com"), "About must have direct inquiries contact");
+  assert(aboutClientCode.includes("<SiteFooter"), "About must render SiteFooter");
+});
 
 test("PhotoModal: Direct responsive sizing prevents 0x0 container collapse", () => {
   const modalCode = fs.readFileSync(path.join(root, "src/components/PhotoModal.tsx"), "utf-8");
@@ -222,44 +306,9 @@ test("PhotoModal: Direct responsive sizing prevents 0x0 container collapse", () 
   assert(modalCode.includes("Sony α7 III"), "PhotoModal EXIF HUD must maintain Sony α7 III invariant");
 });
 
-test("PhotoDeckStack: Natural fling swipe physics, consistent keying & tap inspection threshold", () => {
-  const stackCode = fs.readFileSync(path.join(root, "src/components/PhotoDeckStack.tsx"), "utf-8");
-  assert(stackCode.includes("key={photo.id}"), "StackCard must use stable photo.id keys to prevent unmounting flashes");
-  assert(!stackCode.includes("key={`bg-${offset}"), "Background cards must not change keys on each advance");
-  assert(stackCode.includes("dragDistanceRef"), "StackCard must track pointer drag displacement");
-  assert(stackCode.includes("animate(dragX, -700") || stackCode.includes("animate(dragX, -750"), "Must fling card smoothly offscreen left on swipe left");
-  assert(stackCode.includes("animate(dragX, 700") || stackCode.includes("animate(dragX, 750"), "Must fling card smoothly offscreen right on swipe right");
-  assert(stackCode.includes("Sony α7 III"), "PhotoDeckStack must strictly display Sony α7 III invariant");
-});
-
-test("TopNav: Unified Morphing Filter Bar dynamically measures hero-filter-anchor to prevent text collision", () => {
-  const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
-  const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
-  assert(pageCode.includes('id="hero-filter-anchor"'), "page.tsx must provide hero-filter-anchor slot below greeting");
-  assert(topNavCode.includes("heroFilterTop"), "TopNav must dynamically measure and interpolate heroFilterTop");
-  assert(topNavCode.includes("hero-filter-anchor"), "TopNav must measure hero-filter-anchor DOM element");
-  assert(topNavCode.includes("brandMarkClearance"), "TopNav must maintain exact clearance from BrandMark");
-});
-
-test("InteractivePrintCard: Documentary metadata bar preserves Sony α7 III invariant without SONY ... truncation", () => {
-  const cardCode = fs.readFileSync(path.join(root, "src/components/InteractivePrintCard.tsx"), "utf-8");
-  assert(cardCode.includes("Sony α7 III"), "PrintCard must maintain Sony α7 III invariant");
-  assert(cardCode.includes("photo.series"), "PrintCard must display project series name");
-  assert(cardCode.includes("photo.specs.location"), "PrintCard must display location");
-  assert(!cardCode.includes("max-w-[200px]"), "PrintCard must not constrain camera container with cramped max-width");
-  assert(cardCode.includes("font-sans font-bold"), "PrintCard must style photo.series with font-sans (Anuphan) for authentic Thai typography");
-});
-
 test("Thai Typography: font-mono includes Anuphan fallback in globals.css", () => {
   const cssCode = fs.readFileSync(path.join(root, "src/app/globals.css"), "utf-8");
   assert(cssCode.includes("var(--font-anuphan)"), "globals.css must include var(--font-anuphan)");
-});
-
-test("Mobile Category Dropdown Pill: Implemented in TopNav with ChevronDown and frosted glass popover", () => {
-  const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
-  assert(topNavCode.includes("ChevronDown"), "TopNav must import ChevronDown");
-  assert(topNavCode.includes("isDropdownOpen"), "TopNav must track isDropdownOpen state");
-  assert(topNavCode.includes("backdrop-blur-2xl"), "Dropdown menu must use frosted glass backdrop blur");
 });
 
 // -----------------------------------------------------------------

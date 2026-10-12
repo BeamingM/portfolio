@@ -5,8 +5,6 @@ import { PhotoItem } from "@/config/gallery";
 import { AnimatePresence } from "framer-motion";
 import InstagramEmbed from "@/components/InstagramEmbed";
 import InteractivePrintCard from "@/components/InteractivePrintCard";
-import { Mail, FileText } from "lucide-react";
-import { Twitter, Instagram } from "@/components/SocialIcons";
 
 interface EditorialPhotobookProps {
   items: PhotoItem[];
@@ -58,7 +56,7 @@ export default function EditorialPhotobook({
   }, [items, activeSection]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-4 pb-28">
+    <div id="photos-archive" className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-4 pb-12">
       {/* Empty State */}
       {filteredPhotos.length === 0 && (
         <div className="py-24 text-center font-mono text-xs text-[#737373] dark:text-[#9E9E9C] flex flex-col items-center gap-3">
@@ -93,72 +91,6 @@ export default function EditorialPhotobook({
           )}
         </AnimatePresence>
       </div>
-
-      {/* Editorial Colophon Footer */}
-      <footer className="mt-20 pt-10 border-t border-[#E5E5DF] dark:border-[#282827] flex flex-col md:flex-row items-start md:items-baseline justify-between gap-6 text-[#737373] dark:text-[#9E9E9C] font-mono select-none">
-        <div>
-          <div className="font-sans font-black text-lg text-[#121212] dark:text-[#F5F5F3] tracking-tight uppercase">
-            CHAKARIN L.
-          </div>
-          <div className="font-serif italic text-base text-[#737373] dark:text-[#9E9E9C] mt-0.5">
-            BeamingMotion
-          </div>
-          <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] mt-2 tracking-wider uppercase">
-            Photographer based in Bangkok · Thammasat University
-          </div>
-
-          {/* Social & Contact Direct Links */}
-          <div className="flex flex-wrap items-center gap-3 mt-4 text-xs font-sans">
-            <a
-              href="https://x.com/beamingmotion"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors"
-            >
-              <Twitter className="w-3.5 h-3.5" />
-              <span>Twitter / X</span>
-            </a>
-            <span className="text-[#D1D1CB] dark:text-[#383837]">·</span>
-            <a
-              href="https://www.instagram.com/beamingmotion"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors"
-            >
-              <Instagram className="w-3.5 h-3.5" />
-              <span>Instagram</span>
-            </a>
-            <span className="text-[#D1D1CB] dark:text-[#383837]">·</span>
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Resume</span>
-            </a>
-            <span className="text-[#D1D1CB] dark:text-[#383837]">·</span>
-            <a
-              href="mailto:contact.chakarin@gmail.com"
-              className="flex items-center gap-1.5 text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors"
-              title="Send an email to Chakarin"
-            >
-              <Mail className="w-3.5 h-3.5" />
-              <span>Email</span>
-            </a>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:items-end gap-1 text-[11px]">
-          <div className="font-semibold text-[#121212] dark:text-[#F5F5F3]">
-            chakarin.pics
-          </div>
-          <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider">
-            © CHAKARIN L. 2026 · All Rights Reserved
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
