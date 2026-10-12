@@ -115,6 +115,8 @@ function PhotoModalDialog({
       role="dialog"
       aria-modal="true"
       aria-label={`Photo view: ${photo.title}`}
+      data-lenis-prevent="true"
+      data-lenis-prevent-wheel="true"
       className="fixed inset-0 z-50 bg-[#0B0B0B]/94 backdrop-blur-md flex flex-col items-center justify-between p-3 sm:p-5 md:p-8 select-none overflow-y-auto"
     >
       {/* Top Control Bar: Title & Action Buttons */}
@@ -184,7 +186,7 @@ function PhotoModalDialog({
             onPrev();
           }}
           type="button"
-          className="absolute left-2.5 md:left-6 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer min-w-[44px] min-h-[44px]"
+          className="hidden sm:flex absolute left-2.5 md:left-6 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 items-center justify-center transition-colors cursor-pointer min-w-[44px] min-h-[44px]"
           aria-label="Previous photo"
         >
           <ChevronLeft className="w-5 h-5" />
@@ -199,7 +201,7 @@ function PhotoModalDialog({
             onNext();
           }}
           type="button"
-          className="absolute right-2.5 md:right-6 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer min-w-[44px] min-h-[44px]"
+          className="hidden sm:flex absolute right-2.5 md:right-6 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 items-center justify-center transition-colors cursor-pointer min-w-[44px] min-h-[44px]"
           aria-label="Next photo"
         >
           <ChevronRight className="w-5 h-5" />
@@ -235,7 +237,7 @@ function PhotoModalDialog({
             exit={{ scale: 0.96, opacity: 0 }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             onClick={toggleZoom}
-            className="relative w-full h-full max-h-[72vh] sm:max-h-[74vh] max-w-[92vw] sm:max-w-[88vw] flex items-center justify-center cursor-zoom-in rounded-xs"
+            className="relative w-full h-full max-h-[62vh] sm:max-h-[74vh] max-w-[92vw] sm:max-w-[88vw] flex items-center justify-center cursor-zoom-in rounded-xs"
           >
             <Image
               src={photo.src}
@@ -244,7 +246,7 @@ function PhotoModalDialog({
               height={photo.height || 800}
               priority
               unoptimized
-              className="max-h-[72vh] sm:max-h-[74vh] max-w-[92vw] sm:max-w-[88vw] w-auto h-auto object-contain rounded-xs shadow-2xl select-none"
+              className="max-h-[62vh] sm:max-h-[74vh] max-w-[92vw] sm:max-w-[88vw] w-auto h-auto object-contain rounded-xs shadow-2xl select-none"
             />
           </motion.div>
         )}

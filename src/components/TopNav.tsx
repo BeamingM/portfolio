@@ -112,9 +112,6 @@ export default function TopNav({
   const navLeft = sidePad + brandMarkClearance;
   const navTop = isMobile ? 14 : 18;
 
-  const activeLink = navLinks.find((l) => l.id === activeSection) || navLinks[0];
-  const activeCount = counts?.[activeSection] ?? 0;
-
   return (
     <>
       {/* 1. Progressive Blur Layer */}
@@ -201,7 +198,7 @@ export default function TopNav({
                     onSelectSection?.(link.id);
                   }}
                   type="button"
-                  className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  className={`flex items-center gap-1.5 px-3.5 sm:px-3.5 py-2 sm:py-1.5 min-h-[36px] sm:min-h-0 rounded-full text-[11px] sm:text-xs font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                     isActive
                       ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
                       : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] hover:bg-white/70 dark:hover:bg-[#282827]"
@@ -301,7 +298,7 @@ export default function TopNav({
               onOpenAbout();
             }}
             type="button"
-            className="w-10 h-10 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer flex items-center justify-center shadow-2xs"
+            className="w-11 h-11 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer flex items-center justify-center shadow-2xs min-w-[44px] min-h-[44px]"
             aria-label="Open menu"
           >
             <Menu className="w-4 h-4 text-[#121212] dark:text-[#F5F5F3]" />

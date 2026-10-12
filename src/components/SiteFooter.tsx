@@ -38,7 +38,7 @@ export default function SiteFooter({
 
   return (
     <footer className="w-full mt-24 border-t border-[#E5E5DF] dark:border-[#222221] bg-[#F4F4F0]/60 dark:bg-[#111111]/60 backdrop-blur-md select-none transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 py-16 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-20">
         {/* Top Brand & Identity Banner */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-[#E5E5DF] dark:border-[#222221]">
           <div className="flex items-baseline gap-2.5">
@@ -202,7 +202,7 @@ export default function SiteFooter({
         {/* Bottom Utility Bar: Theme, Language Switchers & Clean Copyright */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 font-mono text-xs">
           {/* Controls: Theme & Language Switchers */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             {/* Dark / Light Mode Toggle */}
             <button
               onClick={() => {

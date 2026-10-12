@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import BrandMark from "./BrandMark";
@@ -38,6 +38,53 @@ export default function AtelierDrawer({
     "tu-photo": galleryItems.filter((i) => i.sectionId === "tu-photo").length,
     psctu: galleryItems.filter((i) => i.sectionId === "psctu").length,
   };
+
+  // Lock background body scroll when drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [isOpen]);
+
+  // Handle Escape key dismissal and Tab focus trap for WCAG 2.2 AA compliance
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        triggerHaptic("light");
+        onClose();
+        return;
+      }
+
+      if (e.key === "Tab") {
+        const drawer = document.querySelector('[role="dialog"][aria-label="Profile and menu drawer"]');
+        if (!drawer) return;
+        const focusable = drawer.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(siteProfile.contact.email);
@@ -131,7 +178,7 @@ export default function AtelierDrawer({
             <div className="space-y-6">
               {/* Header */}
               <div className="flex items-center justify-between pb-4 border-b border-[#EBEBE6]/60 dark:border-[#222221]/60">
-                <BrandMark showSubtitle={false} />
+                <BrandMark showSubtitle={false} collapseSecondary={true} />
                 <button
                   onClick={handleClose}
                   type="button"
@@ -245,7 +292,8 @@ export default function AtelierDrawer({
                     }}
                     type="button"
                     title={copied ? "Copied" : "Copy email address"}
-                    className="p-1.5 text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
+                    aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
+                    className="w-10 h-10 -mr-1 rounded-lg flex items-center justify-center text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
                   >
                     {copied ? (
                       <Check className="w-4 h-4 text-[#FF9500] dark:text-[#FFA000]" />
@@ -338,7 +386,9 @@ export default function AtelierDrawer({
                     setLang("th");
                   }}
                   type="button"
-                  className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
+                  aria-label="Switch language to Thai"
+                  aria-pressed={lang === "th"}
+                  className={`px-3 py-1.5 rounded-full transition-colors cursor-pointer min-h-[36px] flex items-center justify-center ${
                     lang === "th"
                       ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
                       : "text-[#737373] dark:text-[#9E9E9C]"
@@ -352,7 +402,9 @@ export default function AtelierDrawer({
                     setLang("en");
                   }}
                   type="button"
-                  className={`px-2 py-0.5 rounded-full transition-colors cursor-pointer ${
+                  aria-label="Switch language to English"
+                  aria-pressed={lang === "en"}
+                  className={`px-3 py-1.5 rounded-full transition-colors cursor-pointer min-h-[36px] flex items-center justify-center ${
                     lang === "en"
                       ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold"
                       : "text-[#737373] dark:text-[#9E9E9C]"

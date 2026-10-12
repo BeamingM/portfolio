@@ -66,7 +66,7 @@ export default function CommandPalette({
         category: "Action",
         icon: <FileText className="w-4 h-4 text-[#FF9500]" />,
         perform: () => {
-          window.open("/resume.pdf", "_blank");
+          window.open("/resume.pdf", "_blank", "noopener,noreferrer");
           onClose();
         },
       },
@@ -76,7 +76,7 @@ export default function CommandPalette({
         category: "Social",
         icon: <Twitter className="w-4 h-4 text-[#FF9500]" />,
         perform: () => {
-          window.open("https://x.com/beamingmotion", "_blank");
+          window.open("https://x.com/beamingmotion", "_blank", "noopener,noreferrer");
           onClose();
         },
       },
@@ -86,7 +86,7 @@ export default function CommandPalette({
         category: "Social",
         icon: <Instagram className="w-4 h-4 text-[#FF9500]" />,
         perform: () => {
-          window.open("https://www.instagram.com/beamingmotion", "_blank");
+          window.open("https://www.instagram.com/beamingmotion", "_blank", "noopener,noreferrer");
           onClose();
         },
       },

@@ -62,7 +62,7 @@ export default function AboutClient() {
         <Link
           href="/"
           onClick={() => triggerHaptic("light")}
-          className="flex items-center gap-2 font-mono text-xs text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] transition-colors group cursor-pointer"
+          className="flex items-center gap-2 font-mono text-xs text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] transition-colors group cursor-pointer min-h-[44px] py-2 pr-2"
         >
           <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
           <span className="hidden sm:inline">
@@ -77,7 +77,7 @@ export default function AboutClient() {
           onClick={() => triggerHaptic("light")}
           className="cursor-pointer"
         >
-          <BrandMark showSubtitle={false} />
+          <BrandMark showSubtitle={false} collapseSecondary={true} />
         </Link>
 
         {/* Right Controls */}
@@ -141,7 +141,7 @@ export default function AboutClient() {
                 setIsDrawerOpen(true);
               }}
               type="button"
-              className="w-10 h-10 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer flex items-center justify-center shadow-2xs"
+              className="w-11 h-11 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer flex items-center justify-center shadow-2xs min-w-[44px] min-h-[44px]"
               aria-label="Open menu"
             >
               <Menu className="w-4 h-4 text-[#121212] dark:text-[#F5F5F3]" />
@@ -336,7 +336,8 @@ export default function AboutClient() {
                 }}
                 type="button"
                 title={copied ? "Copied" : "Copy email address"}
-                className="p-1.5 text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
+                aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
+                className="w-10 h-10 -mr-1 rounded-lg flex items-center justify-center text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
               >
                 {copied ? (
                   <Check className="w-4 h-4 text-[#FF9500] dark:text-[#FFA000]" />

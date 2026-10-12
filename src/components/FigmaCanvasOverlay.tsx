@@ -49,7 +49,20 @@ export default function FigmaCanvasOverlay() {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+      setIsVisible(true);
+
+      const updateContext = (newContext: CursorContext) => {
+        setCursorContext((prev) => {
+          if (
+            prev.type === newContext.type &&
+            prev.label === newContext.label &&
+            prev.specs === newContext.specs
+          ) {
+            return prev;
+          }
+          return newContext;
+        });
+      };
 
       // Detect hover target context
       const target = e.target as HTMLElement | null;
@@ -59,7 +72,7 @@ export default function FigmaCanvasOverlay() {
       if (photoEl) {
         const series = photoEl.getAttribute("data-photo-series") || "Documentary Frame";
         const specs = photoEl.getAttribute("data-photo-specs") || "Sony α7 III";
-        setCursorContext({
+        updateContext({
           type: "photo",
           label: series,
           specs,
@@ -69,17 +82,17 @@ export default function FigmaCanvasOverlay() {
 
       const emailEl = target.closest("a[href^='mailto:']");
       if (emailEl) {
-        setCursorContext({ type: "email", label: "SEND MAIL" });
+        updateContext({ type: "email", label: "SEND MAIL" });
         return;
       }
 
       const btnEl = target.closest("button, [role='button'], a");
       if (btnEl) {
-        setCursorContext({ type: "button" });
+        updateContext({ type: "button" });
         return;
       }
 
-      setCursorContext({ type: "default" });
+      updateContext({ type: "default" });
     };
 
     const handleMouseDown = () => setIsMouseDown(true);
@@ -106,7 +119,7 @@ export default function FigmaCanvasOverlay() {
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [mouseX, mouseY, isVisible]);
+  }, [mouseX, mouseY]);
 
   if (!isFinePointer || !isVisible) return null;
 

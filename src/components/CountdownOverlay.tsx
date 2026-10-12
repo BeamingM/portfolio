@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -81,7 +81,7 @@ function AnimatedNumberSlot({
   const digits = str.split("");
 
   return (
-    <span className="inline-flex items-center justify-center tabular-nums font-mono text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+    <span className="inline-flex items-center justify-center tabular-nums font-mono text-xl sm:text-4xl md:text-5xl font-bold tracking-tight">
       {digits.map((d, idx) => (
         <AnimatedDigit key={idx} digit={d} className={className} />
       ))}
@@ -89,24 +89,33 @@ function AnimatedNumberSlot({
   );
 }
 
+const emptySubscribe = () => () => {};
+
 export default function CountdownOverlay() {
   const { lang } = useLanguage();
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft);
-  const [mounted, setMounted] = useState(false);
-  const [isSecretBypass, setIsSecretBypass] = useState(false);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const isSecretBypass = useSyncExternalStore(
+    emptySubscribe,
+    () => {
+      if (typeof window !== "undefined") {
+        return new URLSearchParams(window.location.search).get("preview") === "true";
+      }
+      return false;
+    },
+    () => false
+  );
 
   useEffect(() => {
-    setMounted(true);
-    // Secret query param check (?preview=true) allows inspecting the full site without overlay
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("preview") === "true") {
-        setIsSecretBypass(true);
-      }
-    }
+    const initial = calculateTimeLeft();
+    if (initial.isExpired) return;
 
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      const updated = calculateTimeLeft();
+      setTimeLeft(updated);
+      if (updated.isExpired) {
+        clearInterval(timer);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
@@ -121,7 +130,9 @@ export default function CountdownOverlay() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-[75] flex flex-col items-center justify-between p-6 sm:p-10 md:p-14 bg-[#FBFBF9]/90 dark:bg-[#0C0C0C]/92 backdrop-blur-3xl text-[#121212] dark:text-[#F5F5F3] select-none overflow-hidden"
+      role="region"
+      aria-label="Coming Soon Countdown"
+      className="fixed inset-0 z-[75] flex flex-col items-center justify-between p-4 sm:p-10 md:p-14 bg-[#FBFBF9]/90 dark:bg-[#0C0C0C]/92 backdrop-blur-3xl text-[#121212] dark:text-[#F5F5F3] select-none overflow-hidden"
     >
       {/* Ambient Editorial Background Accents */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30 dark:opacity-20">
@@ -148,54 +159,54 @@ export default function CountdownOverlay() {
       </div>
 
       {/* Center Content: Minimalist Coming Soon Countdown */}
-      <div className="relative z-10 flex flex-col items-center text-center my-auto max-w-2xl px-4 py-8">
+      <div className="relative z-10 flex flex-col items-center text-center my-auto max-w-2xl px-1 sm:px-4 py-6 sm:py-8 w-full">
         {/* Title: Pure Coming Soon */}
-        <h1 className="font-serif italic text-4xl sm:text-6xl md:text-7xl text-[#121212] dark:text-[#F5F5F3] tracking-tight leading-none mb-10">
+        <h1 className="font-serif italic text-3xl sm:text-6xl md:text-7xl text-[#121212] dark:text-[#F5F5F3] tracking-tight leading-none mb-8 sm:mb-10">
           Coming Soon
         </h1>
 
         {/* Countdown Numbers Grid with Per-Digit Rolling Slide Animations */}
-        <div className="grid grid-cols-4 gap-2.5 sm:gap-4 md:gap-6 w-full max-w-xl">
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-4 md:gap-6 w-full max-w-xl">
           {/* Days */}
-          <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
+          <div className="flex flex-col items-center p-2 sm:p-5 rounded-xl sm:rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
             <AnimatedNumberSlot
               value={timeLeft.days}
               className="text-[#121212] dark:text-[#F5F5F3]"
             />
-            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-2">
+            <span className="font-mono text-[8px] sm:text-[11px] uppercase tracking-wider text-[#8C8C88] dark:text-[#6C6C68] mt-1.5">
               {lang === "th" ? "วัน" : "Days"}
             </span>
           </div>
 
           {/* Hours */}
-          <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
+          <div className="flex flex-col items-center p-2 sm:p-5 rounded-xl sm:rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
             <AnimatedNumberSlot
               value={timeLeft.hours}
               className="text-[#121212] dark:text-[#F5F5F3]"
             />
-            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-2">
+            <span className="font-mono text-[8px] sm:text-[11px] uppercase tracking-wider text-[#8C8C88] dark:text-[#6C6C68] mt-1.5">
               {lang === "th" ? "ชั่วโมง" : "Hours"}
             </span>
           </div>
 
           {/* Minutes */}
-          <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
+          <div className="flex flex-col items-center p-2 sm:p-5 rounded-xl sm:rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
             <AnimatedNumberSlot
               value={timeLeft.minutes}
               className="text-[#121212] dark:text-[#F5F5F3]"
             />
-            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-2">
+            <span className="font-mono text-[8px] sm:text-[11px] uppercase tracking-wider text-[#8C8C88] dark:text-[#6C6C68] mt-1.5">
               {lang === "th" ? "นาที" : "Mins"}
             </span>
           </div>
 
           {/* Seconds */}
-          <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#FF9500]/30 dark:border-[#FFA000]/30 backdrop-blur-md shadow-xs">
+          <div className="flex flex-col items-center p-2 sm:p-5 rounded-xl sm:rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#FF9500]/30 dark:border-[#FFA000]/30 backdrop-blur-md shadow-xs">
             <AnimatedNumberSlot
               value={timeLeft.seconds}
               className="text-[#FF9500] dark:text-[#FFA000]"
             />
-            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-2">
+            <span className="font-mono text-[8px] sm:text-[11px] uppercase tracking-wider text-[#8C8C88] dark:text-[#6C6C68] mt-1.5">
               {lang === "th" ? "วินาที" : "Secs"}
             </span>
           </div>
@@ -203,11 +214,11 @@ export default function CountdownOverlay() {
       </div>
 
       {/* Bottom Clean Copyright */}
-      <div className="relative z-10 w-full max-w-4xl flex items-center justify-between pb-2 font-mono text-xs text-[#737373] dark:text-[#9E9E9C]">
-        <div className="text-[11px] tracking-wide">
+      <div className="relative z-10 w-full max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-1 pb-2 font-mono text-xs text-[#737373] dark:text-[#9E9E9C] text-center sm:text-left">
+        <div className="text-[10px] sm:text-[11px] tracking-wide">
           © 2026 CHAKARIN L. · ALL RIGHTS RESERVED.
         </div>
-        <div className="text-[11px] tracking-wide text-[#8C8C88] dark:text-[#6C6C68]">
+        <div className="text-[10px] sm:text-[11px] tracking-wide text-[#8C8C88] dark:text-[#6C6C68]">
           chakarin.pics
         </div>
       </div>

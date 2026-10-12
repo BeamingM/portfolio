@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { triggerHaptic } from "@/utils/haptics";
 import { ExternalLink } from "lucide-react";
-import { Instagram } from "@/components/SocialIcons";
 
 interface InstagramEmbedProps {
   postUrl?: string;
@@ -51,11 +49,6 @@ export default function InstagramEmbed({
     return () => clearTimeout(timer);
   }, []);
 
-  const handleOpenPost = () => {
-    triggerHaptic("snap");
-    window.open(postUrl, "_blank", "noopener,noreferrer");
-  };
-
   return (
     <div className="w-full select-none">
       <div
@@ -79,7 +72,7 @@ export default function InstagramEmbed({
               boxShadow: "none",
               margin: "1px",
               maxWidth: "540px",
-              minWidth: "326px",
+              minWidth: "260px",
               padding: 0,
               width: "calc(100% - 2px)",
             }}
@@ -96,7 +89,7 @@ export default function InstagramEmbed({
                   width: "100%",
                 }}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                   <div

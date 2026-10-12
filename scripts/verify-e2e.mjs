@@ -283,6 +283,151 @@ test("CountdownOverlay: Live ticking countdown implemented without bypass button
 });
 
 // -----------------------------------------------------------------
+// Tier 7: Gallery Asset Catalog, EXIF & Bilingual Integrity
+// -----------------------------------------------------------------
+console.log("\n[Tier 7: Gallery Asset Catalog, EXIF & Bilingual Integrity]");
+
+const { galleryItems, gallerySections, siteProfile } = await import(path.join(root, "src/config/gallery.ts"));
+
+function getJpgDimensions(filePath) {
+  const buf = fs.readFileSync(filePath);
+  let offset = 2;
+  while (offset < buf.length) {
+    if (buf[offset] !== 0xFF) break;
+    const marker = buf[offset + 1];
+    if (
+      (marker >= 0xC0 && marker <= 0xC3) ||
+      (marker >= 0xC5 && marker <= 0xC7) ||
+      (marker >= 0xC9 && marker <= 0xCB) ||
+      (marker >= 0xCD && marker <= 0xCF)
+    ) {
+      const height = buf.readUInt16BE(offset + 5);
+      const width = buf.readUInt16BE(offset + 7);
+      return { width, height };
+    }
+    const len = buf.readUInt16BE(offset + 2);
+    offset += 2 + len;
+  }
+  return null;
+}
+
+test("Gallery Asset Catalog: Total count is strictly 16 (5 Personal, 6 TU Photo, 5 PSC.TU)", () => {
+  assert.strictEqual(galleryItems.length, 16, "Gallery items count must be exactly 16");
+  const counts = { personal: 0, "tu-photo": 0, psctu: 0 };
+  for (const item of galleryItems) {
+    counts[item.sectionId] = (counts[item.sectionId] || 0) + 1;
+  }
+  assert.strictEqual(counts.personal, 5, "Personal projects must contain exactly 5 photos");
+  assert.strictEqual(counts["tu-photo"], 6, "TU Photo must contain exactly 6 photos");
+  assert.strictEqual(counts.psctu, 5, "PSC.TU must contain exactly 5 photos");
+});
+
+test("Gallery Asset Catalog: Every item points to an existing file in public/photos/", () => {
+  for (const item of galleryItems) {
+    const photoPath = path.join(root, "public", item.src);
+    assert(fs.existsSync(photoPath), `Photo file must exist: ${item.src} (${item.id})`);
+  }
+});
+
+test("Gallery Geometry: True JPEG dimensions and aspect ratio strictly match config", () => {
+  for (const item of galleryItems) {
+    const photoPath = path.join(root, "public", item.src);
+    const dims = getJpgDimensions(photoPath);
+    assert(dims, `Could not parse JPEG dimensions for ${item.src}`);
+    assert.strictEqual(dims.width, item.width, `Width mismatch on ${item.id}: disk=${dims.width}, config=${item.width}`);
+    assert.strictEqual(dims.height, item.height, `Height mismatch on ${item.id}: disk=${dims.height}, config=${item.height}`);
+    const expectedOrient = dims.width > dims.height ? "landscape" : "portrait";
+    assert.strictEqual(expectedOrient, item.orientation, `Orientation mismatch on ${item.id}`);
+  }
+});
+
+test("Gallery EXIF Authenticity: Strictly authentic Sony α7 III, lens, aperture, shutter, ISO, and year 2026", () => {
+  for (const item of galleryItems) {
+    assert.strictEqual(item.specs.camera, "Sony α7 III", `Camera invariant violated on ${item.id}`);
+    assert(item.specs.lens.startsWith("FE 28-70mm"), `Lens invariant violated on ${item.id}`);
+    assert(/^f\/\d+(\.\d+)?$/.test(item.specs.aperture), `Aperture format invalid on ${item.id}: ${item.specs.aperture}`);
+    assert(item.specs.shutter.endsWith("s"), `Shutter format invalid on ${item.id}: ${item.specs.shutter}`);
+    assert(typeof item.specs.iso === "number" && item.specs.iso > 0, `ISO must be positive number on ${item.id}`);
+    assert(item.specs.location && item.specs.location.length > 5, `Location empty or invalid on ${item.id}`);
+    assert.strictEqual(item.specs.year, 2026, `Year must be 2026 on ${item.id}`);
+  }
+});
+
+test("Gallery Bilingual Metadata: Non-empty title, titleTh, subtitle, series, and category for all 16 items", () => {
+  for (const item of galleryItems) {
+    assert(item.title && item.title.trim().length > 0, `Missing title on ${item.id}`);
+    assert(item.titleTh && item.titleTh.trim().length > 0, `Missing Thai title on ${item.id}`);
+    assert(item.subtitle && item.subtitle.trim().length > 0, `Missing subtitle on ${item.id}`);
+    assert(item.series && item.series.trim().length > 0, `Missing series on ${item.id}`);
+    assert(item.category && item.category.trim().length > 0, `Missing category on ${item.id}`);
+    assert.strictEqual(item.section, item.sectionId, `section and sectionId mismatch on ${item.id}`);
+  }
+});
+
+test("Gallery Sections: Exactly 4 sections configured ('all', 'personal', 'tu-photo', 'psctu')", () => {
+  assert.strictEqual(gallerySections.length, 4, "Must have exactly 4 sections");
+  const sectionIds = gallerySections.map((s) => s.id);
+  assert.deepStrictEqual(sectionIds, ["all", "personal", "tu-photo", "psctu"]);
+});
+
+// -----------------------------------------------------------------
+// Tier 8: Link Security & Document Integrity
+// -----------------------------------------------------------------
+console.log("\n[Tier 8: Link Security & Document Integrity]");
+
+test("Security: All target='_blank' links across src/ strictly specify rel='noopener noreferrer'", () => {
+  function walkDir(dir) {
+    let results = [];
+    const list = fs.readdirSync(dir);
+    for (const file of list) {
+      const full = path.join(dir, file);
+      const stat = fs.statSync(full);
+      if (stat.isDirectory()) {
+        if (!["node_modules", ".next", ".git"].includes(file)) {
+          results = results.concat(walkDir(full));
+        }
+      } else if (file.endsWith(".tsx") || file.endsWith(".ts")) {
+        results.push(full);
+      }
+    }
+    return results;
+  }
+
+  const tsxFiles = walkDir(path.join(root, "src"));
+  for (const file of tsxFiles) {
+    const content = fs.readFileSync(file, "utf-8");
+    const aTags = [...content.matchAll(/<a\b[^>]*>/g)];
+    for (const match of aTags) {
+      const tag = match[0];
+      if (tag.includes(`target="_blank"`) || tag.includes(`target={"_blank"}`)) {
+        assert(
+          tag.includes(`rel="noopener noreferrer"`),
+          `Missing rel="noopener noreferrer" in ${path.relative(root, file)}: ${tag}`
+        );
+      }
+    }
+  }
+});
+
+test("Resume PDF Integrity: public/resume.pdf is a valid PDF (%PDF- header) exceeding 100KB", () => {
+  const resumePath = path.join(root, "public/resume.pdf");
+  assert(fs.existsSync(resumePath), "public/resume.pdf must exist");
+  const buffer = fs.readFileSync(resumePath);
+  assert.strictEqual(buffer.subarray(0, 5).toString("utf-8"), "%PDF-", "Resume file must start with %PDF- header");
+  assert(buffer.length > 100000, `Resume PDF size (${buffer.length} bytes) should exceed 100KB`);
+});
+
+test("Profile Integrity: Official contact channels use secure HTTPS and valid accounts", () => {
+  assert(siteProfile.contact.instagramUrl.startsWith("https://"), "Instagram URL must use HTTPS");
+  assert(siteProfile.contact.instagramUrl.includes("beamingmotion"), "Instagram URL must point to beamingmotion");
+  assert(siteProfile.contact.twitter.startsWith("https://"), "Twitter / X URL must use HTTPS");
+  assert(siteProfile.contact.twitter.includes("beamingmotion"), "Twitter / X URL must point to beamingmotion");
+  assert(siteProfile.contact.github.startsWith("https://"), "GitHub URL must use HTTPS");
+  assert(siteProfile.contact.github.includes("BeamingM"), "GitHub URL must point to BeamingM");
+  assert(siteProfile.contact.email.includes("@"), "Contact email must be valid");
+});
+
+// -----------------------------------------------------------------
 // Summary
 // -----------------------------------------------------------------
 console.log("\n=================================================");

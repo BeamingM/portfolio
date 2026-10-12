@@ -8,13 +8,13 @@ import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin", "greek"],
+  subsets: ["latin"],
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
-  subsets: ["latin", "greek"],
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -79,6 +79,56 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FBFBF9" },
+    { media: "(prefers-color-scheme: dark)", color: "#0D0D0D" },
+  ],
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["Person", "Photographer"],
+      "@id": "https://chakarin.pics/#person",
+      name: "Chakarin Limudom",
+      alternateName: ["จักริน ลิ้มป์อุดม", "Chakarin L.", "BeamingMotion"],
+      jobTitle: "Photographer based in Bangkok",
+      url: "https://chakarin.pics",
+      image: "https://chakarin.pics/photos/personal-01.jpg",
+      description: "Documentary, street, and stage photographer based in Bangkok, Thailand (Sony α7 III).",
+      sameAs: [
+        "https://www.instagram.com/beamingmotion",
+        "https://x.com/beamingmotion",
+        "https://github.com/BeamingM",
+      ],
+      knowsAbout: ["Documentary Photography", "Street Photography", "Sony α7 III", "Photojournalism"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://chakarin.pics/#website",
+      url: "https://chakarin.pics",
+      name: "CHAKARIN L. — Photographer based in Bangkok",
+      publisher: { "@id": "https://chakarin.pics/#person" },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -93,6 +143,10 @@ export default function RootLayout({
       className={`${inter.variable} ${anuphan.variable} ${jetbrainsMono.variable} ${newsreader.variable}`}
     >
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -117,6 +171,13 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] font-sans">
+        {/* Skip to Main Content Link (WCAG 2.2 AA Bypass Blocks) */}
+        <a
+          href="#photos-archive"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#121212] focus:text-white dark:focus:bg-[#F5F5F3] dark:focus:text-[#121212] focus:rounded-md focus:shadow-lg focus:font-mono focus:text-xs"
+        >
+          Skip to photo exhibition
+        </a>
         <ThemeProvider>
           <LanguageProvider>
             <SmoothScroll>{children}</SmoothScroll>

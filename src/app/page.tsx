@@ -92,8 +92,37 @@ export default function Home() {
     }
   }, [selectedPhoto, displayedPhotos]);
 
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "CHAKARIN L. — Documentary & Editorial Photography Showcase",
+    url: "https://chakarin.pics",
+    about: { "@id": "https://chakarin.pics/#person" },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: galleryItems.length,
+      itemListElement: galleryItems.map((photo, idx) => ({
+        "@type": "VisualArtwork",
+        position: idx + 1,
+        name: photo.title,
+        alternateName: photo.titleTh,
+        artform: "Photography",
+        artMedium: "Digital Photography",
+        creator: { "@type": "Person", name: "Chakarin Limudom" },
+        image: `https://chakarin.pics${photo.src}`,
+        contentLocation: { "@type": "Place", name: photo.specs.location },
+        dateCreated: String(photo.specs.year),
+        description: `${photo.series} · ${photo.specs.camera} · ${photo.specs.lens}`,
+      })),
+    },
+  };
+
   return (
     <main className="relative min-h-screen bg-[#FBFBF9] dark:bg-[#0D0D0D] text-[#121212] dark:text-[#F5F5F3] selection:bg-[#FF9500] dark:selection:bg-[#FFA000] selection:text-white paper-texture transition-colors duration-200">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
       {/* Top Header: Progressive Blur & Center-to-Top-Left Morphing BrandMark with Project Tabs */}
       <TopNav
         onOpenAbout={() => setIsAtelierOpen(true)}
