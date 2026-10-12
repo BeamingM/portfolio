@@ -77,7 +77,11 @@ export const metadata: Metadata = {
     canonical: "https://chakarin.pics",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/apple-icon.png",
   },
   robots: {
     index: true,

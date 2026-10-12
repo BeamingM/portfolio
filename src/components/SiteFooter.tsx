@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { triggerHaptic } from "@/utils/haptics";
+import { trackContactReveal } from "@/utils/analytics";
 import { Sun, Moon, ArrowUpRight, FileText, Mail } from "lucide-react";
 import { TwitterXIcon, Instagram } from "@/components/SocialIcons";
 
@@ -19,6 +21,19 @@ export default function SiteFooter({
 }: SiteFooterProps) {
   const { lang, setLang } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
+  const [isEmailRevealed, setIsEmailRevealed] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const CONTACT_EMAIL = "contact.chakarin@gmail.com";
+
+  const handleRevealAndCopyEmail = () => {
+    setIsEmailRevealed(true);
+    navigator.clipboard.writeText(CONTACT_EMAIL);
+    triggerHaptic("success");
+    setCopied(true);
+    trackContactReveal("site_footer", "email");
+    setTimeout(() => setCopied(false), 2400);
+  };
 
   const handleSectionClick = (sectionId: string, e?: React.MouseEvent) => {
     triggerHaptic("light");
@@ -162,14 +177,40 @@ export default function SiteFooter({
             </div>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="mailto:contact.chakarin@gmail.com"
-                  onClick={() => triggerHaptic("light")}
-                  className="flex items-center gap-2 text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors"
-                >
-                  <Mail className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">contact.chakarin@gmail.com</span>
-                </a>
+                {!isEmailRevealed ? (
+                  <button
+                    onClick={handleRevealAndCopyEmail}
+                    type="button"
+                    className="flex items-center gap-2 text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors cursor-pointer group"
+                  >
+                    <Mail className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">
+                      {lang === "th" ? "คลิกเพื่อดูอีเมล" : "Click to reveal email"}
+                    </span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 text-[#4A4A48] dark:text-[#B5B5B0]">
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      onClick={() => {
+                        triggerHaptic("light");
+                        trackContactReveal("site_footer_mailto", "email");
+                      }}
+                      className="flex items-center gap-2 hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors truncate"
+                    >
+                      <Mail className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{CONTACT_EMAIL}</span>
+                    </a>
+                    <button
+                      onClick={handleRevealAndCopyEmail}
+                      type="button"
+                      title={copied ? "Copied" : "Copy email address"}
+                      className="text-[10px] font-mono text-[#737373] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer"
+                    >
+                      {copied ? (lang === "th" ? "✓" : "✓") : (lang === "th" ? "คัดลอก" : "Copy")}
+                    </button>
+                  </div>
+                )}
               </li>
               <li>
                 <a

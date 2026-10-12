@@ -5,6 +5,7 @@ import { galleryItems, PhotoItem } from "@/config/gallery";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { triggerHaptic } from "@/utils/haptics";
+import { trackContactReveal } from "@/utils/analytics";
 import {
   Search,
   FileText,
@@ -96,6 +97,7 @@ export default function CommandPalette({
         category: "Action",
         icon: <Mail className="w-4 h-4 text-[#FF9500]" />,
         perform: () => {
+          trackContactReveal("command_palette", "email");
           window.location.href = "mailto:contact.chakarin@gmail.com";
           onClose();
         },

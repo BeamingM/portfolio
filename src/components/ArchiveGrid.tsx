@@ -41,9 +41,6 @@ export default function ArchiveGrid({ items, activeSection, onSelectPhoto }: Arc
                 <span className="text-[#121212] dark:text-[#F5F5F3] font-black tracking-wider uppercase text-xs md:text-sm">
                   {section.folderName}
                 </span>
-                <span className="text-[#737373] text-[11px]">
-                  [{sectionPhotos.length} PRINTS]
-                </span>
               </div>
               <span className="text-[#737373] text-[10px] hidden sm:inline">
                 {section.description}

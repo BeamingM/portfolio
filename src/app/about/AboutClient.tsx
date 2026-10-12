@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import BrandMark from "@/components/BrandMark";
 import SiteFooter from "@/components/SiteFooter";
 import AtelierDrawer from "@/components/AtelierDrawer";
-import InteractivePrintCard from "@/components/InteractivePrintCard";
-import PhotoModal from "@/components/PhotoModal";
 import CountdownOverlay from "@/components/CountdownOverlay";
-import { galleryItems, PhotoItem } from "@/config/gallery";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { triggerHaptic } from "@/utils/haptics";
@@ -20,27 +18,29 @@ import {
   Mail,
   Copy,
   Check,
-  ExternalLink,
+  ArrowUpRight,
   Camera,
   FileText,
-  MapPin,
 } from "lucide-react";
 import { TwitterXIcon, InstagramIcon } from "@/components/SocialIcons";
+import { trackContactReveal } from "@/utils/analytics";
 
 export default function AboutClient() {
   const { lang, setLang } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isEmailRevealed, setIsEmailRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
 
-  const featuredPhoto = galleryItems[0]; // personal-01: Hua Hin Coastline
+  const CONTACT_EMAIL = "contact.chakarin@gmail.com";
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText("contact.chakarin@gmail.com");
+  const handleRevealAndCopyEmail = () => {
+    setIsEmailRevealed(true);
+    navigator.clipboard.writeText(CONTACT_EMAIL);
     triggerHaptic("success");
     setCopied(true);
-    setTimeout(() => setCopied(false), 2200);
+    trackContactReveal("about_page", "email");
+    setTimeout(() => setCopied(false), 2400);
   };
 
   return (
@@ -123,14 +123,9 @@ export default function AboutClient() {
 
       {/* Main Editorial Hero & Bio Article */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 md:px-12 pt-12 sm:pt-20 pb-16">
-        {/* Overline & Category */}
-        <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#737373] dark:text-[#9E9E9C] mb-4">
-          <span>[ABOUT]</span>
-          <span>·</span>
-          <span className="flex items-center gap-1">
-            <MapPin className="w-3 h-3 text-[#FF9500]" />
-            Bangkok, Thailand
-          </span>
+        {/* Editorial Section Overline */}
+        <div className="font-mono text-[11px] uppercase tracking-widest text-[#737373] dark:text-[#9E9E9C] mb-4">
+          {lang === "th" ? "เกี่ยวกับตัวฉัน" : "ABOUT ME"}
         </div>
 
         {/* Hero Title: Hello! */}
@@ -138,26 +133,55 @@ export default function AboutClient() {
           Hello!
         </h1>
 
-        {/* Identity & Invariant Names */}
-        <div className="border-b border-[#E5E5DF] dark:border-[#222221] pb-8 mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
-            <h2 className="font-sans font-bold text-2xl sm:text-3xl text-[#121212] dark:text-[#F5F5F3]">
-              จักริน ลิ้มป์อุดม
-            </h2>
-            <span className="font-mono text-sm sm:text-base text-[#737373] dark:text-[#9E9E9C]">
-              Chakarin Limudom · BeamingMotion
-            </span>
+        {/* Identity & Portrait Editorial Grid */}
+        <div className="border-b border-[#E5E5DF] dark:border-[#222221] pb-10 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            {/* Portrait Frame */}
+            <div className="md:col-span-4 relative group">
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#E5E5DF] dark:border-[#262625] bg-[#F7F7F5] dark:bg-[#161616] shadow-sm">
+                <Image
+                  src="/profile.jpg"
+                  alt="จักริน ลิ้มป์อุดม (Chakarin Limudom)"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 360px"
+                  className="object-cover object-center filter contrast-[1.02] group-hover:scale-[1.02] transition-transform duration-500"
+                  priority
+                  unoptimized
+                />
+              </div>
+              <div className="mt-2.5 flex items-center justify-between font-mono text-[10px] text-[#737373] dark:text-[#9E9E9C]">
+                <span>PORTRAIT</span>
+                <span>Sony α7 III · 2026</span>
+              </div>
+            </div>
+
+            {/* Invariant Names & Tagline */}
+            <div className="md:col-span-8 space-y-3">
+              <div className="flex flex-col lg:flex-row lg:items-baseline gap-2 lg:gap-4">
+                <h2 className="font-sans font-bold text-3xl sm:text-4xl text-[#121212] dark:text-[#F5F5F3] whitespace-nowrap">
+                  จักริน ลิ้มป์อุดม
+                </h2>
+                <span className="font-mono text-sm sm:text-base text-[#737373] dark:text-[#9E9E9C] whitespace-nowrap">
+                  Chakarin Limudom · BeamingMotion
+                </span>
+              </div>
+              <p className="font-mono text-xs sm:text-sm text-[#FF9500] dark:text-[#FFA000] tracking-widest uppercase font-semibold">
+                Photographer based in Bangkok
+              </p>
+              <p className="font-sans text-sm sm:text-[15px] text-[#737373] dark:text-[#9E9E9C] leading-relaxed pt-1">
+                {lang === "th"
+                  ? "บันทึกภาพถ่ายโมเมนต์ธรรมดาๆ ที่เกิดขึ้นและผ่านไป ผ่านสายตาที่เป็นธรรมชาติและจริงใจ"
+                  : "Documenting ordinary fleeting moments with an unposed, authentic eye."}
+              </p>
+            </div>
           </div>
-          <p className="font-mono text-xs text-[#FF9500] dark:text-[#FFA000] tracking-widest uppercase mt-2 font-semibold">
-            Photographer based in Bangkok
-          </p>
         </div>
 
         {/* Narrative Bio Story (Thai & English side-by-side or stacked) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-[#262626] dark:text-[#D4D4D0] leading-relaxed text-base sm:text-[17px] mb-16">
           <div className="space-y-4">
             <div className="font-mono text-xs uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
-              [ภาษาไทย]
+              ภาษาไทย
             </div>
             <p className="font-sans leading-relaxed">
               เริ่มถ่ายรูปเพราะ ชอบจังหวะเผลอๆ เวลาคนกำลังใช้ชีวิตมากกว่าให้มายืนนับหนึ่งสองสามแล้วเก๊กใส่กล้อง ส่วนตัวแล้ว การกดชัตเตอร์ก็แค่วิธีเก็บโมเมนต์ธรรมดาๆ ที่ผ่านมาแล้วก็ผ่านไป ส่วนเวลาที่เหลือก็หมดไปกับการเดินดูนู่นดูนี่เรื่อยเปื่อย แล้วพยายามทำตัวให้กลมกลืนที่สุดเวลาถือกล้อง :)
@@ -169,7 +193,7 @@ export default function AboutClient() {
 
           <div className="space-y-4">
             <div className="font-mono text-xs uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
-              [ENGLISH]
+              ENGLISH
             </div>
             <p className="font-sans leading-relaxed">
               I started taking photos because I fell in love with unposed, candid moments—people simply living their lives, rather than standing still for a countdown and posing for the lens. For me, pressing the shutter is just a way to hold onto ordinary, fleeting moments that come and go. The rest of the time is spent wandering aimlessly, observing, and trying to blend in as naturally as possible whenever I hold a camera :)
@@ -180,165 +204,217 @@ export default function AboutClient() {
           </div>
         </div>
 
-        {/* Featured Archival Print Showcase */}
-        <div className="mb-16">
-          <div className="font-mono text-[10px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold mb-4">
-            [FEATURED ARCHIVE PRINT]
-          </div>
-          <InteractivePrintCard
-            photo={featuredPhoto}
-            priority={true}
-            onClick={() => setSelectedPhoto(featuredPhoto)}
-          />
-        </div>
 
-        {/* Equipment & Working Gear Specs */}
-        <section className="border-t border-[#E5E5DF] dark:border-[#222221] pt-12 mb-16 font-mono text-xs">
-          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mb-6">
-            <Camera className="w-4 h-4 text-[#FF9500]" />
+
+        {/* Equipment & Working Gear Specs (Apple Minimalist Tech Specs) */}
+        <section className="border-t border-[#E5E5DF] dark:border-[#222221] pt-12 pb-14 font-mono text-xs">
+          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mb-8">
+            <Camera className="w-3.5 h-3.5 text-[#FF9500]" />
             <span>{lang === "th" ? "อุปกรณ์และระบบกล้อง" : "Equipment & Specs"}</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-[#FFFFFF]/60 dark:bg-[#141414]/60 p-6 rounded-2xl border border-[#E5E5DF] dark:border-[#222221]">
-            <div className="space-y-3">
-              <div className="text-[10px] uppercase tracking-widest text-[#737373] dark:text-[#9E9E9C]">
-                {lang === "th" ? "ระบบกล้องหลัก" : "Primary Camera System"}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 pb-4 border-b border-[#F0F0EA] dark:border-[#1E1E1D]">
+              <span className="text-[#737373] dark:text-[#9E9E9C] text-xs uppercase tracking-wider">
+                {lang === "th" ? "ระบบกล้องหลัก" : "Camera System"}
+              </span>
+              <div className="text-left sm:text-right">
+                <span className="text-sm font-semibold text-[#121212] dark:text-[#F5F5F3]">
+                  Sony α7 III
+                </span>
+                <span className="text-[11px] text-[#737373] dark:text-[#9E9E9C] block sm:inline sm:ml-2">
+                  (Full-Frame 24.2 MP)
+                </span>
               </div>
-              <div className="text-sm font-bold text-[#121212] dark:text-[#F5F5F3]">
-                Sony α7 III
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 pb-4 border-b border-[#F0F0EA] dark:border-[#1E1E1D]">
+              <span className="text-[#737373] dark:text-[#9E9E9C] text-xs uppercase tracking-wider">
+                {lang === "th" ? "ชุดเลนส์ประจำตัว" : "Optics"}
+              </span>
+              <span className="text-sm font-semibold text-[#121212] dark:text-[#F5F5F3] text-left sm:text-right">
+                FE 28-70mm F3.5-5.6 OSS
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* Series Overview: Apple Editorial Clean Narrative */}
+        <section className="border-t border-[#E5E5DF] dark:border-[#222221] pt-12 pb-14">
+          <div className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mb-6">
+            {lang === "th" ? "ซีรีส์ภาพถ่ายที่ผ่านมา" : "Photo Series"}
+          </div>
+
+          <p className="font-sans text-[15px] sm:text-base leading-relaxed text-[#262626] dark:text-[#D4D4D0] mb-8 max-w-3xl">
+            {lang === "th"
+              ? "ผลงานที่คัดสรรมาแบ่งออกเป็น 3 หมวดตามสิ่งที่ได้ไปพบเจอ เริ่มตั้งแต่งานส่วนตัวที่บันทึกแสงเงา ท้องฟ้า และความเงียบสงบริมทะเลหัวหิน ถัดมาคืองานกิจกรรมที่ได้ร่วมบันทึกบรรยากาศจริงและผู้คนรอบตัว เช่น งานครบรอบ 50 ปี 6 ตุลา ตลอดจนงานอื่นๆ อย่างแสงสีบนเวทีและงานต่างๆ ที่ได้มีโอกาสไปร่วมเก็บบรรยากาศ ทั้งหมดบันทึกผ่านมุมมองที่ตรงไปตรงมาและเป็นธรรมชาติ"
+              : "The collection curated here spans three chapters gathered along the way: personal frames capturing seaside light and quiet coastal rhythms; campus activities preserving authentic moments and people, including the 50th Anniversary of October 6; and various projects documenting stage atmosphere and diverse gatherings."}
+          </p>
+
+          {/* Clean Apple-style Text Links with Arrows (No heavy button boxes) */}
+          <div className="flex flex-wrap items-center gap-6 font-mono text-xs sm:text-[13px]">
+            <Link
+              href="/?section=personal"
+              onClick={() => triggerHaptic("light")}
+              className="text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors flex items-center gap-1.5 group cursor-pointer"
+            >
+              <span>{lang === "th" ? "ส่วนตัว" : "Personal"}</span>
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </Link>
+            <span className="text-[#D1D1CB] dark:text-[#333332]">·</span>
+            <Link
+              href="/?section=tu-photo"
+              onClick={() => triggerHaptic("light")}
+              className="text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors flex items-center gap-1.5 group cursor-pointer"
+            >
+              <span>{lang === "th" ? "กิจกรรม" : "Activities"}</span>
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </Link>
+            <span className="text-[#D1D1CB] dark:text-[#333332]">·</span>
+            <Link
+              href="/?section=psctu"
+              onClick={() => triggerHaptic("light")}
+              className="text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors flex items-center gap-1.5 group cursor-pointer"
+            >
+              <span>{lang === "th" ? "อื่นๆ" : "Others"}</span>
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </Link>
+          </div>
+        </section>
+
+        {/* Direct Inquiries, Social & Resume (Clean Apple 3-Column Editorial Grid) */}
+        <section className="border-t border-[#E5E5DF] dark:border-[#222221] pt-12 pb-6">
+          <div className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mb-10">
+            {lang === "th" ? "ติดต่อและข้อมูลเพิ่มเติม" : "Direct Inquiries & Connect"}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
+            {/* Column 1: Direct Inquiries (Email) */}
+            <div className="space-y-3.5">
+              <div className="font-mono text-xs uppercase tracking-wider text-[#8C8C88] dark:text-[#6C6C68] font-bold flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-[#FF9500] dark:text-[#FFA000]" />
+                <span>{lang === "th" ? "อีเมลติดต่อ" : "Direct Email"}</span>
               </div>
-              <p className="text-[11px] text-[#737373] dark:text-[#9E9E9C] leading-relaxed">
-                Full-frame 24.2 MP documentary sensor with high dynamic range and silent electronic shutter.
+              <div className="space-y-2">
+                {!isEmailRevealed ? (
+                  <button
+                    onClick={handleRevealAndCopyEmail}
+                    type="button"
+                    className="inline-flex items-center gap-2 py-1.5 px-3 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-all cursor-pointer text-xs font-mono group"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF9500] dark:bg-[#FFA000] animate-pulse" />
+                    <span className="text-[#121212] dark:text-[#F5F5F3] group-hover:text-inherit font-medium">
+                      {lang === "th" ? "คลิกเพื่อดูและคัดลอกอีเมล" : "Click to reveal & copy email"}
+                    </span>
+                  </button>
+                ) : (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      onClick={() => {
+                        triggerHaptic("light");
+                        trackContactReveal("about_page_mailto", "email");
+                      }}
+                      className="font-sans font-semibold text-sm sm:text-[15px] text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors break-all"
+                    >
+                      {CONTACT_EMAIL}
+                    </a>
+                    <button
+                      onClick={handleRevealAndCopyEmail}
+                      type="button"
+                      title={copied ? "Copied" : "Copy email address"}
+                      aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="w-3 h-3 text-[#FF9500] dark:text-[#FFA000]" />
+                          <span className="text-[#FF9500] dark:text-[#FFA000]">
+                            {lang === "th" ? "คัดลอกแล้ว" : "Copied"}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3 h-3" />
+                          <span>{lang === "th" ? "คัดลอก" : "Copy"}</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+              <p className="font-sans text-xs sm:text-[13px] text-[#737373] dark:text-[#9E9E9C] leading-relaxed pt-1">
+                {lang === "th"
+                  ? "สำหรับงานถ่ายภาพ โปรเจกต์ หรือทักทายพูดคุยแลกเปลี่ยนมุมมอง ยินดีตอบกลับเสมอ"
+                  : "Available for photography assignments, projects, or friendly hello."}
               </p>
             </div>
 
-            <div className="space-y-3">
-              <div className="text-[10px] uppercase tracking-widest text-[#737373] dark:text-[#9E9E9C]">
-                {lang === "th" ? "ชุดเลนส์ประจำตัว" : "Optics"}
+            {/* Column 2: Social Media (Instagram & X) */}
+            <div className="space-y-3.5">
+              <div className="font-mono text-xs uppercase tracking-wider text-[#8C8C88] dark:text-[#6C6C68] font-bold flex items-center gap-2">
+                <InstagramIcon className="w-3.5 h-3.5 text-[#FF9500] dark:text-[#FFA000]" />
+                <span>{lang === "th" ? "โซเชียลมีเดีย" : "Social Channels"}</span>
               </div>
-              <ul className="space-y-1.5 text-xs text-[#121212] dark:text-[#F5F5F3] font-medium">
-                <li>· FE 28-70mm F3.5-5.6 OSS</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* Series Overview: Continuous Unified Editorial Narrative */}
-        <section className="border-t border-[#E5E5DF] dark:border-[#222221] pt-12 mb-16 text-xs sm:text-sm">
-          <div className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mb-4">
-            [{lang === "th" ? "ซีรีส์ภาพถ่ายที่ผ่านมา" : "Photo Series"}]
-          </div>
-
-          <div className="bg-[#FFFFFF]/60 dark:bg-[#141414]/60 p-6 sm:p-8 rounded-2xl border border-[#E5E5DF] dark:border-[#222221] space-y-4">
-            <p className="font-sans text-[15px] sm:text-base leading-relaxed text-[#262626] dark:text-[#D4D4D0]">
-              {lang === "th"
-                ? "ผลงานที่คัดสรรมาแบ่งออกเป็น 3 หมวดตามสิ่งที่ได้ไปพบเจอ เริ่มตั้งแต่งานส่วนตัวที่บันทึกแสงเงา ท้องฟ้า และความเงียบสงบริมทะเลหัวหิน ถัดมาคืองานกิจกรรมที่ได้ร่วมบันทึกบรรยากาศจริงและผู้คนรอบตัว เช่น งานครบรอบ 50 ปี 6 ตุลา ตลอดจนงานอื่นๆ อย่างแสงสีบนเวทีและงานต่างๆ ที่ได้มีโอกาสไปร่วมเก็บบรรยากาศ ทั้งหมดบันทึกผ่านมุมมองที่ตรงไปตรงมาและเป็นธรรมชาติ"
-                : "The collection curated here spans three chapters gathered along the way: personal frames capturing seaside light and quiet coastal rhythms; campus activities preserving authentic moments and people, including the 50th Anniversary of October 6; and various projects documenting stage atmosphere and diverse gatherings."}
-            </p>
-            <div className="flex flex-wrap items-center gap-2.5 pt-2 font-mono text-xs">
-              <Link
-                href="/?section=personal"
-                onClick={() => triggerHaptic("light")}
-                className="px-3.5 py-2 rounded-xl bg-[#F7F7F5] dark:bg-[#1C1C1B] hover:bg-[#121212] hover:text-white dark:hover:bg-[#F5F5F3] dark:hover:text-[#121212] transition-colors cursor-pointer"
-              >
-                {lang === "th" ? "ส่วนตัว" : "Personal"} →
-              </Link>
-              <Link
-                href="/?section=tu-photo"
-                onClick={() => triggerHaptic("light")}
-                className="px-3.5 py-2 rounded-xl bg-[#F7F7F5] dark:bg-[#1C1C1B] hover:bg-[#121212] hover:text-white dark:hover:bg-[#F5F5F3] dark:hover:text-[#121212] transition-colors cursor-pointer"
-              >
-                {lang === "th" ? "กิจกรรม" : "Activities"} →
-              </Link>
-              <Link
-                href="/?section=psctu"
-                onClick={() => triggerHaptic("light")}
-                className="px-3.5 py-2 rounded-xl bg-[#F7F7F5] dark:bg-[#1C1C1B] hover:bg-[#121212] hover:text-white dark:hover:bg-[#F5F5F3] dark:hover:text-[#121212] transition-colors cursor-pointer"
-              >
-                {lang === "th" ? "อื่นๆ" : "Others"} →
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Direct Inquiries & Contact Channels */}
-        <section className="border-t border-[#E5E5DF] dark:border-[#222221] pt-12 font-mono text-xs">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mb-6">
-            [{lang === "th" ? "ติดต่อและช่องทางติดตาม" : "Direct Inquiries & Contact"}]
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Email Box */}
-            <div className="flex items-center justify-between p-4 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FFFFFF] dark:bg-[#161615] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group">
-              <a
-                href="mailto:contact.chakarin@gmail.com"
-                onClick={() => triggerHaptic("light")}
-                className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
-              >
-                <Mail className="w-4 h-4 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
-                <span className="truncate">contact.chakarin@gmail.com</span>
-              </a>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleCopyEmail();
-                }}
-                type="button"
-                title={copied ? "Copied" : "Copy email address"}
-                aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
-                className="w-10 h-10 -mr-1 rounded-lg flex items-center justify-center text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
-              >
-                {copied ? (
-                  <Check className="w-4 h-4 text-[#FF9500] dark:text-[#FFA000]" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </button>
+              <div className="space-y-2.5 font-mono text-xs sm:text-[13px]">
+                <a
+                  href="https://www.instagram.com/beamingmotion"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => triggerHaptic("light")}
+                  className="flex items-center justify-between text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors py-0.5 group cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5 text-[#737373] dark:text-[#9E9E9C]">
+                    <InstagramIcon className="w-3 h-3 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
+                    <span>Instagram</span>
+                  </span>
+                  <span className="font-semibold text-[#121212] dark:text-[#F5F5F3] group-hover:text-inherit">@beamingmotion</span>
+                </a>
+                <a
+                  href="https://x.com/beamingmotion"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => triggerHaptic("light")}
+                  className="flex items-center justify-between text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors py-0.5 group cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5 text-[#737373] dark:text-[#9E9E9C]">
+                    <TwitterXIcon className="w-3 h-3 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
+                    <span>Twitter / X</span>
+                  </span>
+                  <span className="font-semibold text-[#121212] dark:text-[#F5F5F3] group-hover:text-inherit">@beamingmotion</span>
+                </a>
+              </div>
+              <p className="font-sans text-xs sm:text-[13px] text-[#737373] dark:text-[#9E9E9C] leading-relaxed pt-1">
+                {lang === "th"
+                  ? "ติดตามโมเมนต์และภาพถ่ายล่าสุดในชีวิตประจำวัน"
+                  : "Follow everyday snapshots, stories, and latest updates."}
+              </p>
             </div>
 
-            {/* Resume Link */}
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => triggerHaptic("light")}
-              className="flex items-center justify-between p-4 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FFFFFF] dark:bg-[#161615] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
-            >
-              <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs">
-                <FileText className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
-                <span>Resume (Curriculum Vitae PDF)</span>
+            {/* Column 3: Credentials (Resume) */}
+            <div className="space-y-3.5">
+              <div className="font-mono text-xs uppercase tracking-wider text-[#8C8C88] dark:text-[#6C6C68] font-bold flex items-center gap-2">
+                <FileText className="w-3.5 h-3.5 text-[#FF9500] dark:text-[#FFA000]" />
+                <span>{lang === "th" ? "ข้อมูลประวัติ" : "Credentials"}</span>
               </div>
-              <ExternalLink className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3] transition-colors" />
-            </a>
-
-            {/* Instagram Link */}
-            <a
-              href="https://www.instagram.com/beamingmotion"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => triggerHaptic("light")}
-              className="flex items-center justify-between p-4 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FFFFFF] dark:bg-[#161615] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
-            >
-              <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs">
-                <InstagramIcon className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
-                <span>Instagram · @beamingmotion</span>
+              <div className="space-y-2">
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => triggerHaptic("light")}
+                  className="inline-flex items-center gap-1.5 font-mono text-xs sm:text-[13px] font-semibold text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors group cursor-pointer"
+                >
+                  <span>Resume</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
               </div>
-            </a>
-
-            {/* Twitter / X Link */}
-            <a
-              href="https://x.com/beamingmotion"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => triggerHaptic("light")}
-              className="flex items-center justify-between p-4 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FFFFFF] dark:bg-[#161615] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
-            >
-              <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs">
-                <TwitterXIcon className="w-4 h-4 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
-                <span>Twitter / X · @beamingmotion</span>
-              </div>
-            </a>
+              <p className="font-sans text-xs sm:text-[13px] text-[#737373] dark:text-[#9E9E9C] leading-relaxed pt-1">
+                {lang === "th"
+                  ? "ดูประวัติและประสบการณ์การทำงานฉบับเต็ม"
+                  : "View complete background, skills, and experience."}
+              </p>
+            </div>
           </div>
         </section>
       </article>
@@ -352,11 +428,7 @@ export default function AboutClient() {
         onClose={() => setIsDrawerOpen(false)}
       />
 
-      {/* Focus Photo Lightbox */}
-      <PhotoModal
-        photo={selectedPhoto}
-        onClose={() => setSelectedPhoto(null)}
-      />
+
 
       {/* Countdown Overlay for pre-launch protection */}
       <CountdownOverlay />

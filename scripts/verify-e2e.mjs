@@ -247,7 +247,7 @@ test("Dedicated /about Route: Standalone editorial page with bio, gear, contacts
   assert(aboutClientCode.includes("Sony α7 III"), "About must maintain Sony α7 III camera invariant");
   assert(aboutClientCode.includes("contact.chakarin@gmail.com"), "About must have direct inquiries contact");
   assert(aboutClientCode.includes("<SiteFooter"), "About must render SiteFooter");
-  assert(aboutClientCode.includes("<PhotoModal"), "About must support lightbox modal inspection for featured print");
+  assert(aboutClientCode.includes("/profile.jpg"), "About must display portrait profile image");
 });
 
 // -----------------------------------------------------------------

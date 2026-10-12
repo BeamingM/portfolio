@@ -547,7 +547,7 @@ function PhotoModalDialog({
                 ? "bg-white/15 text-white border-white/30"
                 : "bg-white/5 text-white/60 border-white/10 hover:bg-white/15 hover:text-white"
             }`}
-            title={showExifHud ? "Hide camera specs [I]" : "Show camera specs [I]"}
+            title={showExifHud ? "Hide camera specs" : "Show camera specs"}
             aria-label="Toggle camera specs HUD"
           >
             <Info className="w-4 h-4" />
@@ -565,7 +565,7 @@ function PhotoModalDialog({
                 ? "bg-white text-black border-white shadow-md scale-105"
                 : "bg-white/5 text-white/80 border-white/10 hover:bg-white/15 hover:text-white"
             }`}
-            title={isZoomed ? "Reset zoom (Fit) [Z]" : "Zoom inspection (Pinch or [Z])"}
+            title={isZoomed ? "Reset zoom" : "Zoom inspection"}
             aria-label="Toggle zoom inspection"
           >
             {isZoomed ? (
@@ -584,7 +584,7 @@ function PhotoModalDialog({
             }}
             type="button"
             className="w-10 h-10 rounded-full bg-white/5 hover:bg-white text-white hover:text-black border border-white/15 transition-all cursor-pointer flex items-center justify-center shrink-0"
-            title="Close [Esc]"
+            title="Close"
             aria-label="Close photo view"
           >
             <X className="w-4 h-4" />
@@ -602,7 +602,7 @@ function PhotoModalDialog({
           }}
           type="button"
           className="absolute left-2 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/50 hover:bg-white text-white hover:text-black border border-white/20 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-90"
-          title="Previous Photo [←]"
+          title="Previous Photo"
           aria-label="Previous photo"
         >
           <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -618,7 +618,7 @@ function PhotoModalDialog({
           }}
           type="button"
           className="absolute right-2 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/50 hover:bg-white text-white hover:text-black border border-white/20 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-90"
-          title="Next Photo [→]"
+          title="Next Photo"
           aria-label="Next photo"
         >
           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import BrandMark from "./BrandMark";
 import { siteProfile, galleryItems } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
+import { trackContactReveal } from "@/utils/analytics";
 import { X, Copy, Check, ExternalLink, Mail, FileText, Sun, Moon } from "lucide-react";
 import { InstagramIcon, TwitterXIcon } from "./SocialIcons";
 import { useLanguage } from "@/context/LanguageContext";
@@ -30,6 +31,7 @@ export default function AtelierDrawer({
   const router = useRouter();
   const { lang, setLang, t } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
+  const [isEmailRevealed, setIsEmailRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Compute dynamic fallback counts from galleryItems
@@ -87,11 +89,13 @@ export default function AtelierDrawer({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  const handleCopyEmail = () => {
+  const handleRevealAndCopyEmail = () => {
+    setIsEmailRevealed(true);
     navigator.clipboard.writeText(siteProfile.contact.email);
     triggerHaptic("success");
     setCopied(true);
-    setTimeout(() => setCopied(false), 2200);
+    trackContactReveal("atelier_drawer", "email");
+    setTimeout(() => setCopied(false), 2400);
   };
 
   const handleClose = () => {
@@ -193,7 +197,7 @@ export default function AtelierDrawer({
               {/* 1. Category / Series Filter (No numbers) */}
               <div className="space-y-2 font-mono">
                 <div className="text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
-                  [{lang === "th" ? "หมวดภาพถ่าย" : "SERIES ARCHIVE"}]
+                  {lang === "th" ? "หมวดภาพถ่าย" : "SERIES ARCHIVE"}
                 </div>
                 <div className="flex flex-col gap-1.5">
                   {categoryItems.map((cat) => {
@@ -261,7 +265,7 @@ export default function AtelierDrawer({
               {/* 3. Equipment Specs */}
               <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 font-mono text-xs">
                 <div className="text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
-                  [{t("equipment")}]
+                  {t("equipment")}
                 </div>
                 <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-sm sm:text-xs">
                   <span className="text-[#737373] dark:text-[#9E9E9C]">{t("system")}</span>
@@ -278,37 +282,54 @@ export default function AtelierDrawer({
               {/* 4. Direct Inquiries & Contact Channels */}
               <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 font-mono text-xs">
                 <div className="text-xs sm:text-[11px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
-                  [{t("getInTouch")}]
+                  {t("getInTouch")}
                 </div>
 
                 {/* Email Box */}
-                <div className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group">
-                  <a
-                    href="mailto:contact.chakarin@gmail.com"
-                    onClick={() => triggerHaptic("light")}
-                    className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-sm sm:text-xs group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
-                  >
-                    <Mail className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
-                    <span className="truncate">contact.chakarin@gmail.com</span>
-                  </a>
+                {!isEmailRevealed ? (
                   <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleCopyEmail();
-                    }}
+                    onClick={handleRevealAndCopyEmail}
                     type="button"
-                    title={copied ? "Copied" : "Copy email address"}
-                    aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
-                    className="w-10 h-10 -mr-1 rounded-lg flex items-center justify-center text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
+                    className="w-full flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer text-left"
                   >
-                    {copied ? (
-                      <Check className="w-4 h-4 text-[#FF9500] dark:text-[#FFA000]" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
+                    <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-sm sm:text-xs group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors">
+                      <Mail className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
+                      <span>{lang === "th" ? "คลิกเพื่อดูและคัดลอกอีเมล" : "Click to reveal email"}</span>
+                    </div>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF9500] dark:bg-[#FFA000] animate-pulse shrink-0" />
                   </button>
-                </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group">
+                    <a
+                      href={`mailto:${siteProfile.contact.email}`}
+                      onClick={() => {
+                        triggerHaptic("light");
+                        trackContactReveal("atelier_drawer_mailto", "email");
+                      }}
+                      className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-sm sm:text-xs group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
+                    >
+                      <Mail className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
+                      <span className="truncate">{siteProfile.contact.email}</span>
+                    </a>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleRevealAndCopyEmail();
+                      }}
+                      type="button"
+                      title={copied ? "Copied" : "Copy email address"}
+                      aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
+                      className="w-10 h-10 -mr-1 rounded-lg flex items-center justify-center text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
+                    >
+                      {copied ? (
+                        <Check className="w-4 h-4 text-[#FF9500] dark:text-[#FFA000]" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+                )}
 
                 {/* Twitter / X Link */}
                 <a
@@ -342,7 +363,7 @@ export default function AtelierDrawer({
                   </div>
                 </a>
 
-                {/* Curriculum Vitae / Resume Link */}
+                {/* Resume Link */}
                 <a
                   href="/resume.pdf"
                   target="_blank"

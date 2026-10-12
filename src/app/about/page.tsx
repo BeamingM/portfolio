@@ -4,7 +4,7 @@ import AboutClient from "./AboutClient";
 export const metadata: Metadata = {
   title: "About — Chakarin Limudom (จักริน ลิ้มป์อุดม) · Photographer based in Bangkok",
   description:
-    "About Chakarin Limudom (จักริน ลิ้มป์อุดม), documentary and street photographer based in Bangkok. Camera: Sony α7 III. Thammasat University, Bangkok, Thailand.",
+    "About Chakarin Limudom (จักริน ลิ้มป์อุดม), documentary and street photographer based in Bangkok. Camera: Sony α7 III.",
   openGraph: {
     title: "About — Chakarin Limudom (จักริน ลิ้มป์อุดม) · Photographer based in Bangkok",
     description:
