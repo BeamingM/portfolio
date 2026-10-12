@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
 // Target: 22 October 2026 at 20:15:00 (ICT / Asia/Bangkok, UTC+7)
@@ -32,6 +32,63 @@ function calculateTimeLeft(): TimeLeft {
   return { days, hours, minutes, seconds, isExpired: false };
 }
 
+/**
+ * AnimatedDigit: Renders an individual numeral with a high-end mechanical/Apple-style rolling slide animation.
+ * Whenever `digit` changes, the outgoing digit smoothly slides up and blurs away,
+ * while the incoming digit rolls in from below with spring physics.
+ */
+function AnimatedDigit({
+  digit,
+  className = "",
+}: {
+  digit: string;
+  className?: string;
+}) {
+  return (
+    <span className="relative inline-block overflow-hidden h-[1.18em] w-[0.66em] select-none tabular-nums text-center align-middle">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={digit}
+          initial={{ y: "85%", opacity: 0, filter: "blur(2px)" }}
+          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
+          exit={{ y: "-85%", opacity: 0, filter: "blur(2px)" }}
+          transition={{
+            y: { type: "spring", stiffness: 360, damping: 28, mass: 0.6 },
+            opacity: { duration: 0.22, ease: "easeOut" },
+            filter: { duration: 0.22 },
+          }}
+          className={`absolute inset-0 flex items-center justify-center font-mono leading-none ${className}`}
+        >
+          {digit}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
+/**
+ * AnimatedNumberSlot: Splits an integer into individual 2-digit places (tens & ones)
+ * and animates each digit independently so static digits remain motionless while changing digits roll smoothly.
+ */
+function AnimatedNumberSlot({
+  value,
+  className = "",
+}: {
+  value: number;
+  className?: string;
+}) {
+  const str = String(value).padStart(2, "0");
+  const digits = str.split("");
+
+  return (
+    <span className="inline-flex items-center justify-center tabular-nums font-mono text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+      {digits.map((d, idx) => (
+        <AnimatedDigit key={idx} digit={d} className={className} />
+      ))}
+    </span>
+  );
+}
+
 export default function CountdownOverlay() {
   const { lang } = useLanguage();
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft);
@@ -40,10 +97,10 @@ export default function CountdownOverlay() {
 
   useEffect(() => {
     setMounted(true);
-    // Secret query param check (?preview=true) or development mode allows testing the full site locally
+    // Secret query param check (?preview=true) allows inspecting the full site without overlay
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      if (params.get("preview") === "true" || process.env.NODE_ENV === "development") {
+      if (params.get("preview") === "true") {
         setIsSecretBypass(true);
       }
     }
@@ -58,8 +115,6 @@ export default function CountdownOverlay() {
   if (!mounted || timeLeft.isExpired || isSecretBypass) {
     return null;
   }
-
-  const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
     <motion.div
@@ -94,44 +149,48 @@ export default function CountdownOverlay() {
           Coming Soon
         </h1>
 
-        {/* Countdown Numbers Grid */}
+        {/* Countdown Numbers Grid with Per-Digit Rolling Slide Animations */}
         <div className="grid grid-cols-4 gap-2.5 sm:gap-4 md:gap-6 w-full max-w-xl">
           {/* Days */}
           <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
-            <span className="font-mono text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#121212] dark:text-[#F5F5F3]">
-              {pad(timeLeft.days)}
-            </span>
-            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-1.5">
+            <AnimatedNumberSlot
+              value={timeLeft.days}
+              className="text-[#121212] dark:text-[#F5F5F3]"
+            />
+            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-2">
               {lang === "th" ? "วัน" : "Days"}
             </span>
           </div>
 
           {/* Hours */}
           <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
-            <span className="font-mono text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#121212] dark:text-[#F5F5F3]">
-              {pad(timeLeft.hours)}
-            </span>
-            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-1.5">
+            <AnimatedNumberSlot
+              value={timeLeft.hours}
+              className="text-[#121212] dark:text-[#F5F5F3]"
+            />
+            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-2">
               {lang === "th" ? "ชั่วโมง" : "Hours"}
             </span>
           </div>
 
           {/* Minutes */}
           <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#EBEBE6] dark:border-[#262625] backdrop-blur-md shadow-xs">
-            <span className="font-mono text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#121212] dark:text-[#F5F5F3]">
-              {pad(timeLeft.minutes)}
-            </span>
-            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-1.5">
+            <AnimatedNumberSlot
+              value={timeLeft.minutes}
+              className="text-[#121212] dark:text-[#F5F5F3]"
+            />
+            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-2">
               {lang === "th" ? "นาที" : "Mins"}
             </span>
           </div>
 
           {/* Seconds */}
           <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-white/60 dark:bg-[#181818]/70 border border-[#FF9500]/30 dark:border-[#FFA000]/30 backdrop-blur-md shadow-xs">
-            <span className="font-mono text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#FF9500] dark:text-[#FFA000]">
-              {pad(timeLeft.seconds)}
-            </span>
-            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-1.5">
+            <AnimatedNumberSlot
+              value={timeLeft.seconds}
+              className="text-[#FF9500] dark:text-[#FFA000]"
+            />
+            <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] mt-2">
               {lang === "th" ? "วินาที" : "Secs"}
             </span>
           </div>
