@@ -270,10 +270,10 @@ export default function AboutClient() {
                 2026 · 5 Prints
               </div>
               <div className="font-sans font-bold text-sm text-[#121212] dark:text-[#F5F5F3] group-hover:text-[#FF9500] transition-colors">
-                Hua Hin 2026
+                {lang === "th" ? "งานส่วนตัว" : "Personal Works"}
               </div>
               <div className="text-[11px] text-[#737373] dark:text-[#9E9E9C] mt-1">
-                Coastal Light &amp; Tide Line Geometry
+                {lang === "th" ? "บันทึกภาพถ่ายและสตรีทศึกษา" : "Street Studies & Candid Moments"}
               </div>
             </Link>
 
@@ -286,10 +286,10 @@ export default function AboutClient() {
                 2026 · 6 Prints
               </div>
               <div className="font-sans font-bold text-sm text-[#121212] dark:text-[#F5F5F3] group-hover:text-[#FF9500] transition-colors">
-                ครบรอบ 50 ปี 6 ตุลา
+                {lang === "th" ? "งานกิจกรรม" : "Activities & Events"}
               </div>
               <div className="text-[11px] text-[#737373] dark:text-[#9E9E9C] mt-1">
-                TU Photo Memorial Documentary
+                {lang === "th" ? "ภาพถ่ายสารคดีและบรรยากาศ" : "Documentary & Event Moments"}
               </div>
             </Link>
 
@@ -302,10 +302,10 @@ export default function AboutClient() {
                 2026 · 5 Prints
               </div>
               <div className="font-sans font-bold text-sm text-[#121212] dark:text-[#F5F5F3] group-hover:text-[#FF9500] transition-colors">
-                Polsci Music FirstM33t
+                {lang === "th" ? "งานต่างๆ" : "Various Projects"}
               </div>
               <div className="text-[11px] text-[#737373] dark:text-[#9E9E9C] mt-1">
-                PSC.TU Live Stage &amp; Warm Film Look
+                {lang === "th" ? "การแสดงดนตรีและกิจกรรมสร้างสรรค์" : "Stage Performance & Creative Works"}
               </div>
             </Link>
           </div>
