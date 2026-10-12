@@ -131,7 +131,7 @@ export default function TopNav({
           style={{
             position: "absolute",
             left: `calc(${sidePad}px + ${factor} * (50% - ${sidePad}px))`,
-            top: `${(isMobile ? 15 : 18) + factor * (isMobile ? 46 : 56)}px`,
+            top: `${(isMobile ? 18 : 26) + factor * (isMobile ? 44 : 50)}px`,
             transform: `translate3d(-${factor * 50}%, 0, 0) scale(${1 + factor * (isMobile ? 0.08 : 0.35)})`,
             transformOrigin: "center center",
             willChange: "left, top, transform",
