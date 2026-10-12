@@ -99,7 +99,17 @@ export default function CountdownOverlay() {
     emptySubscribe,
     () => {
       if (typeof window !== "undefined") {
-        return new URLSearchParams(window.location.search).get("preview") === "true";
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("preview") === "true") return true;
+        const isLocal =
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1";
+        const hasCountdownParam =
+          params.has("countdown") || params.has("demoCountdown");
+        if (isLocal && !hasCountdownParam) {
+          return true;
+        }
+        return false;
       }
       return false;
     },
