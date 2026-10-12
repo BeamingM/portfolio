@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import BrandMark from "./BrandMark";
@@ -116,11 +115,15 @@ export default function AtelierDrawer({
 
           {/* Chic Floating Frosted Glass Panel (Breathable 88vw on mobile, never suffocating) */}
           <motion.aside
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
+            onWheel={(e) => e.stopPropagation()}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 32, stiffness: 320 }}
-            className="fixed top-0 right-0 h-full w-[88vw] sm:w-[420px] max-w-md z-[60] bg-[#FFFFFF]/90 dark:bg-[#141414]/90 backdrop-blur-2xl border-l border-white/60 dark:border-white/10 text-[#121212] dark:text-[#F5F5F3] flex flex-col justify-between p-6 md:p-8 shadow-[-16px_0_48px_rgba(0,0,0,0.22)] rounded-l-2xl sm:rounded-l-3xl overflow-y-auto"
+            className="fixed top-0 right-0 h-full w-[88vw] sm:w-[420px] max-w-md z-[60] bg-[#FFFFFF]/90 dark:bg-[#141414]/90 backdrop-blur-2xl border-l border-white/60 dark:border-white/10 text-[#121212] dark:text-[#F5F5F3] flex flex-col justify-between p-6 md:p-8 shadow-[-16px_0_48px_rgba(0,0,0,0.22)] rounded-l-2xl sm:rounded-l-3xl overflow-y-auto overscroll-contain"
           >
             <div className="space-y-6">
               {/* Header */}
@@ -178,54 +181,7 @@ export default function AtelierDrawer({
                 </div>
               </div>
 
-              {/* 2. Navigation Links */}
-              <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 font-mono">
-                <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
-                  [{lang === "th" ? "เมนูนำทาง" : "NAVIGATION"}]
-                </div>
-                <div className="flex flex-col gap-1 text-xs">
-                  <Link
-                    href="/"
-                    onClick={() => {
-                      triggerHaptic("light");
-                      onClose();
-                    }}
-                    className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-[#121212] dark:text-[#F5F5F3]"
-                  >
-                    <span>{lang === "th" ? "หน้าแรก / แกลเลอรี" : "Gallery"}</span>
-                    <span className="text-[10px] text-[#737373] dark:text-[#9E9E9C]">/</span>
-                  </Link>
-                  <Link
-                    href="/about"
-                    onClick={() => {
-                      triggerHaptic("light");
-                      onClose();
-                    }}
-                    className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-[#121212] dark:text-[#F5F5F3]"
-                  >
-                    <span>{lang === "th" ? "เกี่ยวกับจักริน (About)" : "About Chakarin"}</span>
-                    <span className="text-[10px] text-[#737373] dark:text-[#9E9E9C]">/about</span>
-                  </Link>
-                  <a
-                    href="/resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => {
-                      triggerHaptic("light");
-                      onClose();
-                    }}
-                    className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-[#121212] dark:text-[#F5F5F3]"
-                  >
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C]" />
-                      <span>{lang === "th" ? "เรซูเม่ (Resume PDF)" : "Resume (PDF)"}</span>
-                    </div>
-                    <ExternalLink className="w-3 h-3 text-[#737373] dark:text-[#9E9E9C]" />
-                  </a>
-                </div>
-              </div>
-
-              {/* 3. Bio & Intro (Clean, Floating Typography - Left Aligned with Large Hello) */}
+              {/* 2. Bio & Intro (Clean, Floating Typography - Left Aligned with Large Hello) */}
               <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 text-left">
                 <div className="flex items-baseline justify-between gap-2">
                   <h2 className="font-serif italic text-3xl sm:text-4xl text-[#121212] dark:text-[#F5F5F3] tracking-tight text-left">

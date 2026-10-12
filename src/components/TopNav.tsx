@@ -108,7 +108,7 @@ export default function TopNav({
 
   // Exact clearance from BrandMark guaranteeing zero overlap with "BeamingMotion"
   const isDesktop = windowWidth >= 1024;
-  const brandMarkClearance = isDesktop ? 315 : isMobile ? 104 : 138;
+  const brandMarkClearance = isDesktop ? 360 : isMobile ? 104 : 138;
   const navLeft = sidePad + brandMarkClearance;
   const navTop = isMobile ? 14 : 18;
 
@@ -163,7 +163,9 @@ export default function TopNav({
               ? "50%"
               : `calc(${navLeft}px + ${factor} * (50% - ${navLeft}px))`,
             top: `${navTop + factor * (heroFilterTop - navTop)}px`,
-            transform: `translate3d(-50%, 0, 0)`,
+            transform: isMobile
+              ? "translate3d(-50%, 0, 0)"
+              : `translate3d(-${factor * 50}%, 0, 0)`,
             willChange: "left, top, transform",
             maxWidth:
               factor > 0.35

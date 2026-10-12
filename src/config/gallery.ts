@@ -497,12 +497,22 @@ export const siteProfile = {
   },
   gear: {
     system: "Sony α7 III",
-    lenses: ["FE 28-70mm F3.5-5.6 OSS", "FE 35mm F1.8", "Sonnar T* FE 55mm F1.8 ZA"],
-    optics: ["FE 28-70mm F3.5-5.6 OSS", "FE 35mm F1.8", "Sonnar T* FE 55mm F1.8 ZA"],
+    lenses: [
+      "Zeiss Sonnar FE 35mm F2.8 ZA",
+      "Zeiss Sonnar FE 55mm F1.8 ZA",
+      "FE 28-70mm F3.5-5.6 OSS",
+    ],
+    optics: [
+      "Zeiss Sonnar FE 35mm F2.8 ZA",
+      "Zeiss Sonnar FE 55mm F1.8 ZA",
+      "FE 28-70mm F3.5-5.6 OSS",
+    ],
   },
   contact: {
     email: "contact.chakarin@gmail.com",
     instagram: "beamingmotion",
     instagramUrl: "https://www.instagram.com/beamingmotion",
+    twitter: "https://x.com/beamingmotion",
+    github: "https://github.com/BeamingM",
   },
 };

@@ -8,6 +8,7 @@ import SiteFooter from "@/components/SiteFooter";
 import PhotoModal from "@/components/PhotoModal";
 import AtelierDrawer from "@/components/AtelierDrawer";
 import FigmaCanvasOverlay from "@/components/FigmaCanvasOverlay";
+import CountdownOverlay from "@/components/CountdownOverlay";
 import { galleryItems, gallerySections, PhotoItem } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
 
@@ -147,6 +148,9 @@ export default function Home() {
 
       {/* Interactive Figma Canvas Cursor Overlay */}
       <FigmaCanvasOverlay />
+
+      {/* Chic Frosted Glass Countdown Overlay */}
+      <CountdownOverlay />
     </main>
   );
 }

@@ -12,6 +12,15 @@ export const metadata: Metadata = {
     url: "https://chakarin.pics/about",
     images: ["/photos/personal-01.jpg"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "About — Chakarin Limudom (จักริน ลิ้มป์อุดม) · Photographer based in Bangkok",
+    description:
+      "About Chakarin Limudom (จักริน ลิ้มป์อุดม), documentary and street photographer based in Bangkok. Camera: Sony α7 III.",
+    site: "@beamingmotion",
+    creator: "@beamingmotion",
+    images: ["/photos/personal-01.jpg"],
+  },
   alternates: {
     canonical: "https://chakarin.pics/about",
   },

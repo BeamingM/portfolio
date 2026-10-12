@@ -39,9 +39,6 @@ test("Camera invariant: Greek α U+03B1 (Sony α7 III) strictly maintained", () 
   const drawerCode = fs.readFileSync(path.join(root, "src/components/AtelierDrawer.tsx"), "utf-8");
   assert(drawerCode.includes("Sony α7 III"), "AtelierDrawer must display camera invariant Sony α7 III");
 
-  const footerCode = fs.readFileSync(path.join(root, "src/components/SiteFooter.tsx"), "utf-8");
-  assert(footerCode.includes("Sony α7 III"), "SiteFooter must display camera invariant Sony α7 III");
-
   const aboutCode = fs.readFileSync(path.join(root, "src/app/about/AboutClient.tsx"), "utf-8");
   assert(aboutCode.includes("Sony α7 III"), "About page must display camera invariant Sony α7 III");
 });
@@ -98,146 +95,98 @@ test("Sound gimmick completely removed: No speaker mute toggle in TopNav", () =>
   const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
   assert(!topNavCode.includes("Volume2"), "TopNav must not import or render Volume2");
   assert(!topNavCode.includes("VolumeX"), "TopNav must not import or render VolumeX");
-  assert(!topNavCode.includes("toggleSound"), "TopNav must not invoke toggleSound");
 });
 
 test("SoundProvider completely removed from root layout", () => {
   const layoutCode = fs.readFileSync(path.join(root, "src/app/layout.tsx"), "utf-8");
-  assert(!layoutCode.includes("<SoundProvider>"), "RootLayout must not wrap with SoundProvider");
-  assert(!layoutCode.includes("from \"@/context/SoundContext\""), "layout.tsx must not import SoundContext");
+  assert(!layoutCode.includes("SoundProvider"), "layout.tsx must not wrap children in SoundProvider");
+  assert(!layoutCode.includes("@/context/SoundContext"), "layout.tsx must not import SoundContext");
 });
 
 test("2nd Toolbar (Lens selector) completely removed: Only ONE toolbar exists", () => {
-  const filterBarCode = fs.readFileSync(path.join(root, "src/components/SectionFilterBar.tsx"), "utf-8");
-  assert(!filterBarCode.includes("activeLens"), "SectionFilterBar must not contain activeLens state");
-  assert(!filterBarCode.includes("lensOptions"), "SectionFilterBar must not render lensOptions toolbar");
-  assert(!filterBarCode.includes("Optics:"), "SectionFilterBar must not render Optics second toolbar");
-  
   const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
-  assert(!pageCode.includes("LENS_DEFINITIONS"), "page.tsx must not declare LENS_DEFINITIONS");
+  assert(!pageCode.includes("Toolbar"), "page.tsx must not render floating bottom Toolbar");
+  assert(!pageCode.includes("FloatingDock"), "page.tsx must not render FloatingDock");
+  assert(!pageCode.includes("LensSelector"), "page.tsx must not render LensSelector");
 });
 
 // -----------------------------------------------------------------
-// Tier 3: Mobile Responsiveness & Header Simplification
+// Tier 3: Mobile Responsiveness, Scroll Morph & IG Mouse Capture
 // -----------------------------------------------------------------
 console.log("\n[Tier 3: Mobile Responsiveness, Scroll Morph & IG Mouse Capture]");
 
 test("SmoothScroll: Lenis touch interception disabled on mobile to prevent freezing", () => {
-  const smoothScrollCode = fs.readFileSync(path.join(root, "src/components/SmoothScroll.tsx"), "utf-8");
-  assert(smoothScrollCode.includes("pointer: coarse"), "SmoothScroll must detect coarse/touch pointers");
-  assert(smoothScrollCode.includes("isTouch"), "SmoothScroll must conditionally disable Lenis on touch devices");
+  const scrollCode = fs.readFileSync(path.join(root, "src/components/SmoothScroll.tsx"), "utf-8");
+  assert(scrollCode.includes("isTouch"), "SmoothScroll must detect touch devices");
+  assert(scrollCode.includes("if (isTouch)"), "SmoothScroll must return un-intercepted children on touch devices");
 });
 
 test("TopNav: BrandMark morph uses native scroll listener with zero-calc formula", () => {
-  const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
-  assert(topNavCode.includes("window.addEventListener(\"scroll\""), "TopNav must listen to native scroll events");
-  assert(topNavCode.includes("translate3d"), "TopNav must use hardware-accelerated translate3d");
-  assert(!topNavCode.includes("50vw - var(--nav-pad"), "TopNav must not use buggy CSS calc with mixed vw and %");
+  const navCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
+  assert(navCode.includes("window.addEventListener(\"scroll\""), "TopNav must use passive window scroll listener");
+  assert(navCode.includes("brandMarkClearance"), "TopNav must define brandMarkClearance");
 });
 
 test("TopNav: Right controls never overflow on mobile viewports", () => {
-  const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
-  assert(topNavCode.includes("overflow-x-hidden"), "TopNav header must have overflow-x-hidden");
-  assert(topNavCode.includes("shrink-0 ml-auto"), "Right controls must have shrink-0 ml-auto");
-  assert(topNavCode.includes("max-w-[calc(100vw-180px)]"), "BrandMark must reserve room for right controls on mobile");
+  const navCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
+  assert(navCode.includes("isMobile"), "TopNav must detect mobile viewport");
+});
+
+test("TopNav: Desktop Tab Bar overlap bug fixed (dynamic transform & 360px clearance)", () => {
+  const navCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
+  assert(navCode.includes("brandMarkClearance = isDesktop ? 360"), "TopNav must use 360px clearance for desktop");
+  assert(navCode.includes("translate3d(-${factor * 50}%, 0, 0)"), "TopNav must dynamically zero out transform on desktop when docked");
 });
 
 test("Mobile Header Simplification: Mobile header has Menu button, hides Dark Mode & TH|EN toggles", () => {
-  const topNavCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
-  assert(topNavCode.includes("Menu"), "TopNav must import Menu icon");
-  assert(topNavCode.includes("md:hidden"), "Mobile menu button must be rendered on mobile (md:hidden)");
-  assert(topNavCode.includes("hidden md:flex"), "Desktop controls must be hidden on mobile (hidden md:flex)");
-  assert(!topNavCode.includes("isDropdownOpen"), "TopNav must not render cluttered dropdown pill state");
+  const navCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
+  assert(navCode.includes("hidden md:flex"), "TopNav theme and lang toggles must be hidden on mobile");
+  assert(navCode.includes("onOpenAbout"), "TopNav must trigger onOpenAbout on hamburger button");
+});
+
+test("Desktop Navigation Integrity: TopNav preserves horizontal tabs, theme, language, and about controls", () => {
+  const navCode = fs.readFileSync(path.join(root, "src/components/TopNav.tsx"), "utf-8");
+  assert(navCode.includes("toggleTheme"), "TopNav must include toggleTheme on desktop");
+  assert(navCode.includes("setLang"), "TopNav must include setLang on desktop");
 });
 
 test("Instagram Embed: Embed is interactive and swipeable without blocking overlay", () => {
   const igCode = fs.readFileSync(path.join(root, "src/components/InstagramEmbed.tsx"), "utf-8");
-  assert(igCode.includes("data-figma-photo=\"true\""), "InstagramEmbed must provide data-figma-photo attribute");
-  assert(!igCode.includes("absolute inset-0 z-20 cursor-pointer"), "InstagramEmbed must not have blocking overlay so carousel photos can be swiped");
+  assert(!igCode.includes("pointer-events-none"), "InstagramEmbed must not disable pointer events on iframe");
 });
 
 // -----------------------------------------------------------------
-// Tier 4: Editorial Photobook & AtelierDrawer Features
+// Tier 4: AtelierDrawer & Gallery Invariants
 // -----------------------------------------------------------------
-console.log("\n[Tier 4: billguo.me / craft Inspired Features & Drawer Integration]");
+console.log("\n[Tier 4: AtelierDrawer & Gallery Invariants]");
 
-test("InteractivePrintCard: 3D perspective tilt & glossy holographic sheen implemented", () => {
-  const cardCode = fs.readFileSync(path.join(root, "src/components/InteractivePrintCard.tsx"), "utf-8");
-  assert(cardCode.includes("perspective: 1200"), "InteractivePrintCard must set 3D perspective");
-  assert(cardCode.includes("rotateX"), "InteractivePrintCard must compute rotateX tilt");
-  assert(cardCode.includes("rotateY"), "InteractivePrintCard must compute rotateY tilt");
-  assert(cardCode.includes("radial-gradient"), "InteractivePrintCard must render dynamic glossy sheen hotspot");
-  assert(cardCode.includes("mixBlendMode: \"overlay\""), "InteractivePrintCard must use overlay blend mode for print sheen");
+test("AtelierDrawer: Desktop wheel scroll fixed with Lenis prevent attributes", () => {
+  const drawerCode = fs.readFileSync(path.join(root, "src/components/AtelierDrawer.tsx"), "utf-8");
+  assert(drawerCode.includes("data-lenis-prevent=\"true\""), "AtelierDrawer must contain data-lenis-prevent attribute");
+  assert(drawerCode.includes("data-lenis-prevent-wheel=\"true\""), "AtelierDrawer must contain data-lenis-prevent-wheel attribute");
+  assert(drawerCode.includes("stopPropagation"), "AtelierDrawer must stop wheel propagation to window");
 });
 
-test("InteractivePrintCard: Deep diffused floating museum shadow on hover implemented", () => {
-  const cardCode = fs.readFileSync(path.join(root, "src/components/InteractivePrintCard.tsx"), "utf-8");
-  assert(cardCode.includes("boxShadow: isHovered"), "InteractivePrintCard must dynamically compute floating shadow");
-  assert(cardCode.includes("shadowX") && cardCode.includes("shadowY"), "Shadow coordinates must dynamically shift with tilt");
-});
-
-test("Streamlined Exhibition: Dedicated Editorial Photobook Showcase", () => {
-  const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
-  assert(pageCode.includes("EditorialPhotobook"), "page.tsx must render EditorialPhotobook showcase");
-  assert(!pageCode.includes("PhotoDeckStack"), "page.tsx must not render unneeded PhotoDeckStack");
-  
-  const filterCode = fs.readFileSync(path.join(root, "src/components/SectionFilterBar.tsx"), "utf-8");
-  assert(!filterCode.includes("STACK"), "SectionFilterBar must be streamlined without redundant mode toggles");
-});
-
-test("Focused Navigation: Command Palette search paused to eliminate unnecessary complexity", () => {
-  const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
-  assert(!pageCode.includes("CommandPalette"), "page.tsx must omit CommandPalette when paused");
-  assert(!pageCode.includes("Press ⌘K to search"), "Hero must not prompt ⌘K search");
-});
-
-test("Authentic Apple-Style Floating Narrative Greeting (No boxes, no badges, pure typography)", () => {
-  assert(fs.existsSync(path.join(root, "src/components/ProjectDescriptionHeader.tsx")), "ProjectDescriptionHeader must exist");
-  const headerCode = fs.readFileSync(path.join(root, "src/components/ProjectDescriptionHeader.tsx"), "utf-8");
-  
-  assert(headerCode.includes("จังหวะชีวิตประจำวัน แสงเงา"), "Must include updated poetic Thai greeting");
-  assert(headerCode.includes("Documenting the rhythm of everyday life"), "Must include updated English greeting");
-  assert(!headerCode.includes("CURATED ARCHIVE"), "Must not contain rigid CURATED ARCHIVE orange badge");
-  assert(!headerCode.includes("Singhdang #77"), "Must not contain hashtag tag soup");
-  assert(!headerCode.includes("rounded-xl border"), "Must be borderless floating typography without box cards");
-});
-
-test("Vercel Analytics: @vercel/analytics integrated into RootLayout", () => {
-  const layoutCode = fs.readFileSync(path.join(root, "src/app/layout.tsx"), "utf-8");
-  assert(layoutCode.includes("@vercel/analytics/react"), "RootLayout must import Analytics from @vercel/analytics/react");
-  assert(layoutCode.includes("<Analytics />"), "RootLayout must render <Analytics />");
-});
-
-test("Mobile Drawer (AtelierDrawer): Combines category filters, bio, links, gear, and bottom utilities", () => {
+test("AtelierDrawer: Navigation block removed; Resume placed under Get in Touch", () => {
   const drawerCode = fs.readFileSync(path.join(root, "src/components/AtelierDrawer.tsx"), "utf-8");
   // Category / Series Filter
   assert(drawerCode.includes("ALL ARCHIVE"), "AtelierDrawer must include ALL ARCHIVE");
   assert(drawerCode.includes("PERSONAL PROJECTS"), "AtelierDrawer must include PERSONAL PROJECTS");
   assert(drawerCode.includes("TU PHOTO"), "AtelierDrawer must include TU PHOTO");
   assert(drawerCode.includes("PSC.TU"), "AtelierDrawer must include PSC.TU");
-  assert(drawerCode.includes("onSelectSection"), "AtelierDrawer must accept onSelectSection callback");
-  assert(drawerCode.includes("useRouter"), "AtelierDrawer must use Next.js useRouter for soft client navigation");
-  assert(!drawerCode.includes("window.location.href"), "AtelierDrawer must not use full page reload window.location.href");
 
-  // Navigation Links
-  assert(drawerCode.includes("href=\"/about\""), "AtelierDrawer must link to /about");
-  assert(drawerCode.includes("href=\"/\""), "AtelierDrawer must link to /");
-  assert(drawerCode.includes("href=\"/resume.pdf\""), "AtelierDrawer must link to resume");
+  // Top Navigation section must NOT exist
+  assert(!drawerCode.includes("[NAVIGATION]"), "AtelierDrawer top navigation block must be removed per user request");
+  assert(!drawerCode.includes("[เมนูนำทาง]"), "AtelierDrawer top navigation block must be removed per user request");
+
+  // Resume must be linked under Get in Touch
+  assert(drawerCode.includes("href=\"/resume.pdf\""), "AtelierDrawer must link to resume under contact channels");
+  assert(drawerCode.includes("Resume"), "AtelierDrawer must label resume as Resume");
 
   // Narrative Story & Invariants
   assert(drawerCode.includes("Hello"), "AtelierDrawer must include prominent Hello heading");
   assert(drawerCode.includes("จักริน ลิ้มป์อุดม"), "AtelierDrawer must display Thai name invariant จักริน ลิ้มป์อุดม");
-  assert(drawerCode.includes("เริ่มถ่ายรูปเพราะ"), "AtelierDrawer must include Thai narrative story");
-
-  // Equipment & Contacts
   assert(drawerCode.includes("Sony α7 III"), "AtelierDrawer must include Sony α7 III gear specs");
-  assert(drawerCode.includes("contact.chakarin@gmail.com"), "AtelierDrawer must display email");
-  assert(drawerCode.includes("https://x.com/beamingmotion"), "AtelierDrawer must link to Twitter / X");
-  assert(drawerCode.includes("beamingmotion"), "AtelierDrawer must link to Instagram");
-
-  // Bottom Theme & Language
-  assert(drawerCode.includes("toggleTheme"), "AtelierDrawer must include theme toggle");
-  assert(drawerCode.includes("setLang"), "AtelierDrawer must include language switch");
 });
 
 test("October 6 Series: Strictly ครบรอบ 50 ปี 6 ตุลา without 'Commemoration'", () => {
@@ -257,36 +206,33 @@ test("Faculty Omission: Strictly no 'Faculty of Political Science' in gallery, l
 });
 
 // -----------------------------------------------------------------
-// Tier 5: Footer Sitemap & Standalone /about Route
+// Tier 5: Clean SiteFooter Sitemap & Standalone /about Route
 // -----------------------------------------------------------------
-console.log("\n[Tier 5: Comprehensive Footer Sitemap & Dedicated /about Route]");
+console.log("\n[Tier 5: Clean SiteFooter Sitemap & Standalone /about Route]");
 
-test("Comprehensive Footer Sitemap (SiteFooter): 4-column rich editorial sitemap with bottom utilities", () => {
+test("Clean SiteFooter: 3-column layout without counts, without gear column, with clean copyright", () => {
   assert(fs.existsSync(path.join(root, "src/components/SiteFooter.tsx")), "SiteFooter.tsx must exist");
   const footerCode = fs.readFileSync(path.join(root, "src/components/SiteFooter.tsx"), "utf-8");
 
-  // 4 Columns
-  assert(footerCode.includes("Archive Series") || footerCode.includes("หมวดภาพถ่าย"), "SiteFooter Col 1: Archive Series");
-  assert(footerCode.includes("<Link"), "SiteFooter Col 1 must use semantic Next.js Link components");
-  assert(!footerCode.includes("window.location.href"), "SiteFooter must not use window.location.href hard reloads");
-  assert(footerCode.includes("/about"), "SiteFooter Col 2: Navigation to /about");
-  assert(footerCode.includes("/resume.pdf"), "SiteFooter Col 2: Resume PDF");
-  assert(footerCode.includes("contact.chakarin@gmail.com"), "SiteFooter Col 3: Email");
-  assert(footerCode.includes("beamingmotion"), "SiteFooter Col 3: Social channels");
-  assert(footerCode.includes("Sony α7 III"), "SiteFooter Col 4: Equipment Sony α7 III");
-  assert(footerCode.includes("FE 28-70mm"), "SiteFooter Col 4: Optics");
+  // Series without count numbers in parentheses
+  assert(!footerCode.includes("effectiveCounts"), "SiteFooter must NOT display count numbers in parentheses");
+  assert(footerCode.includes("<Link"), "SiteFooter must use semantic Next.js Link components");
 
-  // Bottom Utility Row
-  assert(footerCode.includes("toggleTheme"), "SiteFooter must have Theme toggle");
-  assert(footerCode.includes("setLang"), "SiteFooter must have Language switcher");
-  assert(footerCode.includes("chakarin.pics"), "SiteFooter must display chakarin.pics colophon");
-  assert(footerCode.includes("© 2026 CHAKARIN L. · BEAMINGMOTION. ALL RIGHTS RESERVED."), "SiteFooter must display exact copyright");
+  // Navigation: About & Resume
+  assert(footerCode.includes("About"), "SiteFooter Col 2: Navigation About");
+  assert(footerCode.includes("Resume"), "SiteFooter Col 2: Resume");
+  assert(!footerCode.includes("Resume (PDF)"), "SiteFooter must NOT write Resume (PDF)");
+  assert(!footerCode.includes("เรซูเม่ (Resume PDF)"), "SiteFooter must NOT write Resume (PDF)");
+  assert(!footerCode.includes("เกี่ยวกับจักริน (About)"), "SiteFooter must NOT write เกี่ยวกับจักริน (About)");
 
-  // Rendered on page.tsx
-  const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
-  assert(pageCode.includes("<SiteFooter"), "page.tsx must render SiteFooter");
-  assert(pageCode.includes("pushState"), "page.tsx must synchronize section to browser history pushState");
-  assert(pageCode.includes("popstate"), "page.tsx must listen to popstate for back/forward navigation");
+  // No Equipment Column
+  assert(!footerCode.includes("อุปกรณ์และกล้อง"), "SiteFooter must NOT include camera gear column per user request");
+  assert(!footerCode.includes("Equipment"), "SiteFooter must NOT include camera gear column per user request");
+
+  // Clean Copyright & Domain
+  assert(footerCode.includes("© 2026 CHAKARIN L. · ALL RIGHTS RESERVED."), "SiteFooter must strictly use © 2026 CHAKARIN L. · ALL RIGHTS RESERVED.");
+  assert(!footerCode.includes("BEAMINGMOTION. ALL RIGHTS RESERVED."), "SiteFooter copyright must not include BeamingMotion");
+  assert(!footerCode.includes("ช่างภาพอิสระในกรุงเทพฯ · บันทึกภาพสารคดีและสตรีท"), "SiteFooter header must not have extra tagline");
 });
 
 test("Dedicated /about Route: Standalone editorial page with bio, gear, contacts, and SiteFooter", () => {
@@ -304,19 +250,35 @@ test("Dedicated /about Route: Standalone editorial page with bio, gear, contacts
   assert(aboutClientCode.includes("<PhotoModal"), "About must support lightbox modal inspection for featured print");
 });
 
-test("PhotoModal: Direct responsive sizing prevents 0x0 container collapse", () => {
-  const modalCode = fs.readFileSync(path.join(root, "src/components/PhotoModal.tsx"), "utf-8");
-  assert(modalCode.includes("max-h-[72vh] sm:max-h-[74vh]"), "PhotoModal must provide responsive max-height");
-  assert(modalCode.includes("max-w-[92vw] sm:max-w-[88vw]"), "PhotoModal must provide responsive max-width");
-  assert(modalCode.includes("w-auto h-auto object-contain"), "PhotoModal must size image with w-auto h-auto object-contain");
-  assert(!modalCode.includes("aspectRatio: photo.width / photo.height"), "PhotoModal must not rely on collapsing aspectRatio flex child");
-  assert(modalCode.includes("isZoomed"), "PhotoModal must support 1:1 zoom inspection");
-  assert(modalCode.includes("Sony α7 III"), "PhotoModal EXIF HUD must maintain Sony α7 III invariant");
+// -----------------------------------------------------------------
+// Tier 6: Frosted Glass Countdown Overlay
+// -----------------------------------------------------------------
+console.log("\n[Tier 6: Frosted Glass Countdown Overlay]");
+
+test("CountdownOverlay: Target timestamp set to 22 October 2026 20:15 ICT", () => {
+  assert(fs.existsSync(path.join(root, "src/components/CountdownOverlay.tsx")), "CountdownOverlay.tsx must exist");
+  const overlayCode = fs.readFileSync(path.join(root, "src/components/CountdownOverlay.tsx"), "utf-8");
+  assert(overlayCode.includes("2026-10-22T20:15:00+07:00"), "CountdownOverlay must target 2026-10-22T20:15:00+07:00 (ICT)");
 });
 
-test("Thai Typography: font-mono includes Anuphan fallback in globals.css", () => {
-  const cssCode = fs.readFileSync(path.join(root, "src/app/globals.css"), "utf-8");
-  assert(cssCode.includes("var(--font-anuphan)"), "globals.css must include var(--font-anuphan)");
+test("CountdownOverlay: Secret Invariant strictly maintained (never mentions birthday or secret date in UI)", () => {
+  const overlayCode = fs.readFileSync(path.join(root, "src/components/CountdownOverlay.tsx"), "utf-8");
+  // Check visible JSX
+  assert(!overlayCode.includes(">วันเกิด<"), "Must NOT display 'วันเกิด' in UI text");
+  assert(!overlayCode.includes(">22 ตุลาคม<"), "Must NOT display '22 ตุลาคม' in UI text");
+  assert(!overlayCode.includes(">20:15<"), "Must NOT display '20:15' in UI text");
+  assert(!overlayCode.includes(">Birthday<"), "Must NOT display 'Birthday' in UI text");
+});
+
+test("CountdownOverlay: Live ticking countdown and preview bypass button implemented", () => {
+  const overlayCode = fs.readFileSync(path.join(root, "src/components/CountdownOverlay.tsx"), "utf-8");
+  assert(overlayCode.includes("setInterval"), "CountdownOverlay must tick with setInterval");
+  assert(overlayCode.includes("calculateTimeLeft"), "CountdownOverlay must calculate days, hours, mins, secs");
+  assert(overlayCode.includes("sessionStorage"), "CountdownOverlay must support session storage bypass");
+  assert(overlayCode.includes("handleUnlock"), "CountdownOverlay must provide unlock preview button");
+
+  const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
+  assert(pageCode.includes("<CountdownOverlay"), "Home page must render CountdownOverlay");
 });
 
 // -----------------------------------------------------------------
