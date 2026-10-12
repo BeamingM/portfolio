@@ -132,7 +132,7 @@ export default function TopNav({
             position: "absolute",
             left: `calc(${sidePad}px + ${factor} * (50% - ${sidePad}px))`,
             top: `${(isMobile ? 15 : 18) + factor * (isMobile ? 46 : 56)}px`,
-            transform: `translate3d(-${factor * 50}%, 0, 0) scale(${1 + factor * (isMobile ? 0.22 : 0.35)})`,
+            transform: `translate3d(-${factor * 50}%, 0, 0) scale(${1 + factor * (isMobile ? 0.08 : 0.35)})`,
             transformOrigin: "center center",
             willChange: "left, top, transform",
           }}
@@ -146,8 +146,8 @@ export default function TopNav({
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
-          className={`pointer-events-auto shrink-0 max-w-[calc(100vw-180px)] ${
-            progress > 0.25 ? "cursor-pointer" : "cursor-default"
+          className={`pointer-events-auto shrink-0 ${
+            progress > 0.25 ? "max-w-[calc(100vw-180px)] cursor-pointer" : "cursor-default"
           }`}
           onClick={() => {
             if (progress > 0.25) {

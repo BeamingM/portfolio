@@ -107,11 +107,41 @@ export default function CountdownOverlay() {
   );
 
   useEffect(() => {
-    const initial = calculateTimeLeft();
-    if (initial.isExpired) return;
+    let target = TARGET_TIMESTAMP;
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const demoParam = params.get("countdown") || params.get("demoCountdown");
+      if (demoParam) {
+        const secs = parseInt(demoParam, 10);
+        if (!isNaN(secs) && secs > 0) {
+          target = Date.now() + secs * 1000;
+        }
+      }
+    }
+
+    const calc = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true };
+      }
+      return {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+        isExpired: false,
+      };
+    };
+
+    const initial = calc();
+    if (initial.isExpired) {
+      queueMicrotask(() => setTimeLeft(initial));
+      return;
+    }
+    queueMicrotask(() => setTimeLeft(initial));
 
     const timer = setInterval(() => {
-      const updated = calculateTimeLeft();
+      const updated = calc();
       setTimeLeft(updated);
       if (updated.isExpired) {
         clearInterval(timer);
@@ -121,19 +151,24 @@ export default function CountdownOverlay() {
     return () => clearInterval(timer);
   }, []);
 
-  if (!mounted || timeLeft.isExpired || isSecretBypass) {
-    return null;
-  }
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      role="region"
-      aria-label="Coming Soon Countdown"
-      className="fixed inset-0 z-[75] flex flex-col items-center justify-between p-4 sm:p-10 md:p-14 bg-[#FBFBF9]/90 dark:bg-[#0C0C0C]/92 backdrop-blur-3xl text-[#121212] dark:text-[#F5F5F3] select-none overflow-hidden"
-    >
+    <AnimatePresence>
+      {mounted && !timeLeft.isExpired && !isSecretBypass && (
+        <motion.div
+          key="countdown-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+            scale: 1.04,
+            filter: "blur(28px)",
+            transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+          }}
+          transition={{ duration: 0.5 }}
+          role="region"
+          aria-label="Coming Soon Countdown"
+          className="fixed inset-0 z-[75] flex flex-col items-center justify-between p-4 sm:p-10 md:p-14 bg-[#FBFBF9]/90 dark:bg-[#0C0C0C]/92 backdrop-blur-3xl text-[#121212] dark:text-[#F5F5F3] select-none overflow-hidden"
+        >
       {/* Ambient Editorial Background Accents */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30 dark:opacity-20">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-[#FF9500]/20 via-[#FFA000]/10 to-transparent blur-3xl" />
@@ -222,6 +257,8 @@ export default function CountdownOverlay() {
           chakarin.pics
         </div>
       </div>
-    </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

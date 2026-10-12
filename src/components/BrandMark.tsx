@@ -36,7 +36,7 @@ export default function BrandMark({
     >
       {/* Primary Dominant Name: CHAKARIN L. / BeamingMotion with Optically Balanced Symmetrical Kerning */}
       <div className="inline-flex items-center gap-2.5 sm:gap-3 whitespace-nowrap">
-        <span className="font-sans text-[17px] sm:text-[18px] md:text-[21px] font-black tracking-tight text-[#121212] dark:text-[#F5F5F3] leading-none uppercase transition-colors duration-200 shrink-0">
+        <span className="font-sans text-[16px] sm:text-[18px] md:text-[21px] font-black tracking-tight text-[#121212] dark:text-[#F5F5F3] leading-none uppercase transition-colors duration-200 shrink-0">
           CHAKARIN L.
         </span>
 
@@ -51,7 +51,7 @@ export default function BrandMark({
           <span className="text-[#BFBFB6] dark:text-[#454543] text-[13px] sm:text-sm font-light select-none leading-none -translate-y-[0.5px] px-0.5">
             /
           </span>
-          <span className="font-serif italic text-[18px] sm:text-[19px] md:text-[22px] text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] transition-colors duration-200 leading-none shrink-0">
+          <span className="font-serif italic text-[17px] sm:text-[19px] md:text-[22px] text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] transition-colors duration-200 leading-none shrink-0">
             BeamingMotion
           </span>
         </div>

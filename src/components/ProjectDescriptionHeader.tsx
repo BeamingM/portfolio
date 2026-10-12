@@ -62,8 +62,8 @@ export default function ProjectDescriptionHeader({
   const current = GREETINGS[activeSection] || GREETINGS.all;
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-6 text-center select-none pt-3 pb-4">
-      <AnimatePresence mode="wait">
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 text-center select-none pt-3 pb-4">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={activeSection}
           initial={{ opacity: 0, y: 8 }}
@@ -73,7 +73,7 @@ export default function ProjectDescriptionHeader({
           className="space-y-2.5"
         >
           {/* Apple-Style Clean Floating Typography (Bold, modern Anuphan Thai typography) */}
-          <h2 className="font-sans font-semibold sm:font-bold text-xl sm:text-2xl md:text-3xl text-[#121212] dark:text-[#F5F5F3] tracking-tight leading-relaxed break-words max-w-2xl mx-auto">
+          <h2 className="font-sans font-semibold sm:font-bold text-lg sm:text-2xl md:text-3xl text-[#121212] dark:text-[#F5F5F3] tracking-tight leading-snug sm:leading-relaxed [text-wrap:balance] max-w-2xl mx-auto">
             {current.title[lang]}
           </h2>
           <p className="font-sans text-sm sm:text-[15px] leading-relaxed text-[#595955] dark:text-[#A8A8A4] max-w-xl mx-auto font-normal">
