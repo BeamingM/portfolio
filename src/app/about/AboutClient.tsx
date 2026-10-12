@@ -6,7 +6,8 @@ import BrandMark from "@/components/BrandMark";
 import SiteFooter from "@/components/SiteFooter";
 import AtelierDrawer from "@/components/AtelierDrawer";
 import InteractivePrintCard from "@/components/InteractivePrintCard";
-import { galleryItems } from "@/config/gallery";
+import PhotoModal from "@/components/PhotoModal";
+import { galleryItems, PhotoItem } from "@/config/gallery";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { triggerHaptic } from "@/utils/haptics";
@@ -30,6 +31,7 @@ export default function AboutClient() {
   const { resolvedTheme, toggleTheme } = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
 
   const featuredPhoto = galleryItems[0]; // personal-01: Hua Hin Coastline
 
@@ -201,7 +203,11 @@ export default function AboutClient() {
           <div className="font-mono text-[10px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold mb-4">
             [FEATURED ARCHIVE PRINT]
           </div>
-          <InteractivePrintCard photo={featuredPhoto} priority={true} />
+          <InteractivePrintCard
+            photo={featuredPhoto}
+            priority={true}
+            onClick={() => setSelectedPhoto(featuredPhoto)}
+          />
         </div>
 
         {/* Equipment & Working Gear Specs */}
@@ -384,6 +390,12 @@ export default function AboutClient() {
       <AtelierDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
+      />
+
+      {/* Focus Photo Lightbox */}
+      <PhotoModal
+        photo={selectedPhoto}
+        onClose={() => setSelectedPhoto(null)}
       />
     </main>
   );

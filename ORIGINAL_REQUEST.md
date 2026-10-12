@@ -55,3 +55,30 @@ Integrity mode: demo
 ### Build & Integrity Verification
 - [ ] `npm run build` completes cleanly with 0 TypeScript and 0 build errors.
 - [ ] All camera references strictly output `Sony α7 III` with Greek letter α (U+03B1).
+
+
+## Follow-up — 2026-10-12T00:37:46Z
+
+Editorial Portfolio Architecture & Features: Mobile Hamburger Navigation, Dedicated About Page (`/about`), and Comprehensive Footer Sitemap for `chakarin.pics`.
+
+Working directory: `/Users/chakarin/Documents/Geek Stuffs/portfolio`
+
+## Requirements
+
+### R1. Mobile-Only Navigation Overhaul
+Merge Category Dropdown and About Me into a clean, unified mobile hamburger drawer. Eliminate Dark Mode and TH/EN buttons from the mobile top header.
+
+### R2. Footer Sitemap & Global Utilities
+Add an Apple/Vercel-style editorial sitemap footer at the bottom of the site containing project archives, page navigation, equipment specs, and bottom utility controls (Dark/Light toggle, TH/EN switcher).
+
+### R3. Dedicated `/about` Route
+Implement a standalone `/about` route (`chakarin.pics/about`) featuring Chakarin's photographic bio, equipment specs, and direct inquiries.
+
+## Acceptance Criteria
+
+### Visual & Mobile Ergonomics
+- [ ] Mobile sticky header contains only `CHAKARIN L.` on the left and a single Menu button on the right
+- [ ] Tapping Menu opens a frosted glass drawer with category filter, about story, equipment, contact, and utilities
+- [ ] Desktop navigation remains intact with horizontal tabs and utility toggles
+- [ ] `/about` renders cleanly with full editorial typography and back navigation
+- [ ] Production build passes with 0 errors and passes all E2E verification tests

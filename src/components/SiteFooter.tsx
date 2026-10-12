@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { triggerHaptic } from "@/utils/haptics";
 import { Sun, Moon, ArrowUpRight, Camera, FileText, Mail } from "lucide-react";
 import { TwitterXIcon, Instagram } from "@/components/SocialIcons";
+import { galleryItems } from "@/config/gallery";
 
 interface SiteFooterProps {
   activeSection?: string;
@@ -18,23 +20,31 @@ export default function SiteFooter({
   onSelectSection,
   counts,
 }: SiteFooterProps) {
+  const router = useRouter();
   const { lang, setLang } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
 
-  const handleSectionClick = (sectionId: string) => {
+  // Compute dynamic fallback counts from galleryItems if not supplied
+  const effectiveCounts = counts ?? {
+    all: galleryItems.length,
+    personal: galleryItems.filter((i) => i.sectionId === "personal").length,
+    "tu-photo": galleryItems.filter((i) => i.sectionId === "tu-photo").length,
+    psctu: galleryItems.filter((i) => i.sectionId === "psctu").length,
+  };
+
+  const handleSectionClick = (sectionId: string, e?: React.MouseEvent) => {
     triggerHaptic("light");
     if (onSelectSection) {
+      e?.preventDefault();
       onSelectSection(sectionId);
       const target =
-        document.getElementById("hero-filter-anchor") ||
-        document.getElementById("photos-archive");
+        document.getElementById("photos-archive") ||
+        document.getElementById("hero-filter-anchor");
       if (target) {
         target.scrollIntoView({ behavior: "smooth" });
       } else {
         window.scrollTo({ top: 380, behavior: "smooth" });
       }
-    } else {
-      window.location.href = `/?section=${sectionId}`;
     }
   };
 
@@ -75,9 +85,9 @@ export default function SiteFooter({
             </div>
             <ul className="space-y-2.5">
               <li>
-                <button
-                  onClick={() => handleSectionClick("all")}
-                  type="button"
+                <Link
+                  href="/"
+                  onClick={(e) => handleSectionClick("all", e)}
                   className={`flex items-center gap-2 transition-colors cursor-pointer text-left ${
                     activeSection === "all"
                       ? "text-[#FF9500] dark:text-[#FFA000] font-bold"
@@ -86,14 +96,14 @@ export default function SiteFooter({
                 >
                   <span>{lang === "th" ? "ผลงานทั้งหมด" : "All Works"}</span>
                   <span className="text-[10px] text-[#8C8C88] dark:text-[#6C6C68]">
-                    ({counts?.all ?? 16})
+                    ({effectiveCounts.all})
                   </span>
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleSectionClick("personal")}
-                  type="button"
+                <Link
+                  href="/?section=personal"
+                  onClick={(e) => handleSectionClick("personal", e)}
                   className={`flex items-center gap-2 transition-colors cursor-pointer text-left ${
                     activeSection === "personal"
                       ? "text-[#FF9500] dark:text-[#FFA000] font-bold"
@@ -102,14 +112,14 @@ export default function SiteFooter({
                 >
                   <span>{lang === "th" ? "หัวหิน 2026 (งานส่วนตัว)" : "Hua Hin 2026"}</span>
                   <span className="text-[10px] text-[#8C8C88] dark:text-[#6C6C68]">
-                    ({counts?.personal ?? 5})
+                    ({effectiveCounts.personal})
                   </span>
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleSectionClick("tu-photo")}
-                  type="button"
+                <Link
+                  href="/?section=tu-photo"
+                  onClick={(e) => handleSectionClick("tu-photo", e)}
                   className={`flex items-center gap-2 transition-colors cursor-pointer text-left ${
                     activeSection === "tu-photo"
                       ? "text-[#FF9500] dark:text-[#FFA000] font-bold"
@@ -118,14 +128,14 @@ export default function SiteFooter({
                 >
                   <span>{lang === "th" ? "ครบรอบ 50 ปี 6 ตุลา" : "50th Oct 6 (TU Photo)"}</span>
                   <span className="text-[10px] text-[#8C8C88] dark:text-[#6C6C68]">
-                    ({counts?.["tu-photo"] ?? 6})
+                    ({effectiveCounts["tu-photo"]})
                   </span>
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleSectionClick("psctu")}
-                  type="button"
+                <Link
+                  href="/?section=psctu"
+                  onClick={(e) => handleSectionClick("psctu", e)}
                   className={`flex items-center gap-2 transition-colors cursor-pointer text-left ${
                     activeSection === "psctu"
                       ? "text-[#FF9500] dark:text-[#FFA000] font-bold"
@@ -134,9 +144,9 @@ export default function SiteFooter({
                 >
                   <span>{lang === "th" ? "Polsci Music (PSC.TU)" : "Polsci Music (PSC.TU)"}</span>
                   <span className="text-[10px] text-[#8C8C88] dark:text-[#6C6C68]">
-                    ({counts?.psctu ?? 5})
+                    ({effectiveCounts.psctu})
                   </span>
-                </button>
+                </Link>
               </li>
             </ul>
           </div>

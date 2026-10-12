@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import BrandMark from "./BrandMark";
-import { siteProfile } from "@/config/gallery";
+import { siteProfile, galleryItems } from "@/config/gallery";
 import { triggerHaptic } from "@/utils/haptics";
 import { X, Copy, Check, ExternalLink, Mail, FileText, Sun, Moon } from "lucide-react";
 import { InstagramIcon, TwitterXIcon } from "./SocialIcons";
@@ -26,9 +27,18 @@ export default function AtelierDrawer({
   onSelectSection,
   counts,
 }: AtelierDrawerProps) {
+  const router = useRouter();
   const { lang, setLang, t } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
   const [copied, setCopied] = useState(false);
+
+  // Compute dynamic fallback counts from galleryItems
+  const effectiveCounts = counts ?? {
+    all: galleryItems.length,
+    personal: galleryItems.filter((i) => i.sectionId === "personal").length,
+    "tu-photo": galleryItems.filter((i) => i.sectionId === "tu-photo").length,
+    psctu: galleryItems.filter((i) => i.sectionId === "psctu").length,
+  };
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(siteProfile.contact.email);
@@ -49,8 +59,8 @@ export default function AtelierDrawer({
       onClose();
       setTimeout(() => {
         const anchor =
-          document.getElementById("hero-filter-anchor") ||
-          document.getElementById("photos-archive");
+          document.getElementById("photos-archive") ||
+          document.getElementById("hero-filter-anchor");
         if (anchor) {
           anchor.scrollIntoView({ behavior: "smooth" });
         } else {
@@ -59,7 +69,7 @@ export default function AtelierDrawer({
       }, 150);
     } else {
       onClose();
-      window.location.href = `/?section=${catId}`;
+      router.push(catId === "all" ? "/" : `/?section=${catId}`);
     }
   };
 
@@ -68,25 +78,25 @@ export default function AtelierDrawer({
       id: "all",
       label: "ALL ARCHIVE",
       labelTh: "ผลงานทั้งหมด",
-      count: counts?.all ?? 16,
+      count: effectiveCounts.all,
     },
     {
       id: "personal",
       label: "PERSONAL PROJECTS",
       labelTh: "หัวหิน 2026 (งานส่วนตัว)",
-      count: counts?.personal ?? 5,
+      count: effectiveCounts.personal,
     },
     {
       id: "tu-photo",
       label: "TU PHOTO",
       labelTh: "ครบรอบ 50 ปี 6 ตุลา",
-      count: counts?.["tu-photo"] ?? 6,
+      count: effectiveCounts["tu-photo"],
     },
     {
       id: "psctu",
       label: "PSC.TU",
       labelTh: "Polsci Music (PSC.TU)",
-      count: counts?.psctu ?? 5,
+      count: effectiveCounts.psctu,
     },
   ];
 
@@ -100,7 +110,7 @@ export default function AtelierDrawer({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 z-50 bg-black/35 dark:bg-black/60 backdrop-blur-md cursor-pointer transition-opacity"
+            className="fixed inset-0 z-[60] bg-black/35 dark:bg-black/60 backdrop-blur-md cursor-pointer transition-opacity"
             aria-label="Close drawer backdrop"
           />
 
@@ -110,7 +120,7 @@ export default function AtelierDrawer({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 32, stiffness: 320 }}
-            className="fixed top-0 right-0 h-full w-[88vw] sm:w-[420px] max-w-md z-50 bg-[#FFFFFF]/90 dark:bg-[#141414]/90 backdrop-blur-2xl border-l border-white/60 dark:border-white/10 text-[#121212] dark:text-[#F5F5F3] flex flex-col justify-between p-6 md:p-8 shadow-[-16px_0_48px_rgba(0,0,0,0.22)] rounded-l-2xl sm:rounded-l-3xl overflow-y-auto"
+            className="fixed top-0 right-0 h-full w-[88vw] sm:w-[420px] max-w-md z-[60] bg-[#FFFFFF]/90 dark:bg-[#141414]/90 backdrop-blur-2xl border-l border-white/60 dark:border-white/10 text-[#121212] dark:text-[#F5F5F3] flex flex-col justify-between p-6 md:p-8 shadow-[-16px_0_48px_rgba(0,0,0,0.22)] rounded-l-2xl sm:rounded-l-3xl overflow-y-auto"
           >
             <div className="space-y-6">
               {/* Header */}
@@ -216,10 +226,18 @@ export default function AtelierDrawer({
               </div>
 
               {/* 3. Bio & Intro (Clean, Floating Typography - Left Aligned with Large Hello) */}
-              <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2.5 text-left">
-                <h2 className="font-serif italic text-3xl sm:text-4xl text-[#121212] dark:text-[#F5F5F3] tracking-tight text-left">
-                  Hello
-                </h2>
+              <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 text-left">
+                <div className="flex items-baseline justify-between gap-2">
+                  <h2 className="font-serif italic text-3xl sm:text-4xl text-[#121212] dark:text-[#F5F5F3] tracking-tight text-left">
+                    Hello
+                  </h2>
+                  <span className="font-sans font-bold text-xs text-[#121212] dark:text-[#F5F5F3]">
+                    จักริน ลิ้มป์อุดม
+                  </span>
+                </div>
+                <div className="font-mono text-[10px] text-[#FF9500] dark:text-[#FFA000] tracking-wider uppercase font-semibold">
+                  Photographer based in Bangkok
+                </div>
                 <p className="font-sans text-xs md:text-[13px] leading-relaxed text-[#262626] dark:text-[#D4D4D0] text-left">
                   {lang === "en"
                     ? "I started taking photos because I fell in love with unposed, candid moments—people simply living their lives, rather than standing still for a countdown and posing for the lens. For me, pressing the shutter is just a way to hold onto ordinary, fleeting moments that come and go. The rest of the time is spent wandering aimlessly, observing, and trying to blend in as naturally as possible whenever I hold a camera :)"

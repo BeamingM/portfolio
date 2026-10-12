@@ -216,14 +216,17 @@ test("Mobile Drawer (AtelierDrawer): Combines category filters, bio, links, gear
   assert(drawerCode.includes("TU PHOTO"), "AtelierDrawer must include TU PHOTO");
   assert(drawerCode.includes("PSC.TU"), "AtelierDrawer must include PSC.TU");
   assert(drawerCode.includes("onSelectSection"), "AtelierDrawer must accept onSelectSection callback");
+  assert(drawerCode.includes("useRouter"), "AtelierDrawer must use Next.js useRouter for soft client navigation");
+  assert(!drawerCode.includes("window.location.href"), "AtelierDrawer must not use full page reload window.location.href");
 
   // Navigation Links
   assert(drawerCode.includes("href=\"/about\""), "AtelierDrawer must link to /about");
   assert(drawerCode.includes("href=\"/\""), "AtelierDrawer must link to /");
   assert(drawerCode.includes("href=\"/resume.pdf\""), "AtelierDrawer must link to resume");
 
-  // Narrative Story
+  // Narrative Story & Invariants
   assert(drawerCode.includes("Hello"), "AtelierDrawer must include prominent Hello heading");
+  assert(drawerCode.includes("จักริน ลิ้มป์อุดม"), "AtelierDrawer must display Thai name invariant จักริน ลิ้มป์อุดม");
   assert(drawerCode.includes("เริ่มถ่ายรูปเพราะ"), "AtelierDrawer must include Thai narrative story");
 
   // Equipment & Contacts
@@ -264,6 +267,8 @@ test("Comprehensive Footer Sitemap (SiteFooter): 4-column rich editorial sitemap
 
   // 4 Columns
   assert(footerCode.includes("Archive Series") || footerCode.includes("หมวดภาพถ่าย"), "SiteFooter Col 1: Archive Series");
+  assert(footerCode.includes("<Link"), "SiteFooter Col 1 must use semantic Next.js Link components");
+  assert(!footerCode.includes("window.location.href"), "SiteFooter must not use window.location.href hard reloads");
   assert(footerCode.includes("/about"), "SiteFooter Col 2: Navigation to /about");
   assert(footerCode.includes("/resume.pdf"), "SiteFooter Col 2: Resume PDF");
   assert(footerCode.includes("contact.chakarin@gmail.com"), "SiteFooter Col 3: Email");
@@ -280,6 +285,8 @@ test("Comprehensive Footer Sitemap (SiteFooter): 4-column rich editorial sitemap
   // Rendered on page.tsx
   const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
   assert(pageCode.includes("<SiteFooter"), "page.tsx must render SiteFooter");
+  assert(pageCode.includes("pushState"), "page.tsx must synchronize section to browser history pushState");
+  assert(pageCode.includes("popstate"), "page.tsx must listen to popstate for back/forward navigation");
 });
 
 test("Dedicated /about Route: Standalone editorial page with bio, gear, contacts, and SiteFooter", () => {
@@ -294,6 +301,7 @@ test("Dedicated /about Route: Standalone editorial page with bio, gear, contacts
   assert(aboutClientCode.includes("Sony α7 III"), "About must maintain Sony α7 III camera invariant");
   assert(aboutClientCode.includes("contact.chakarin@gmail.com"), "About must have direct inquiries contact");
   assert(aboutClientCode.includes("<SiteFooter"), "About must render SiteFooter");
+  assert(aboutClientCode.includes("<PhotoModal"), "About must support lightbox modal inspection for featured print");
 });
 
 test("PhotoModal: Direct responsive sizing prevents 0x0 container collapse", () => {

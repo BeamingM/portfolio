@@ -56,7 +56,7 @@ export default function EditorialPhotobook({
   }, [items, activeSection]);
 
   return (
-    <div id="photos-archive" className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-4 pb-12">
+    <div id="photos-archive" className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-4 pb-12 scroll-mt-20 sm:scroll-mt-24">
       {/* Empty State */}
       {filteredPhotos.length === 0 && (
         <div className="py-24 text-center font-mono text-xs text-[#737373] dark:text-[#9E9E9C] flex flex-col items-center gap-3">

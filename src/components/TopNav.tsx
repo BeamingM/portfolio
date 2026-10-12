@@ -155,13 +155,15 @@ export default function TopNav({
           />
         </div>
 
-        {/* Filter Bar: Center Hero -> Top Nav beside BrandMark (desktop) / fades out on mobile */}
+        {/* Filter Bar: Center Hero -> Top Nav beside BrandMark (desktop) / fades out centered on mobile */}
         <div
           style={{
             position: "absolute",
-            left: `calc(${navLeft}px + ${factor} * (50% - ${navLeft}px))`,
+            left: isMobile
+              ? "50%"
+              : `calc(${navLeft}px + ${factor} * (50% - ${navLeft}px))`,
             top: `${navTop + factor * (heroFilterTop - navTop)}px`,
-            transform: `translate3d(-${factor * 50}%, 0, 0)`,
+            transform: `translate3d(-50%, 0, 0)`,
             willChange: "left, top, transform",
             maxWidth:
               factor > 0.35
@@ -170,8 +172,8 @@ export default function TopNav({
             opacity: isMobile ? Math.max(0, (factor - 0.25) / 0.75) : 1,
             pointerEvents: isMobile && factor <= 0.25 ? "none" : "auto",
           }}
-          className={`pointer-events-auto flex items-center select-none ${
-            isMobile && factor <= 0.25 ? "hidden" : ""
+          className={`pointer-events-auto items-center select-none ${
+            factor <= 0.25 ? "hidden md:flex" : "flex"
           }`}
         >
           {/* Full Horizontal Tabs (in hero on mobile, and morphs into top nav on desktop) */}
@@ -213,7 +215,7 @@ export default function TopNav({
       </div>
 
       {/* 3. Top Navigation Right Controls */}
-      <header className="fixed top-0 left-0 w-full z-40 h-14 sm:h-20 flex items-center justify-end px-3 sm:px-6 md:px-12 select-none pointer-events-none overflow-x-hidden max-w-full">
+      <header className="fixed top-0 left-0 w-full z-50 h-14 sm:h-20 flex items-center justify-end px-3 sm:px-6 md:px-12 select-none pointer-events-none overflow-x-hidden max-w-full">
         {/* Desktop Controls (>= 768px): Full navigation with Dark Mode, TH|EN, and About Me button */}
         <div className="hidden md:flex items-center gap-2 font-mono text-xs pointer-events-auto shrink-0 ml-auto">
           {/* Theme Toggle (Dark / Light mode) */}

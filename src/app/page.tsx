@@ -16,15 +16,23 @@ export default function Home() {
   const [isAtelierOpen, setIsAtelierOpen] = useState<boolean>(false);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
 
-  // Sync active section from URL query param if present
+  // Sync active section from URL query param if present & listen to popstate
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const sec = params.get("section");
-      if (sec && ["all", "personal", "tu-photo", "psctu"].includes(sec)) {
-        setActiveSection(sec);
+    const syncFromUrl = () => {
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        const sec = params.get("section");
+        if (sec && ["all", "personal", "tu-photo", "psctu"].includes(sec)) {
+          setActiveSection(sec);
+        } else {
+          setActiveSection("all");
+        }
       }
-    }
+    };
+
+    syncFromUrl();
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
   }, []);
 
   // Filter gallery items by active project section
@@ -48,7 +56,17 @@ export default function Home() {
 
   const handleSelectSection = (sectionId: string) => {
     triggerHaptic("light");
-    setActiveSection((prev) => (prev === sectionId && sectionId !== "all" ? "all" : sectionId));
+    setActiveSection(sectionId);
+    if (typeof window !== "undefined") {
+      const newUrl = sectionId === "all" ? "/" : `/?section=${sectionId}`;
+      window.history.pushState({ section: sectionId }, "", newUrl);
+      if (window.scrollY > 400) {
+        const archive = document.getElementById("photos-archive");
+        if (archive) {
+          archive.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
   };
 
   const handleModalNext = useCallback(() => {
