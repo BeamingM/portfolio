@@ -270,12 +270,13 @@ test("CountdownOverlay: Secret Invariant strictly maintained (never mentions bir
   assert(!overlayCode.includes(">Birthday<"), "Must NOT display 'Birthday' in UI text");
 });
 
-test("CountdownOverlay: Live ticking countdown and preview bypass button implemented", () => {
+test("CountdownOverlay: Live ticking countdown implemented without bypass buttons in UI", () => {
   const overlayCode = fs.readFileSync(path.join(root, "src/components/CountdownOverlay.tsx"), "utf-8");
   assert(overlayCode.includes("setInterval"), "CountdownOverlay must tick with setInterval");
   assert(overlayCode.includes("calculateTimeLeft"), "CountdownOverlay must calculate days, hours, mins, secs");
-  assert(overlayCode.includes("sessionStorage"), "CountdownOverlay must support session storage bypass");
-  assert(overlayCode.includes("handleUnlock"), "CountdownOverlay must provide unlock preview button");
+  assert(overlayCode.includes("Coming Soon"), "CountdownOverlay must display clean Coming Soon title");
+  assert(!overlayCode.includes("Archive Locked"), "Must not display Archive Locked badge");
+  assert(!overlayCode.includes("บันทึกภาพถ่ายกำลังจะเปิดตัว"), "Must not display explanation tag");
 
   const pageCode = fs.readFileSync(path.join(root, "src/app/page.tsx"), "utf-8");
   assert(pageCode.includes("<CountdownOverlay"), "Home page must render CountdownOverlay");
