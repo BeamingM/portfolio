@@ -134,7 +134,7 @@ export default function TopNav({
           style={{
             position: "absolute",
             left: `calc(${sidePad}px + ${factor} * (50% - ${sidePad}px))`,
-            top: `${(isMobile ? 14 : 18) + factor * (isMobile ? 46 : 56)}px`,
+            top: `${(isMobile ? 15 : 18) + factor * (isMobile ? 46 : 56)}px`,
             transform: `translate3d(-${factor * 50}%, 0, 0) scale(${1 + factor * (isMobile ? 0.22 : 0.35)})`,
             transformOrigin: "center center",
             willChange: "left, top, transform",
@@ -191,7 +191,7 @@ export default function TopNav({
                     onSelectSection?.(link.id);
                   }}
                   type="button"
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                     isActive
                       ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
                       : "text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] hover:bg-white/70 dark:hover:bg-[#282827]"
@@ -200,7 +200,7 @@ export default function TopNav({
                   <span>{link.label}</span>
                   {count > 0 && (
                     <span
-                      className={`text-[8px] sm:text-[9px] px-1 py-0.2 rounded-full ${
+                      className={`text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-full ${
                         isActive
                           ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#121212]"
                           : "text-[#A0A09A] dark:text-[#666]"
@@ -217,7 +217,7 @@ export default function TopNav({
       </div>
 
       {/* 3. Top Navigation Right Controls */}
-      <header className="fixed top-0 left-0 w-full z-50 h-14 sm:h-20 flex items-center justify-end px-3 sm:px-6 md:px-12 select-none pointer-events-none overflow-x-hidden max-w-full">
+      <header className="fixed top-0 left-0 w-full z-50 h-14 sm:h-20 flex items-center justify-end px-4 sm:px-6 md:px-12 select-none pointer-events-none overflow-x-hidden max-w-full">
         {/* Desktop Controls (>= 768px): Full navigation with Dark Mode, TH|EN, and About Me button */}
         <div className="hidden md:flex items-center gap-2 font-mono text-xs pointer-events-auto shrink-0 ml-auto">
           {/* Theme Toggle (Dark / Light mode) */}
@@ -283,7 +283,7 @@ export default function TopNav({
           </button>
         </div>
 
-        {/* Mobile Controls (< 768px): Sleek Hamburger/Menu button */}
+        {/* Mobile Controls (< 768px): Sleek Hamburger/Menu Icon button without redundant text */}
         <div className="flex md:hidden items-center pointer-events-auto shrink-0 ml-auto">
           <button
             onClick={() => {
@@ -291,11 +291,10 @@ export default function TopNav({
               onOpenAbout();
             }}
             type="button"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer font-mono text-[11px] font-medium shadow-2xs"
+            className="w-9 h-9 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer flex items-center justify-center shadow-2xs"
             aria-label="Open menu"
           >
-            <Menu className="w-3.5 h-3.5 text-[#121212] dark:text-[#F5F5F3]" />
-            <span>Menu</span>
+            <Menu className="w-4 h-4 text-[#121212] dark:text-[#F5F5F3]" />
           </button>
         </div>
       </header>

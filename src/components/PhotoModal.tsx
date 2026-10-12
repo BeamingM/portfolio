@@ -164,7 +164,7 @@ function PhotoModalDialog({
               onClose();
             }}
             type="button"
-            className="p-2 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 transition-colors cursor-pointer"
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 transition-colors cursor-pointer flex items-center justify-center"
             aria-label="Close photo view"
           >
             <X className="w-4 h-4" />
@@ -181,7 +181,7 @@ function PhotoModalDialog({
             onPrev();
           }}
           type="button"
-          className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 z-50 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer"
+          className="absolute left-2.5 md:left-6 top-1/2 -translate-y-1/2 z-50 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer"
           aria-label="Previous photo"
         >
           <ChevronLeft className="w-5 h-5" />
@@ -196,7 +196,7 @@ function PhotoModalDialog({
             onNext();
           }}
           type="button"
-          className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 z-50 w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer"
+          className="absolute right-2.5 md:right-6 top-1/2 -translate-y-1/2 z-50 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer"
           aria-label="Next photo"
         >
           <ChevronRight className="w-5 h-5" />
@@ -250,13 +250,13 @@ function PhotoModalDialog({
       {/* Complete Camera EXIF HUD Overlay */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-4xl bg-black/70 border border-white/15 backdrop-blur-md rounded-lg p-2.5 sm:p-3 text-white font-mono z-50 mt-1 shadow-lg"
+        className="w-full max-w-4xl bg-black/75 border border-white/15 backdrop-blur-md rounded-lg p-3 text-white font-mono z-50 mt-1 shadow-lg"
       >
-        <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] md:text-[11px]">
+        <div className="flex flex-wrap items-center justify-between gap-2.5 text-[11px] sm:text-xs">
           {/* Primary Camera Spec strictly Sony α7 III */}
           <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded-sm bg-white/15 text-white font-bold tracking-wider">
-              <Camera className="w-3 h-3 text-[#FF9500]" />
+            <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-white/15 text-white font-bold tracking-wider text-[11px] sm:text-xs">
+              <Camera className="w-3.5 h-3.5 text-[#FF9500]" />
               Sony α7 III
             </span>
             <span className="text-white/80 font-medium truncate max-w-[180px] sm:max-w-none">
@@ -266,17 +266,17 @@ function PhotoModalDialog({
 
           {/* Exposure Triad HUD (Aperture · Shutter · ISO · Focal Length) */}
           <div className="flex items-center gap-1.5 sm:gap-2 text-white/90">
-            <span className="px-1.5 py-0.5 rounded-xs bg-white/10 font-semibold text-[#FFB300]">
+            <span className="px-2 py-0.5 rounded-xs bg-white/10 font-semibold text-[#FFB300]">
               {photo.specs.aperture}
             </span>
-            <span className="px-1.5 py-0.5 rounded-xs bg-white/10 font-semibold">
+            <span className="px-2 py-0.5 rounded-xs bg-white/10 font-semibold">
               {photo.specs.shutter}
             </span>
-            <span className="px-1.5 py-0.5 rounded-xs bg-white/10 font-semibold">
+            <span className="px-2 py-0.5 rounded-xs bg-white/10 font-semibold">
               {typeof photo.specs.iso === "number" ? `ISO ${photo.specs.iso}` : photo.specs.iso}
             </span>
             {photo.specs.focalLength && (
-              <span className="px-1.5 py-0.5 rounded-xs bg-white/10 text-white/80">
+              <span className="px-2 py-0.5 rounded-xs bg-white/10 text-white/80">
                 {photo.specs.focalLength}
               </span>
             )}

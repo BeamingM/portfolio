@@ -40,10 +40,10 @@ export default function CountdownOverlay() {
 
   useEffect(() => {
     setMounted(true);
-    // Secret query param check (?preview=true) for private dev check, no UI button
+    // Secret query param check (?preview=true) or development mode allows testing the full site locally
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      if (params.get("preview") === "true") {
+      if (params.get("preview") === "true" || process.env.NODE_ENV === "development") {
         setIsSecretBypass(true);
       }
     }

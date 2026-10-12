@@ -184,11 +184,11 @@ export default function InteractivePrintCard({
         </div>
 
         {/* Clean Documentary Metadata Bar with Strict Priority: 1. Project (NO ELLIPSIS) > 2. Location > 3. Camera (NEVER 'SONY ...') */}
-        <div className="mt-3 px-0.5 flex items-center justify-between gap-3 font-mono text-[10px] sm:text-[11px] text-[#6B6B67] border-t border-[#F0F0EA] pt-2.5 min-w-0">
+        <div className="mt-3 px-0.5 flex items-center justify-between gap-3 font-mono text-[11px] sm:text-xs text-[#6B6B67] border-t border-[#F0F0EA] pt-2.5 min-w-0">
           {/* Main Info Block (Priority 1: Project Name [NO TRUNCATION] + Priority 2: Location) */}
           <div className="flex items-center gap-1.5 min-w-0 flex-1 overflow-hidden">
             {/* Priority 1: Project Name — Styled with font-sans (Anuphan) for clean Thai & Latin typography */}
-            <span className="font-sans font-bold tracking-wide text-[#121212] uppercase text-[10px] sm:text-[11px] shrink-0 whitespace-nowrap group-hover:text-[#FF9500] transition-colors">
+            <span className="font-sans font-bold tracking-wide text-[#121212] uppercase text-[11px] sm:text-xs shrink-0 whitespace-nowrap group-hover:text-[#FF9500] transition-colors">
               {photo.series}
             </span>
 
@@ -196,13 +196,13 @@ export default function InteractivePrintCard({
             <span className="text-[#D1D1CB] shrink-0">·</span>
 
             {/* Priority 2: Location — High priority, fills remaining width, only truncates if space completely runs out */}
-            <span className="text-[#6B6B67] truncate min-w-0 tracking-wide">
+            <span className="text-[#6B6B67] truncate min-w-0 tracking-wide text-[11px] sm:text-xs">
               {photo.specs.location}
             </span>
           </div>
 
           {/* Priority 3: Camera — Strictly complete Sony α7 III, NEVER truncated into ugly 'SONY ...' */}
-          <div className="hidden sm:flex items-center gap-1.5 text-[9px] sm:text-[10px] tracking-wider uppercase shrink-0 whitespace-nowrap">
+          <div className="hidden sm:flex items-center gap-1.5 text-[10px] sm:text-[11px] tracking-wider uppercase shrink-0 whitespace-nowrap">
             <span className="font-semibold text-[#121212] shrink-0 whitespace-nowrap">
               Sony α7 III
             </span>

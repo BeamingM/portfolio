@@ -141,7 +141,7 @@ export default function AtelierDrawer({
 
               {/* 1. Category / Series Filter */}
               <div className="space-y-2 font-mono">
-                <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
+                <div className="text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
                   [{lang === "th" ? "หมวดภาพถ่าย" : "SERIES ARCHIVE"}]
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -152,22 +152,22 @@ export default function AtelierDrawer({
                         key={cat.id}
                         onClick={() => handleCategoryClick(cat.id)}
                         type="button"
-                        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono transition-all text-left cursor-pointer ${
+                        className={`w-full flex items-center justify-between px-4 py-3 sm:py-2.5 rounded-xl text-[13px] sm:text-xs font-mono transition-all text-left cursor-pointer ${
                           isActive
                             ? "bg-[#121212] dark:bg-[#F5F5F3] text-white dark:text-[#121212] font-bold shadow-xs"
                             : "bg-[#F7F7F5]/80 dark:bg-[#1A1A19]/80 text-[#4A4A48] dark:text-[#B5B5B0] hover:bg-black/5 dark:hover:bg-white/5"
                         }`}
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5">
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
+                            className={`w-2 h-2 sm:w-1.5 sm:h-1.5 rounded-full ${
                               isActive ? "bg-[#FF9500]" : "bg-transparent"
                             }`}
                           />
                           <span>{lang === "th" ? cat.labelTh : cat.label}</span>
                         </div>
                         <span
-                          className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
+                          className={`text-[11px] sm:text-[10px] px-2.5 py-0.5 rounded-full font-mono ${
                             isActive
                               ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#121212]"
                               : "bg-black/5 dark:bg-white/5 text-[#737373] dark:text-[#9E9E9C]"
@@ -182,56 +182,56 @@ export default function AtelierDrawer({
               </div>
 
               {/* 2. Bio & Intro (Clean, Floating Typography - Left Aligned with Large Hello) */}
-              <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 text-left">
+              <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2.5 text-left">
                 <div className="flex items-baseline justify-between gap-2">
                   <h2 className="font-serif italic text-3xl sm:text-4xl text-[#121212] dark:text-[#F5F5F3] tracking-tight text-left">
                     Hello
                   </h2>
-                  <span className="font-sans font-bold text-xs text-[#121212] dark:text-[#F5F5F3]">
+                  <span className="font-sans font-bold text-sm sm:text-xs text-[#121212] dark:text-[#F5F5F3]">
                     จักริน ลิ้มป์อุดม
                   </span>
                 </div>
-                <div className="font-mono text-[10px] text-[#FF9500] dark:text-[#FFA000] tracking-wider uppercase font-semibold">
+                <div className="font-mono text-[11px] sm:text-[10px] text-[#FF9500] dark:text-[#FFA000] tracking-wider uppercase font-semibold">
                   Photographer based in Bangkok
                 </div>
-                <p className="font-sans text-xs md:text-[13px] leading-relaxed text-[#262626] dark:text-[#D4D4D0] text-left">
+                <p className="font-sans text-[13px] sm:text-xs md:text-[13px] leading-relaxed text-[#262626] dark:text-[#D4D4D0] text-left">
                   {lang === "en"
                     ? "I started taking photos because I fell in love with unposed, candid moments—people simply living their lives, rather than standing still for a countdown and posing for the lens. For me, pressing the shutter is just a way to hold onto ordinary, fleeting moments that come and go. The rest of the time is spent wandering aimlessly, observing, and trying to blend in as naturally as possible whenever I hold a camera :)"
                     : "เริ่มถ่ายรูปเพราะ ชอบจังหวะเผลอๆ เวลาคนกำลังใช้ชีวิตมากกว่าให้มายืนนับหนึ่งสองสามแล้วเก๊กใส่กล้อง ส่วนตัวแล้ว การกดชัตเตอร์ก็แค่วิธีเก็บโมเมนต์ธรรมดาๆ ที่ผ่านมาแล้วก็ผ่านไป ส่วนเวลาที่เหลือก็หมดไปกับการเดินดูนู่นดูนี่เรื่อยเปื่อย แล้วพยายามทำตัวให้กลมกลืนที่สุดเวลาถือกล้อง :)"}
                 </p>
               </div>
 
-              {/* 4. Equipment Specs */}
+              {/* 3. Equipment Specs */}
               <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 font-mono text-xs">
-                <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
+                <div className="text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
                   [{t("equipment")}]
                 </div>
-                <div className="grid grid-cols-[80px_1fr] gap-2 py-1 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-[11px]">
+                <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-xs sm:text-[11px]">
                   <span className="text-[#737373] dark:text-[#9E9E9C]">{t("system")}</span>
                   <span className="text-[#121212] dark:text-[#F5F5F3] font-medium">Sony α7 III</span>
                 </div>
-                <div className="grid grid-cols-[80px_1fr] gap-2 py-1 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-[11px]">
+                <div className="grid grid-cols-[80px_1fr] gap-2 py-1.5 border-b border-[#F0F0EA] dark:border-[#1E1E1E] text-xs sm:text-[11px]">
                   <span className="text-[#737373] dark:text-[#9E9E9C]">{t("lens")}</span>
-                  <span className="text-[#121212] dark:text-[#F5F5F3] font-medium">
+                  <span className="text-[#121212] dark:text-[#F5F5F3] font-medium leading-relaxed">
                     FE 28-70mm OSS · FE 35mm F1.8 · Sonnar T* FE 55mm F1.8 ZA
                   </span>
                 </div>
               </div>
 
-              {/* 5. Direct Inquiries & Contact Channels */}
+              {/* 4. Direct Inquiries & Contact Channels */}
               <div className="pt-4 border-t border-[#EBEBE6] dark:border-[#222221] space-y-2 font-mono text-xs">
-                <div className="text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
+                <div className="text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] uppercase tracking-wider font-semibold">
                   [{t("getInTouch")}]
                 </div>
 
                 {/* Email Box */}
-                <div className="flex items-center justify-between p-2.5 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group">
+                <div className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group">
                   <a
                     href="mailto:contact.chakarin@gmail.com"
                     onClick={() => triggerHaptic("light")}
-                    className="flex items-center gap-2 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
+                    className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs sm:text-[11px] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors"
                   >
-                    <Mail className="w-3.5 h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
+                    <Mail className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
                     <span className="truncate">contact.chakarin@gmail.com</span>
                   </a>
                   <button
@@ -242,12 +242,12 @@ export default function AtelierDrawer({
                     }}
                     type="button"
                     title={copied ? "Copied" : "Copy email address"}
-                    className="p-1 text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
+                    className="p-1.5 text-[#737373] dark:text-[#9E9E9C] hover:text-[#121212] dark:hover:text-[#F5F5F3] cursor-pointer shrink-0 transition-colors"
                   >
                     {copied ? (
-                      <Check className="w-3.5 h-3.5 text-[#FF9500] dark:text-[#FFA000]" />
+                      <Check className="w-4 h-4 text-[#FF9500] dark:text-[#FFA000]" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5" />
+                      <Copy className="w-4 h-4" />
                     )}
                   </button>
                 </div>
@@ -257,15 +257,15 @@ export default function AtelierDrawer({
                   href="https://x.com/beamingmotion"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-2.5 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
+                  className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
                 >
-                  <div className="flex items-center gap-2 text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px]">
-                    <TwitterXIcon className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000]" />
+                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs sm:text-[11px]">
+                    <TwitterXIcon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000]" />
                     <span>@beamingmotion</span>
                   </div>
-                  <div className="flex items-center gap-1 text-[10px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
+                  <div className="flex items-center gap-1 text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
                     <span>TWITTER / X</span>
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3.5 h-3.5" />
                   </div>
                 </a>
 
@@ -274,15 +274,15 @@ export default function AtelierDrawer({
                   href={siteProfile.contact.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-2.5 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
+                  className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
                 >
-                  <div className="flex items-center gap-2 text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px]">
-                    <InstagramIcon className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000]" />
+                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs sm:text-[11px]">
+                    <InstagramIcon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000]" />
                     <span>@{siteProfile.contact.instagram}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-[10px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
+                  <div className="flex items-center gap-1 text-[11px] sm:text-[10px] text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3]">
                     <span>INSTAGRAM</span>
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3.5 h-3.5" />
                   </div>
                 </a>
 
@@ -292,13 +292,13 @@ export default function AtelierDrawer({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => triggerHaptic("light")}
-                  className="flex items-center justify-between p-2.5 rounded-lg border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
+                  className="flex items-center justify-between p-3 sm:p-2.5 rounded-xl border border-[#E5E5DF] dark:border-[#282827] bg-[#FBFBF9] dark:bg-[#1A1A19] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors group cursor-pointer"
                 >
-                  <div className="flex items-center gap-2 text-[#121212] dark:text-[#F5F5F3] font-semibold text-[11px]">
-                    <FileText className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
+                  <div className="flex items-center gap-2.5 text-[#121212] dark:text-[#F5F5F3] font-semibold text-xs sm:text-[11px]">
+                    <FileText className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#FF9500] dark:group-hover:text-[#FFA000] transition-colors" />
                     <span>Resume</span>
                   </div>
-                  <ExternalLink className="w-3 h-3 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3] transition-colors" />
+                  <ExternalLink className="w-3.5 h-3.5 text-[#737373] dark:text-[#9E9E9C] group-hover:text-[#121212] dark:group-hover:text-[#F5F5F3] transition-colors" />
                 </a>
               </div>
             </div>
@@ -312,23 +312,23 @@ export default function AtelierDrawer({
                   toggleTheme();
                 }}
                 type="button"
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5] dark:bg-[#1C1C1B] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer text-[11px]"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5] dark:bg-[#1C1C1B] text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] transition-colors cursor-pointer text-xs sm:text-[11px]"
               >
                 {resolvedTheme === "dark" ? (
                   <>
-                    <Sun className="w-3.5 h-3.5 text-[#FFA000]" />
+                    <Sun className="w-4 h-4 text-[#FFA000]" />
                     <span>Light Mode</span>
                   </>
                 ) : (
                   <>
-                    <Moon className="w-3.5 h-3.5 text-[#121212]" />
+                    <Moon className="w-4 h-4 text-[#121212]" />
                     <span>Dark Mode</span>
                   </>
                 )}
               </button>
 
               {/* Language Switch */}
-              <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#282827] rounded-full p-0.5 text-[10px]">
+              <div className="flex items-center bg-[#F4F4F0] dark:bg-[#1C1C1B] border border-[#E5E5DF] dark:border-[#282827] rounded-full p-0.5 text-xs sm:text-[10px]">
                 <button
                   onClick={() => {
                     triggerHaptic("light");
