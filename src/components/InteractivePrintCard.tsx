@@ -31,9 +31,9 @@ export default function InteractivePrintCard({
     const xRatio = x / rect.width - 0.5;  // -0.5 to 0.5
     const yRatio = y / rect.height - 0.5; // -0.5 to 0.5
 
-    // Smooth tilt angles (-8.5deg to +8.5deg)
-    const rotateX = -yRatio * 17;
-    const rotateY = xRatio * 17;
+    // Smooth subtle tactile tilt angles (-3deg to +3deg)
+    const rotateX = -yRatio * 6;
+    const rotateY = xRatio * 6;
 
     // Glare position in percentage (0% to 100%)
     const glareX = (x / rect.width) * 100;
@@ -123,48 +123,37 @@ export default function InteractivePrintCard({
         data-photo-specs={`${photo.specs.camera || "Sony α7 III"} · ${photo.specs.lens || "35mm"}`}
         style={{
           transform: isHovered
-            ? `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-8px) scale(1.02)`
+            ? `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-4px) scale(1.01)`
             : `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(0px) scale(1)`,
           transformStyle: "preserve-3d",
           boxShadow: isHovered
-            ? `${shadowX}px ${shadowY}px 48px -12px rgba(0, 0, 0, 0.42), 0 12px 24px -6px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.85)`
-            : "0 8px 24px -6px rgba(0, 0, 0, 0.1), 0 2px 6px -1px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.6)",
+            ? `${shadowX}px ${shadowY}px 32px -8px rgba(0, 0, 0, 0.22), 0 8px 16px -4px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.7)`
+            : "0 4px 16px -4px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.5)",
           transition: isHovered
-            ? "transform 0.12s ease-out, box-shadow 0.25s ease-out"
+            ? "transform 0.15s ease-out, box-shadow 0.25s ease-out"
             : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease-out",
         }}
         className="w-full relative bg-[#FFFFFF] p-3 sm:p-4 md:p-5 pb-4 md:pb-5 border border-[#E5E5DF] dark:border-[#2C2C2B] rounded-sm cursor-pointer group will-change-transform overflow-hidden"
       >
-        {/* Full-Card Glossy Photo Paper Refraction & Specular Sheen (Encompasses entire photo paper & white border) */}
+        {/* Full-Card Glossy Photo Paper Specular Sheen (Soft, authentic ambient reflection) */}
         <div
           style={{
-            opacity: glare.opacity,
-            background: `
-              radial-gradient(circle 460px at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.24) 28%, rgba(255, 255, 255, 0.04) 55%, transparent 75%),
-              linear-gradient(${glare.angle}deg, 
-                transparent 15%, 
-                rgba(255, 195, 215, 0.09) 36%, 
-                rgba(255, 255, 255, 0.42) 47%, 
-                rgba(255, 255, 255, 0.58) 50%, 
-                rgba(195, 245, 255, 0.35) 53%, 
-                rgba(255, 240, 190, 0.14) 63%, 
-                transparent 85%
-              )
-            `,
-            mixBlendMode: "overlay",
-            transition: "opacity 0.22s ease-out",
+            opacity: isHovered ? 0.35 : 0,
+            background: `radial-gradient(circle 480px at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.12) 32%, transparent 68%)`,
+            mixBlendMode: "soft-light",
+            transition: "opacity 0.25s ease-out",
           }}
           className="absolute inset-0 pointer-events-none z-20 rounded-sm"
           aria-hidden="true"
         />
 
-        {/* Specular Clear-Coat Glaze Highlight */}
+        {/* Specular Clear-Coat Glaze Highlight (Clean white angle sweep, no HDR blowout) */}
         <div
           style={{
-            opacity: glare.opacity * 0.7,
-            background: `radial-gradient(circle 220px at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.5) 0%, transparent 70%)`,
-            mixBlendMode: "color-dodge",
-            transition: "opacity 0.22s ease-out",
+            opacity: isHovered ? 0.18 : 0,
+            background: `linear-gradient(${glare.angle}deg, transparent 25%, rgba(255, 255, 255, 0.18) 47%, rgba(255, 255, 255, 0.32) 50%, rgba(255, 255, 255, 0.12) 53%, transparent 75%)`,
+            mixBlendMode: "screen",
+            transition: "opacity 0.25s ease-out",
           }}
           className="absolute inset-0 pointer-events-none z-20 rounded-sm"
           aria-hidden="true"

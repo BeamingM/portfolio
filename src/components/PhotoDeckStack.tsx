@@ -254,36 +254,25 @@ function StackCard({
             : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease-out",
         }}
       >
-        {/* Full-Card Glossy Photo Paper Optical Refraction & Specular Sheen */}
+        {/* Full-Card Glossy Photo Paper Specular Sheen (Soft, authentic ambient reflection) */}
         <div
           style={{
-            opacity: glare.opacity,
-            background: `
-              radial-gradient(circle 460px at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.68) 0%, rgba(255, 255, 255, 0.25) 28%, rgba(255, 255, 255, 0.04) 55%, transparent 75%),
-              linear-gradient(${glare.angle}deg, 
-                transparent 15%, 
-                rgba(255, 195, 215, 0.1) 36%, 
-                rgba(255, 255, 255, 0.45) 47%, 
-                rgba(255, 255, 255, 0.62) 50%, 
-                rgba(195, 245, 255, 0.38) 53%, 
-                rgba(255, 240, 190, 0.15) 63%, 
-                transparent 85%
-              )
-            `,
-            mixBlendMode: "overlay",
-            transition: "opacity 0.22s ease-out",
+            opacity: isHovered ? 0.35 : 0,
+            background: `radial-gradient(circle 480px at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.12) 32%, transparent 68%)`,
+            mixBlendMode: "soft-light",
+            transition: "opacity 0.25s ease-out",
           }}
           className="absolute inset-0 pointer-events-none z-20 rounded-sm"
           aria-hidden="true"
         />
 
-        {/* Specular Clear-Coat Glaze Highlight */}
+        {/* Specular Clear-Coat Glaze Highlight (Clean white angle sweep, no HDR blowout) */}
         <div
           style={{
-            opacity: glare.opacity * 0.72,
-            background: `radial-gradient(circle 240px at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.52) 0%, transparent 70%)`,
-            mixBlendMode: "color-dodge",
-            transition: "opacity 0.22s ease-out",
+            opacity: isHovered ? 0.18 : 0,
+            background: `linear-gradient(${glare.angle}deg, transparent 25%, rgba(255, 255, 255, 0.18) 47%, rgba(255, 255, 255, 0.32) 50%, rgba(255, 255, 255, 0.12) 53%, transparent 75%)`,
+            mixBlendMode: "screen",
+            transition: "opacity 0.25s ease-out",
           }}
           className="absolute inset-0 pointer-events-none z-20 rounded-sm"
           aria-hidden="true"

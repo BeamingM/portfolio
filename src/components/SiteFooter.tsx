@@ -57,7 +57,7 @@ export default function SiteFooter({
           {/* Column 1: Series & Archive (No counts/numbers) */}
           <div className="space-y-3.5">
             <div className="text-[11px] sm:text-[10px] uppercase tracking-widest text-[#8C8C88] dark:text-[#6C6C68] font-bold">
-              {lang === "th" ? "หมวดภาพถ่าย" : "Archive Series"}
+              {lang === "th" ? "ผังเว็บไซต์" : "Sitemap"}
             </div>
             <ul className="space-y-3">
               <li>
@@ -83,7 +83,7 @@ export default function SiteFooter({
                       : "text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white"
                   }`}
                 >
-                  <span>{lang === "th" ? "หัวหิน 2026 (งานส่วนตัว)" : "Hua Hin 2026"}</span>
+                  <span>{lang === "th" ? "งานส่วนตัว" : "Personal Works"}</span>
                 </Link>
               </li>
               <li>
@@ -96,7 +96,7 @@ export default function SiteFooter({
                       : "text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white"
                   }`}
                 >
-                  <span>{lang === "th" ? "ครบรอบ 50 ปี 6 ตุลา" : "50th Oct 6 (TU Photo)"}</span>
+                  <span>{lang === "th" ? "งานกิจกรรม" : "Activities & Events"}</span>
                 </Link>
               </li>
               <li>
@@ -109,7 +109,7 @@ export default function SiteFooter({
                       : "text-[#4A4A48] dark:text-[#B5B5B0] hover:text-[#121212] dark:hover:text-white"
                   }`}
                 >
-                  <span>{lang === "th" ? "Polsci Music (PSC.TU)" : "Polsci Music (PSC.TU)"}</span>
+                  <span>{lang === "th" ? "งานต่างๆ" : "Various Projects"}</span>
                 </Link>
               </li>
             </ul>
