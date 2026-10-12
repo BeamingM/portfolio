@@ -112,6 +112,9 @@ function PhotoModalDialog({
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Photo view: ${photo.title}`}
       className="fixed inset-0 z-50 bg-[#0B0B0B]/94 backdrop-blur-md flex flex-col items-center justify-between p-3 sm:p-5 md:p-8 select-none overflow-y-auto"
     >
       {/* Top Control Bar: Title & Action Buttons */}
@@ -135,7 +138,7 @@ function PhotoModalDialog({
               toggleZoom();
             }}
             type="button"
-            className={`p-2 rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-mono ${
+            className={`h-11 px-3.5 rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-mono min-h-[44px] ${
               isZoomed
                 ? "bg-white text-black border-white"
                 : "bg-white/10 text-white border-white/20 hover:bg-white/20"
@@ -164,7 +167,7 @@ function PhotoModalDialog({
               onClose();
             }}
             type="button"
-            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 transition-colors cursor-pointer flex items-center justify-center"
+            className="w-11 h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 transition-colors cursor-pointer flex items-center justify-center min-w-[44px] min-h-[44px]"
             aria-label="Close photo view"
           >
             <X className="w-4 h-4" />
@@ -181,7 +184,7 @@ function PhotoModalDialog({
             onPrev();
           }}
           type="button"
-          className="absolute left-2.5 md:left-6 top-1/2 -translate-y-1/2 z-50 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer"
+          className="absolute left-2.5 md:left-6 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer min-w-[44px] min-h-[44px]"
           aria-label="Previous photo"
         >
           <ChevronLeft className="w-5 h-5" />
@@ -196,7 +199,7 @@ function PhotoModalDialog({
             onNext();
           }}
           type="button"
-          className="absolute right-2.5 md:right-6 top-1/2 -translate-y-1/2 z-50 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer"
+          className="absolute right-2.5 md:right-6 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-colors cursor-pointer min-w-[44px] min-h-[44px]"
           aria-label="Next photo"
         >
           <ChevronRight className="w-5 h-5" />

@@ -105,7 +105,16 @@ export default function InteractivePrintCard({
     >
       <div
         ref={cardRef}
+        role="button"
+        tabIndex={0}
+        aria-label={`${photo.title || photo.alt} - ${photo.series}`}
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}

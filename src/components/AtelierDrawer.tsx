@@ -123,6 +123,9 @@ export default function AtelierDrawer({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 32, stiffness: 320 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Profile and menu drawer"
             className="fixed top-0 right-0 h-full w-[88vw] sm:w-[420px] max-w-md z-[60] bg-[#FFFFFF]/90 dark:bg-[#141414]/90 backdrop-blur-2xl border-l border-white/60 dark:border-white/10 text-[#121212] dark:text-[#F5F5F3] flex flex-col justify-between p-6 md:p-8 shadow-[-16px_0_48px_rgba(0,0,0,0.22)] rounded-l-2xl sm:rounded-l-3xl overflow-y-auto overscroll-contain"
           >
             <div className="space-y-6">
@@ -132,7 +135,7 @@ export default function AtelierDrawer({
                 <button
                   onClick={handleClose}
                   type="button"
-                  className="p-2 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5]/80 dark:bg-[#1E1E1D]/80 hover:bg-[#121212] dark:hover:bg-[#F5F5F3] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer"
+                  className="w-10 h-10 rounded-full border border-[#E5E5DF] dark:border-[#282827] bg-[#F7F7F5]/80 dark:bg-[#1E1E1D]/80 hover:bg-[#121212] dark:hover:bg-[#F5F5F3] hover:text-white dark:hover:text-[#121212] transition-colors cursor-pointer flex items-center justify-center"
                   aria-label="Close profile panel"
                 >
                   <X className="w-4 h-4" />

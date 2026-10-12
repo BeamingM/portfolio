@@ -131,12 +131,17 @@ export default function CountdownOverlay() {
 
       {/* Top Minimal Brand Header */}
       <div className="relative z-10 w-full max-w-4xl flex items-center justify-between pt-2">
-        <div className="flex items-baseline gap-2">
-          <span className="font-sans text-xs sm:text-sm font-black tracking-widest uppercase">
+        <div className="inline-flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm">
+          <span className="font-sans font-black tracking-widest uppercase text-[#121212] dark:text-[#F5F5F3]">
             CHAKARIN L.
           </span>
-          <span className="text-[#D1D1CB] dark:text-[#383837] text-xs">/</span>
-          <span className="font-serif italic text-xs sm:text-sm text-[#737373] dark:text-[#9E9E9C]">
+          <span
+            className="text-[#D1D1CB] dark:text-[#383837] font-light select-none transform -translate-y-[0.5px]"
+            aria-hidden="true"
+          >
+            /
+          </span>
+          <span className="font-serif italic text-[#737373] dark:text-[#9E9E9C] tracking-normal">
             BeamingMotion
           </span>
         </div>

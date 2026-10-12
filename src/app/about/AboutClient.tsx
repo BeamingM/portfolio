@@ -133,7 +133,7 @@ export default function AboutClient() {
             </div>
           </div>
 
-          {/* Mobile Menu Trigger (< 768px) */}
+          {/* Mobile Menu Trigger (< 768px): Icon-only button without redundant text */}
           <div className="flex md:hidden items-center">
             <button
               onClick={() => {
@@ -141,11 +141,10 @@ export default function AboutClient() {
                 setIsDrawerOpen(true);
               }}
               type="button"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer font-mono text-[11px] font-medium shadow-2xs"
+              className="w-10 h-10 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer flex items-center justify-center shadow-2xs"
               aria-label="Open menu"
             >
-              <Menu className="w-3.5 h-3.5 text-[#121212] dark:text-[#F5F5F3]" />
-              <span>Menu</span>
+              <Menu className="w-4 h-4 text-[#121212] dark:text-[#F5F5F3]" />
             </button>
           </div>
         </div>

@@ -139,6 +139,16 @@ export default function TopNav({
             transformOrigin: "center center",
             willChange: "left, top, transform",
           }}
+          role={progress > 0.25 ? "button" : undefined}
+          tabIndex={progress > 0.25 ? 0 : undefined}
+          aria-label={progress > 0.25 ? "Scroll to top" : undefined}
+          onKeyDown={(e) => {
+            if (progress > 0.25 && (e.key === "Enter" || e.key === " ")) {
+              e.preventDefault();
+              triggerHaptic("light");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
           className={`pointer-events-auto shrink-0 max-w-[calc(100vw-180px)] ${
             progress > 0.25 ? "cursor-pointer" : "cursor-default"
           }`}
@@ -291,7 +301,7 @@ export default function TopNav({
               onOpenAbout();
             }}
             type="button"
-            className="w-9 h-9 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer flex items-center justify-center shadow-2xs"
+            className="w-10 h-10 rounded-full border border-[#E5E5DF] dark:border-[#2C2C2B] bg-[#FFFFFF]/90 dark:bg-[#181818]/90 backdrop-blur-md text-[#121212] dark:text-[#F5F5F3] hover:border-[#121212] dark:hover:border-[#F5F5F3] active:scale-95 transition-all cursor-pointer flex items-center justify-center shadow-2xs"
             aria-label="Open menu"
           >
             <Menu className="w-4 h-4 text-[#121212] dark:text-[#F5F5F3]" />
