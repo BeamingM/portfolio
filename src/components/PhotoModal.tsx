@@ -66,6 +66,12 @@ function PhotoModalDialog({
   const [isDragging, setIsDragging] = useState(false);
   const [showExifHud, setShowExifHud] = useState<boolean>(true);
 
+  // Interactive swipe-down to dismiss state
+  const [dismissY, setDismissY] = useState(0);
+  const [isDismissDragging, setIsDismissDragging] = useState(false);
+  const dismissYRef = useRef(0);
+  const gestureDirectionRef = useRef<"none" | "horizontal" | "vertical">("none");
+
   // Mutable refs to prevent stale closures during high-frequency RAF wheel/touch events
   const scaleRef = useRef<number>(1);
   const panRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -91,7 +97,6 @@ function PhotoModalDialog({
 
   const isZoomed = transform.scale > 1.05;
 
-
   // Reset zoom & transform whenever navigating between photos (render-phase state adjustment)
   const [prevPhotoId, setPrevPhotoId] = useState(photo.id);
   if (prevPhotoId !== photo.id) {
@@ -99,12 +104,16 @@ function PhotoModalDialog({
     setTransform({ scale: 1, x: 0, y: 0 });
     setIsTransforming(false);
     setIsDragging(false);
+    setDismissY(0);
+    setIsDismissDragging(false);
   }
 
   // Synchronize mutable refs on photo change outside render phase
   useEffect(() => {
     scaleRef.current = 1;
     panRef.current = { x: 0, y: 0 };
+    dismissYRef.current = 0;
+    gestureDirectionRef.current = "none";
   }, [photo.id]);
 
   // Predictive image prefetching for adjacent images (currentIndex ± 1)
@@ -387,10 +396,15 @@ function PhotoModalDialog({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose, onNext, onPrev, resetZoom, toggleZoom]);
 
-  // Mobile / Touchscreen Pinch & Pan Handlers
+  // Mobile / Touchscreen Pinch & Pan Handlers + Interactive Swipe-Down Dismiss
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 2) {
       // 2-finger pinch start
+      gestureDirectionRef.current = "none";
+      dismissYRef.current = 0;
+      setDismissY(0);
+      setIsDismissDragging(false);
+
       const dist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
@@ -415,6 +429,11 @@ function PhotoModalDialog({
         return;
       }
       lastTapRef.current = now;
+
+      gestureDirectionRef.current = "none";
+      dismissYRef.current = 0;
+      setDismissY(0);
+      setIsDismissDragging(false);
 
       touchStateRef.current = {
         startX: e.touches[0].clientX,
@@ -459,6 +478,38 @@ function PhotoModalDialog({
       panRef.current = { x: nextX, y: nextY };
       setTransform((prev) => ({ ...prev, x: nextX, y: nextY }));
       setIsTransforming(true);
+    } else if (e.touches.length === 1 && scaleRef.current <= 1.02) {
+      // Standard 1x viewing: Real-time visual tracking of vertical drag & direction locking
+      const deltaX = e.touches[0].clientX - touchStateRef.current.startX;
+      const deltaY = e.touches[0].clientY - touchStateRef.current.startY;
+
+      // Direction locking once movement exceeds 10px
+      if (gestureDirectionRef.current === "none") {
+        if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+          if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+            gestureDirectionRef.current = "horizontal";
+          } else if (deltaY > 0) {
+            gestureDirectionRef.current = "vertical";
+          }
+        }
+      }
+
+      if (gestureDirectionRef.current === "vertical") {
+        if (e.cancelable) e.preventDefault();
+
+        // Rubber-band damping curve:
+        // Free tracking up to 200px, then smooth resistance factor of 0.45; upward drag resisted heavily
+        let dampedY = 0;
+        if (deltaY > 0) {
+          dampedY = deltaY > 200 ? 200 + (deltaY - 200) * 0.45 : deltaY;
+        } else {
+          dampedY = deltaY * 0.2;
+        }
+
+        dismissYRef.current = dampedY;
+        setDismissY(dampedY);
+        setIsDismissDragging(true);
+      }
     }
   };
 
@@ -471,7 +522,28 @@ function PhotoModalDialog({
       panRef.current = { x: 0, y: 0 };
       setTransform({ scale: 1, x: 0, y: 0 });
 
-      // Swipe navigation when at 1x
+      // Check vertical swipe-down dismiss
+      if (gestureDirectionRef.current === "vertical") {
+        const elapsed = Math.max(1, Date.now() - touchStateRef.current.startTime);
+        const currentDismissY = dismissYRef.current;
+        const velocity = currentDismissY / elapsed; // px/ms
+
+        // Threshold trigger: displacement > 110px OR flick velocity > 0.55px/ms with min 35px drag
+        if (currentDismissY > 110 || (velocity > 0.55 && currentDismissY > 35)) {
+          triggerHaptic("light");
+          onClose();
+        } else {
+          // Spring snap-back to 0 with cubic-bezier(0.175, 0.885, 0.32, 1.275)
+          setIsDismissDragging(false);
+          setDismissY(0);
+          dismissYRef.current = 0;
+        }
+        gestureDirectionRef.current = "none";
+        touchStateRef.current = null;
+        return;
+      }
+
+      // Swipe navigation when at 1x (horizontal)
       if (e.changedTouches.length > 0) {
         const deltaX = e.changedTouches[0].clientX - touchStateRef.current.startX;
         const deltaY = e.changedTouches[0].clientY - touchStateRef.current.startY;
@@ -484,25 +556,31 @@ function PhotoModalDialog({
             triggerHaptic("snap");
             onPrev?.();
           }
-        } else if (deltaY > 90 && Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
-          triggerHaptic("light");
-          onClose();
         }
       }
     }
 
+    setIsDismissDragging(false);
+    setDismissY(0);
+    dismissYRef.current = 0;
+    gestureDirectionRef.current = "none";
     touchStateRef.current = null;
   };
 
   const displayTitle = lang === "th" && photo.titleTh ? photo.titleTh : photo.title;
 
+  // Dynamic backdrop opacity dimming tied to pull distance
+  const backdropOpacity = isDismissDragging
+    ? Math.max(0.2, 1 - Math.max(0, dismissY) / 380)
+    : 1;
+
   return (
     <motion.div
       key="photo-modal-backdrop"
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: backdropOpacity }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.22, ease: "easeOut" }}
+      transition={{ duration: isDismissDragging ? 0 : 0.22, ease: "easeOut" }}
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -513,8 +591,11 @@ function PhotoModalDialog({
       aria-label={`Photo view: ${displayTitle}`}
       data-lenis-prevent="true"
       data-lenis-prevent-wheel="true"
-      style={{ touchAction: "none" }}
-      className="fixed inset-0 z-50 bg-[#060606]/96 backdrop-blur-2xl flex flex-col justify-between p-3 sm:p-5 md:p-7 select-none overflow-hidden touch-none"
+      style={{
+        touchAction: "none",
+        backgroundColor: `rgba(6, 6, 6, ${0.96 * backdropOpacity})`,
+      }}
+      className="fixed inset-0 z-50 flex flex-col justify-between p-3 sm:p-5 md:p-7 select-none overflow-hidden touch-none"
     >
       {/* Top Controls Bar: Modern Editorial Header */}
       <header
@@ -651,9 +732,11 @@ function PhotoModalDialog({
             <div
               ref={imageContainerRef}
               style={{
-                transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale(${transform.scale})`,
+                transform: `translate3d(${transform.x}px, ${transform.y + dismissY}px, 0) scale(${transform.scale * (isDismissDragging ? 1 - Math.min(Math.max(0, dismissY) / 1500, 0.12) : 1)})`,
                 transformOrigin: "center center",
-                transition: isTransforming ? "none" : "transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
+                transition: isTransforming || isDismissDragging
+                  ? "none"
+                  : "transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease-out",
               }}
               className="relative max-h-[64vh] sm:max-h-[72vh] md:max-h-[76vh] max-w-[92vw] sm:max-w-[88vw] flex items-center justify-center will-change-transform rounded-xs shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/10"
             >
@@ -756,13 +839,87 @@ export default function PhotoModal({
   currentIndex,
   totalCount,
 }: PhotoModalProps) {
-  // Lock body scroll while modal is active
+  const historyPushedRef = useRef(false);
+  const isPoppingHistoryRef = useRef(false);
+
+  // Synchronize browser history state: pushState on open, replaceState on photo navigation
   useEffect(() => {
     if (photo) {
+      if (!historyPushedRef.current) {
+        window.history.pushState(
+          { photoModalOpen: true, photoId: photo.id },
+          "",
+          window.location.href
+        );
+        historyPushedRef.current = true;
+      } else {
+        window.history.replaceState(
+          { photoModalOpen: true, photoId: photo.id },
+          "",
+          window.location.href
+        );
+      }
+    }
+  }, [photo]);
+
+  // Handle browser/device back button navigation (popstate)
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (historyPushedRef.current) {
+        if (!e.state?.photoModalOpen) {
+          isPoppingHistoryRef.current = true;
+          historyPushedRef.current = false;
+          onClose();
+        }
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [onClose]);
+
+  // Clean manual close: triggers history.back() without leaving dirty history entries
+  const handleManualClose = useCallback(() => {
+    if (historyPushedRef.current && !isPoppingHistoryRef.current) {
+      isPoppingHistoryRef.current = true;
+      historyPushedRef.current = false;
+      window.history.back();
+    }
+    onClose();
+  }, [onClose]);
+
+  // Cleanup history state when modal unmounts unexpectedly
+  useEffect(() => {
+    return () => {
+      if (historyPushedRef.current && !isPoppingHistoryRef.current) {
+        isPoppingHistoryRef.current = true;
+        historyPushedRef.current = false;
+        window.history.back();
+      }
+    };
+  }, []);
+
+  // Lock body scroll and pause Lenis smooth scroll while modal is active
+  useEffect(() => {
+    if (photo) {
+      const lenis = typeof window !== "undefined"
+        ? (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis
+        : undefined;
+      if (lenis && typeof lenis.stop === "function") {
+        lenis.stop();
+      }
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = originalOverflow;
+        const lenis = typeof window !== "undefined"
+          ? (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis
+          : undefined;
+        if (lenis && typeof lenis.start === "function") {
+          lenis.start();
+        }
       };
     }
   }, [photo]);
@@ -773,7 +930,7 @@ export default function PhotoModal({
         <PhotoModalDialog
           key="photo-modal-shell"
           photo={photo}
-          onClose={onClose}
+          onClose={handleManualClose}
           onNext={onNext}
           onPrev={onPrev}
           currentIndex={currentIndex}

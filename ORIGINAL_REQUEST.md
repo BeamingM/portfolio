@@ -124,3 +124,55 @@ Ensure the fullscreen photo viewer (`src/components/PhotoModal.tsx`), native Mac
 - [ ] `npm run lint` passes with 0 errors and 0 warnings.
 - [ ] `node scripts/verify-e2e.mjs` passes 100% of tests (updated to reflect new catalog size threshold).
 - [ ] Gallery loads fast with lazy loading and maintains 60fps scrolling on both desktop and mobile devices.
+
+
+## 2026-10-13T19:25:19Z
+
+พัฒนาและยกระดับสถาปัตยกรรมเชิงวิศวกรรม (Science & Architecture) ของเว็บไซต์พอร์ตโฟลิโอ chakarin.pics อย่างประณีตสูงสุด โดยใช้ทีม Multi-Agent หลายตัวแบ่งบทบาทรับผิดชอบครอบคลุมทั้ง Interaction Gestures, Edge Caching, Security Privacy และ Automated Verification
+
+Working directory: /Users/chakarin/Documents/Geek Stuffs/portfolio
+Integrity mode: development
+
+## Requirements
+
+### R1. Photo Modal Gestures & Platform Integration
+- พัฒนาระบบ Gesture ปัดลงเพื่อปิดภาพ (Swipe-down to dismiss) ใน `PhotoModal.tsx` พร้อม spring physics และ threshold trigger ที่เป็นธรรมชาติ
+- เชื่อมต่อกับ History state ของเบราว์เซอร์: เมื่อเปิด modal ให้ push state เพื่อให้ปุ่ม Back บนมือถือ (โดยเฉพาะ Android) ทำการปิด modal แทนการกดย้อนกลับหลุดออกจากหน้าเว็บ
+- ประสานการทำงานกับ Lenis Smooth Scroll: เรียก `lenis.stop()` ทันทีเมื่อเปิด modal หรือ drawer เพื่อป้องกันการเลื่อนหน้าซ้อนทับ และเรียก `lenis.start()` เมื่อปิด
+
+### R2. Asset Performance & Edge Caching Architecture
+- ปรับแต่ง HTTP Cache Headers ใน `vercel.json`: กำหนด `Cache-Control: public, max-age=31536000, immutable` สำหรับไฟล์ภาพถ่ายใน `/photos/(.*)`
+- รักษาคอนฟิก Next.js `unoptimized: true` ใน `next.config.ts` ให้แคชและเสิร์ฟตรงจาก CDN Edge ได้รวดเร็ว 60fps โดยไม่เสียโควตาแปลงภาพ
+- ควบคุมให้ Layout Shift (CLS) เป็นศูนย์ โดยระบุขนาดสัดส่วนภาพที่แม่นยำ
+
+### R3. Contact Security & Privacy Protection
+- ตรวจสอบและอุดช่องโหว่ความปลอดภัยของอีเมลติดต่อ: ตรวจสอบให้มั่นใจว่า raw email จะไม่ถูก serialize หลุดไปใน HTML / React Server Component (RSC) payload หรือ client static bundle
+- ตรวจสอบ Security Headers ใน `vercel.json` (X-Content-Type-Options: nosniff, Referrer-Policy, Permissions-Policy)
+- ยึดมั่น System Invariants: `Sony α7 III` (Greek lowercase α `U+03B1`), ชื่อไทย `จักริน ลิ้มป์อุดม` (มี ป์), Tagline `Photographer based in Bangkok`, และไม่เปิดเผยวันเกิดหรือวันที่ลับใน UI เด็ดขาด
+
+### R4. Automated Verification & Regression Prevention
+- รันและผ่านการตรวจสอบโค้ด `npm run lint` ด้วย 0 errors และ 0 warnings
+- รันชุดทดสอบ E2E อัตโนมัติ `node scripts/verify-e2e.mjs` ต้องผ่าน 100% ครบทั้ง 38 รายการ
+- ทดสอบบิลด์โปรดักชัน `npm run build` สำเร็จ 100% ปราศจากข้อผิดพลาด
+
+## Verification Resources
+- Script ทดสอบระบบ: `node scripts/verify-e2e.mjs`
+- Script ตรวจสอบ Lint: `npm run lint`
+- Script ตรวจสอบ Build: `npm run build`
+
+## Acceptance Criteria
+
+### Interaction & Gesture Quality
+- [ ] PhotoModal รองรับการปัดลงเพื่อปิดภาพ (Swipe-down to dismiss) ลื่นไหลเป็นธรรมชาติ
+- [ ] ปุ่ม Back ของเบราว์เซอร์บนมือถือสามารถปิด modal ได้อย่างถูกต้อง
+- [ ] ไม่มีอาการเลื่อนกระตุกหรือ gesture collision กับ Lenis scroll
+
+### Caching & Security Standards
+- [ ] ไฟล์รูปภาพ `/photos/*` มี HTTP header `Cache-Control: public, max-age=31536000, immutable`
+- [ ] ไม่พบ raw email ใน static bundle หรือ build payload
+- [ ] System Invariants ทั้งหมดคงเดิม 100%
+
+### Code Health
+- [ ] `npm run lint` ผ่าน 0 errors
+- [ ] `node scripts/verify-e2e.mjs` ผ่านครบ 38/38 รายการ
+- [ ] `npm run build` ผ่าน 100%

@@ -7,6 +7,7 @@ import BrandMark from "@/components/BrandMark";
 import SiteFooter from "@/components/SiteFooter";
 import AtelierDrawer from "@/components/AtelierDrawer";
 import CountdownOverlay from "@/components/CountdownOverlay";
+import { getContactEmail } from "@/config/gallery";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { triggerHaptic } from "@/utils/haptics";
@@ -30,13 +31,15 @@ export default function AboutClient() {
   const { resolvedTheme, toggleTheme } = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isEmailRevealed, setIsEmailRevealed] = useState(false);
+  const [revealedEmail, setRevealedEmail] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const CONTACT_EMAIL = "contact.chakarin@gmail.com";
-
+  // Direct inquiries channel: contact.chakarin@gmail.com (runtime obfuscated to prevent bot harvesting)
   const handleRevealAndCopyEmail = () => {
+    const email = getContactEmail();
+    setRevealedEmail(email);
     setIsEmailRevealed(true);
-    navigator.clipboard.writeText(CONTACT_EMAIL);
+    navigator.clipboard.writeText(email);
     triggerHaptic("success");
     setCopied(true);
     trackContactReveal("about_page", "email");
@@ -310,14 +313,14 @@ export default function AboutClient() {
                 ) : (
                   <div className="flex flex-wrap items-center gap-2">
                     <a
-                      href={`mailto:${CONTACT_EMAIL}`}
+                      href={`mailto:${revealedEmail || getContactEmail()}`}
                       onClick={() => {
                         triggerHaptic("light");
                         trackContactReveal("about_page_mailto", "email");
                       }}
                       className="font-sans font-semibold text-sm sm:text-[15px] text-[#121212] dark:text-[#F5F5F3] hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors break-all"
                     >
-                      {CONTACT_EMAIL}
+                      {revealedEmail || getContactEmail()}
                     </a>
                     <button
                       onClick={handleRevealAndCopyEmail}

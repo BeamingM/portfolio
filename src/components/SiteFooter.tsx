@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { getContactEmail } from "@/config/gallery";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { triggerHaptic } from "@/utils/haptics";
@@ -22,13 +23,14 @@ export default function SiteFooter({
   const { lang, setLang } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
   const [isEmailRevealed, setIsEmailRevealed] = useState(false);
+  const [revealedEmail, setRevealedEmail] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const CONTACT_EMAIL = "contact.chakarin@gmail.com";
-
   const handleRevealAndCopyEmail = () => {
+    const email = getContactEmail();
+    setRevealedEmail(email);
     setIsEmailRevealed(true);
-    navigator.clipboard.writeText(CONTACT_EMAIL);
+    navigator.clipboard.writeText(email);
     triggerHaptic("success");
     setCopied(true);
     trackContactReveal("site_footer", "email");
@@ -191,7 +193,7 @@ export default function SiteFooter({
                 ) : (
                   <div className="flex items-center gap-2 text-[#4A4A48] dark:text-[#B5B5B0]">
                     <a
-                      href={`mailto:${CONTACT_EMAIL}`}
+                      href={`mailto:${revealedEmail || getContactEmail()}`}
                       onClick={() => {
                         triggerHaptic("light");
                         trackContactReveal("site_footer_mailto", "email");
@@ -199,7 +201,7 @@ export default function SiteFooter({
                       className="flex items-center gap-2 hover:text-[#FF9500] dark:hover:text-[#FFA000] transition-colors truncate"
                     >
                       <Mail className="w-3.5 h-3.5 shrink-0" />
-                      <span className="truncate">{CONTACT_EMAIL}</span>
+                      <span className="truncate">{revealedEmail || getContactEmail()}</span>
                     </a>
                     <button
                       onClick={handleRevealAndCopyEmail}

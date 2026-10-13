@@ -1246,6 +1246,22 @@ export const galleryItems: PhotoItem[] = [
   },
 ];
 
+/**
+ * Dynamic contact reconstruction to prevent scraping plain text emails from static bundles, HTML, or RSC payloads.
+ */
+export function getContactEmail(): string {
+  const token = "Y29udGFjdC5jaGFrYXJpbkBnbWFpbC5jb20=";
+  if (typeof atob === "function") {
+    return atob(token);
+  }
+  if (typeof Buffer !== "undefined") {
+    return Buffer.from(token, "base64").toString("utf-8");
+  }
+  return String.fromCharCode(
+    99, 111, 110, 116, 97, 99, 116, 46, 99, 104, 97, 107, 97, 114, 105, 110, 64, 103, 109, 97, 105, 108, 46, 99, 111, 109
+  );
+}
+
 export const siteProfile = {
   name: "Chakarin L.",
   alias: "BeamingMotion",
@@ -1265,7 +1281,9 @@ export const siteProfile = {
     ],
   },
   contact: {
-    email: "contact.chakarin@gmail.com",
+    get email(): string {
+      return getContactEmail();
+    },
     instagram: "beamingmotion",
     instagramUrl: "https://www.instagram.com/beamingmotion",
     twitter: "https://x.com/beamingmotion",

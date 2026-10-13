@@ -42,13 +42,25 @@ export default function AtelierDrawer({
     psctu: galleryItems.filter((i) => i.sectionId === "psctu").length,
   };
 
-  // Lock background body scroll when drawer is open
+  // Lock background body scroll and synchronize Lenis smooth scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
+      const lenis = typeof window !== "undefined"
+        ? (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis
+        : undefined;
+      if (lenis && typeof lenis.stop === "function") {
+        lenis.stop();
+      }
       const original = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = original;
+        const lenis = typeof window !== "undefined"
+          ? (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis
+          : undefined;
+        if (lenis && typeof lenis.start === "function") {
+          lenis.start();
+        }
       };
     }
   }, [isOpen]);

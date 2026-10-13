@@ -1,11 +1,28 @@
 "use client";
 
 import { ReactNode, useState, useEffect } from "react";
-import { ReactLenis } from "lenis/react";
+import { ReactLenis, useLenis } from "lenis/react";
 import "lenis/dist/lenis.css";
 
 interface SmoothScrollProps {
   children: ReactNode;
+}
+
+function LenisGlobalSync() {
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && lenis) {
+      (window as unknown as { lenis?: typeof lenis }).lenis = lenis;
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        (window as unknown as { lenis?: unknown }).lenis = undefined;
+      }
+    };
+  }, [lenis]);
+
+  return null;
 }
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
@@ -40,6 +57,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
         wheelMultiplier: 1.0,
       }}
     >
+      <LenisGlobalSync />
       {children}
     </ReactLenis>
   );

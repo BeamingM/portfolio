@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { galleryItems, PhotoItem } from "@/config/gallery";
+import { galleryItems, PhotoItem, getContactEmail } from "@/config/gallery";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { triggerHaptic } from "@/utils/haptics";
@@ -98,7 +98,7 @@ export default function CommandPalette({
         icon: <Mail className="w-4 h-4 text-[#FF9500]" />,
         perform: () => {
           trackContactReveal("command_palette", "email");
-          window.location.href = "mailto:contact.chakarin@gmail.com";
+          window.location.href = `mailto:${getContactEmail()}`;
           onClose();
         },
       },
